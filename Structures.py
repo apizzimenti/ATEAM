@@ -8,7 +8,7 @@ class Simplex:
         Initializes a simplex of any dimension.
 
         Args:
-            coordinates (list): Will be integers (0-simplex) or Simplex entries
+            coordinates (np.array): Will be integers (0-simplex) or Simplex entries
                 (k-simplex, k > 0).
             orientation (int): Which way do we traverse the entries in `coordinates`?
             index (int): When constructing matrices, the index to which this simplex
@@ -17,7 +17,7 @@ class Simplex:
         # This determines which kind of simplex we're dealing with: if it's a
         # 0-dimensional simplex, then `coordinates` will have integer entries; if
         # it's any higher-dimensional one, its entries will be instances of Simplex.
-        if type(coordinates[0]) is int:
+        if type(coordinates[0]) in {int, np.int32, np.int64}:
             self.dimension = 0
         else:
             self.dimension = coordinates[0].dimension + 1
@@ -25,6 +25,14 @@ class Simplex:
         self.coordinates = coordinates
         self.orientation = orientation
         self.index = index
+
+    def __repr__(self): return self.__str__()
+
+    def __str__(self):
+        if self.dimension < 1:
+            return str(self.coordinates)
+        else:
+            return ""
 
 
 class Lattice:
@@ -92,8 +100,18 @@ class Lattice:
 
         # Now that we've computed the combinations, we need only add.
         coordinates = [
-            reduce(lambda l, r: [l[i] + r[i] for i in range(len(l))], combination) for combination in combinations
+            reduce(lambda l, r: np.array([l[i] + r[i] for i in range(len(l))]), combination)
+            for combination in combinations
         ]
 
-        print(coordinates)
+        # Turn the coordinates into simplices, and then turn the list of
+        # coordinates into an n-dimensional array.
+        self.coordinates = np.array([
+            Simplex(coordinate, index=index) for index, coordinate in enumerate(coordinates)
+        ])
 
+        # Create the internal ndarray structure so indexing is easy; this fixes
+        # the amount of memory we'll use on the Lattice.
+        self.structure = np.ndarray(tuple([c+1 for c in corners]), dtype=Simplex)
+        for simplex in self.coordinates:
+            self.structure[tuple(simplex.coordinates)] = simplex
