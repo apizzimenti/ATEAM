@@ -1,58 +1,9 @@
 
 from functools import reduce
 import numpy as np
+import matplotlib.pyplot as plt
 
-class Simplex:
-    def __init__(self, coordinates, orientation=1, index=0):
-        """
-        Initializes a simplex of any dimension.
-
-        Args:
-            coordinates (np.array): Will be integers (0-simplex) or Simplex entries
-                (k-simplex, k > 0).
-            orientation (int): Which way do we traverse the entries in `coordinates`?
-            index (int): When constructing matrices, the index to which this simplex
-                corresponds.
-        """
-        # This determines which kind of simplex we're dealing with: if it's a
-        # 0-dimensional simplex, then `coordinates` will have integer entries; if
-        # it's any higher-dimensional one, its entries will be instances of Simplex.
-        if type(coordinates[0]) in {int, np.int32, np.int64}:
-            self.dimension = 0
-        else:
-            self.dimension = coordinates[0].dimension + 1
-
-        self.coordinates = coordinates
-        self.orientation = orientation
-        self.index = index
-
-    def __repr__(self): return self.__str__()
-
-    def __str__(self):
-        """
-        Stringification.
-        """
-        if self.dimension < 1:
-            return str(tuple(self.coordinates))
-        else:
-            return f"{self.dimension}-dimensional simplex at index {self.index}"
-        
-    def __eq__(self, other):
-        """
-        Testing for equality; this asks whether the coordinates of each simplex
-        are the same.
-        """
-        return (self.coordinates == other.coordinates).all()
-    
-    def __lt__(self, other):
-        pass
-
-    def __hash__(self):
-        """
-        Returns a unique property from each simplex.
-        """
-        return hash(tuple(self.coordinates))
-
+from Simplex import Simplex
 
 class Lattice:
     """
@@ -244,4 +195,36 @@ class Lattice:
 
         self.boundary = B
         self.coboundary = B.T
-                
+
+
+    def plot(
+        self, vertexStyle=dict(marker="o", markeredgewidth=0),
+        edgeStyle=dict(linewidth=1/2, color="k", alpha=1/2), assignment=None
+    ):
+        """
+        Plot the lattice (if it's of dimension 3 or lower).
+        """
+        if self.dimension > 3: return
+        elif self.dimension == 2: _, axes = plt.subplots()
+        elif self.dimension == 3: axes = plt.figure().add_subplot(projection="3d")
+
+        for edge in self.structure[1]:
+            u, v = edge.coordinates
+            axes.plot(
+                *([u.coordinates[axis], v.coordinates[axis]] for axis in range(self.dimension)),
+                **edgeStyle
+            )
+
+        for vertex in self.structure[0]:
+            axes.plot(
+                *vertex.coordinates,
+                color=(assignment[vertex.index] if assignment else "k"),
+                **vertexStyle
+            )
+
+        # Set axes to be equal, turn off panes.
+        axes.set_aspect("equal")
+        axes.set_axis_off()
+        plt.show()
+
+        
