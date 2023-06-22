@@ -2,6 +2,9 @@
 import numpy as np
 
 class Simplex:
+    # Default spin.
+    spin = 0;
+
     def __init__(self, coordinates, orientation=1, index=0):
         """
         Initializes a simplex of any dimension.
@@ -51,5 +54,3 @@ class Simplex:
         Returns a unique property from each simplex.
         """
         return hash(tuple(self.coordinates))
-
-
