@@ -1,6 +1,7 @@
 
 from functools import reduce
 import numpy as np
+import galois
 import matplotlib.pyplot as plt
 
 from Simplex import Simplex
@@ -17,7 +18,7 @@ class Lattice:
             the lattice.
     """
 
-    def __init__(self, corners, boundaryDimension=1, maxDimension=None):
+    def __init__(self, corners, field=2, boundaryDimension=1, maxDimension=None):
         """
         Instantiates an integer lattice.
 
@@ -27,6 +28,8 @@ class Lattice:
                 3-dimensional integer lattice. More generally, an argument of
                 `[c1, ..., cn]` admits an n-dimensional integer lattice with the
                 ith copy of Z bounded below by 0 and above by ci (inclusive).
+            field (int): The finite field over which we're working; that is,
+                coefficients are taken from the finite field of order `field`.
             boundaryDimension (int): Specifies the dimension for which we construct
                 the boundary/coboundary operator matrices; this defaults to 1.
             maxDimension (int): The maximum dimension of simplex constructed;
@@ -36,6 +39,7 @@ class Lattice:
         # Assign corners and dimensionality.
         self.corners = corners
         self.dimension = len(corners)
+        self.field = galois.GF(field)
 
         # Construct the lattice.
         self._coordinates()
@@ -73,7 +77,7 @@ class Lattice:
         # pair each vector on the first axis with each vector on the second axis;
         # then, we'll add each vector in the third axis to each of those pairs;
         # we'll continue in this way until we end up with all possible combinations
-        # of integer-scaled vectors. Afterwarsd, all we have to do is elementwise-add
+        # of integer-scaled vectors. Afterwards, all we have to do is elementwise-add
         # the vectors in each combination, and we'll have the coordinates outright.
         combinations = [[b] for b in allVectorsByAxis[0]]
         
@@ -90,7 +94,7 @@ class Lattice:
 
         # Now that we've computed the combinations, we need only add.
         coordinates = [
-            reduce(lambda l, r: np.array([l[i] + r[i] for i in range(len(l))]), combination)
+            reduce(np.add, combination)
             for combination in combinations
         ]
 
@@ -175,6 +179,7 @@ class Lattice:
             oneSimplices.append(Simplex(np.array(list(edge)), index=index))
 
         self.structure[1] = np.array(oneSimplices, dtype=Simplex)
+    
 
     def boundaryOperator(self, dimension=1):
         """
@@ -190,16 +195,17 @@ class Lattice:
         # Impose an arbitrary orientation on the edges; we just need the vertex
         # labels to cancel.
         for edge in self.structure[1]:
-            for vertex, coefficient in zip(edge.coordinates, [-1, 1]):
+            for vertex, coefficient in zip(edge.coordinates, [1, self.field.order-1]):
                 B[vertex.index, edge.index] = coefficient
 
-        self.boundary = B
-        self.coboundary = B.T
+        self.boundary = self.field(B.astype(int))
+        self.coboundary = self.field(B.T.astype(int))
 
 
     def plot(
         self, vertexStyle=dict(marker="o", markeredgewidth=0),
-        edgeStyle=dict(linewidth=1/2, color="k", alpha=1/2), assignment=None
+        edgeStyle=dict(linewidth=1/2, alpha=1/2), edgeAssignment=None,
+        vertexAssignment=None, vertexLabels=False, axis=False
     ):
         """
         Plot the lattice (if it's of dimension 3 or lower).
@@ -212,19 +218,25 @@ class Lattice:
             u, v = edge.coordinates
             axes.plot(
                 *([u.coordinates[axis], v.coordinates[axis]] for axis in range(self.dimension)),
+                color=(edgeAssignment[edge.index] if edgeAssignment else "k"),
                 **edgeStyle
             )
 
         for vertex in self.structure[0]:
             axes.plot(
                 *vertex.coordinates,
-                color=(assignment[vertex.index] if assignment else "k"),
+                color=(vertexAssignment[vertex.index] if vertexAssignment else "k"),
                 **vertexStyle
             )
 
+            if vertexLabels and self.dimension < 3:
+                axes.text(
+                    vertex.coordinates[0], vertex.coordinates[1],
+                    f"({vertex.coordinates[0]},{vertex.coordinates[1]})",
+                    ha="center", va="center"
+                )
+
         # Set axes to be equal, turn off panes.
         axes.set_aspect("equal")
-        axes.set_axis_off()
-        plt.show()
-
-        
+        if not axis: axes.set_axis_off()
+        return plt.gcf(), axes
