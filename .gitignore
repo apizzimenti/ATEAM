@@ -1,2 +1,9 @@
 
+# Ignore caches, python versions, and DS stores.
 __pycache__/
+.DS_Store
+.python-version
+
+# Ignore contents, but not directories.
+output/figures/*
+output/matrices/*
