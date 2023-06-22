@@ -3,7 +3,7 @@
 __pycache__/
 .DS_Store
 .python-version
-.egg-info
+potts.egg-info/
 
 # Ignore contents, but not directories.
 output/figures/*
