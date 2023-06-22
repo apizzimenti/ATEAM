@@ -2,13 +2,16 @@
 import numpy as np
 import pandas as pd
 from functools import reduce
+from pathlib import Path
 
 from ..stats import constant, always, uniform
 from .Model import Model
 
 
 class SwendsonWang(Model):
-    def __init__(self, temperature=constant(0.7), accept=always(), testing=False):
+    def __init__(
+            self, temperature=constant(0.7), accept=always(), testing=False
+        ):
         """
         Initializes a Swendson-Wang evolution on the Potts model.
 
@@ -23,7 +26,19 @@ class SwendsonWang(Model):
         self.accept = accept
         self.testing = testing
         self.log = ""
-    
+
+        self._directorySetup()
+
+
+    def _directorySetup(self):
+        if self.testing:
+            # Creates an output directory if none exists.
+            outroot = Path("./output/")
+            if not outroot.exists():
+                outroot.mkdir()
+                (outroot/"figures").mkdir()
+                (outroot/"matrices").mkdir()
+
 
     def proposal(self, chain):
         """
@@ -90,7 +105,7 @@ class SwendsonWang(Model):
         # If we're testing, write the matrices to file and indicate which edges
         # are ignored.
         if self.testing:
-            pd.DataFrame(state).to_csv(f"./output/matrices/state-{chain.step}.csv", index=False)
+            pd.DataFrame(state).to_csv(f"{self.testDirectory}/state-{chain.step}.csv", index=False)
             pd.DataFrame(boundary).to_csv(f"./output/matrices/operator-{chain.step}.csv", index=False)
             self.log += "\n\n"
 
