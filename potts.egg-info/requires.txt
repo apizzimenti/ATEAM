@@ -1,0 +1,12 @@
+numpy
+galois
+matplotlib
+
+[dev]
+pdoc3
+flake8
+pytest
+autopep8
+pytest-cov
+black
+isort

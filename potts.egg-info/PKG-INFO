@@ -1,0 +1,11 @@
+Metadata-Version: 2.1
+Name: potts
+Version: 0.0.1
+Summary: Generalized Potts model.
+Home-page: https://github.com/apizzimenti/potts
+Author: Paul Duncan, Anthony E. Pizzimenti, Benjamin Schweinhart
+Author-email: apizzime@gmu.edu
+Description-Content-Type: text/markdown
+Provides-Extra: dev
+
+## Potts lattice gauge theory.

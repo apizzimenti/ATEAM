@@ -3,15 +3,8 @@ import numpy as np
 import pandas as pd
 from functools import reduce
 
-from schedules import constant
-from accepts import always
-from distributions import uniform
-
-class Model:
-    def __init__(self): pass
-    def proposal(self): pass
-    def accept(self): pass
-    def initial(self): pass
+from ..stats import constant, always, uniform
+from .Model import Model
 
 
 class SwendsonWang(Model):
@@ -29,7 +22,8 @@ class SwendsonWang(Model):
         self.temperature = temperature
         self.accept = accept
         self.testing = testing
-
+        self.log = ""
+    
 
     def proposal(self, chain):
         """
@@ -43,6 +37,10 @@ class SwendsonWang(Model):
             A proposed state.
         """
         lattice, state = chain.lattice, chain.state
+
+        # If we're testing, we want to record probabilities; since this is called
+        # at each step, we'll write something to file at each step.
+        self.log += f"### STEP {chain.step} ###\n"
 
         # First, create a matrix that includes/excludes the appropriate edges;
         # we scan through them, and "remove" any edges that have no effect.
@@ -59,10 +57,12 @@ class SwendsonWang(Model):
             #       a. include the edge with probability 1-e^beta,
             #       b. ignore the edge with probability e^beta.
 
-            # Case 1.
+            # Case 1; re-set edge spin to 0.
             if state[u.index] != state[v.index]:
                 edge.spin = 0
                 continue
+                
+            # Case 2.
             else:
                 # Set the probability that an edge is included, and uniformly
                 # randomly select a value in [0,1] to determine whether the edge
@@ -73,8 +73,9 @@ class SwendsonWang(Model):
                 # Case 2(a).
                 if q < p:
                     # Testing!
-                    if self.testing:
-                        print(f"included edge ({u},{v}) with probability {q}<{p}")
+                    if self.testing: self.log += f"included edge ({u},{v}) with probability {p} > {q}\n"
+                    
+                    # Set the spins of the edges appropriately.
                     included[edge.index, edge.index] = 1
                     edge.spin = 1
                 
@@ -91,6 +92,7 @@ class SwendsonWang(Model):
         if self.testing:
             pd.DataFrame(state).to_csv(f"./output/matrices/state-{chain.step}.csv", index=False)
             pd.DataFrame(boundary).to_csv(f"./output/matrices/operator-{chain.step}.csv", index=False)
+            self.log += "\n\n"
 
         # Now, let's change the states!
         coboundary = boundary.T
@@ -100,33 +102,9 @@ class SwendsonWang(Model):
             [uniform(0, chain.lattice.field.order)*b for b in basis]
         ))
 
-        if self.testing: print(proposed)
-
         return proposed
-
-    def _fromNullSpace(chain, boundary):
-        """
-        Uniformly randomly chooses a solution in the null space of the coboundary
-        matrix.
-
-        Args:
-            boundary (galois.FieldArray): A matrix over the field specified by
-                the lattice.
-
-        Returns:
-            A single vector of spins (values over the field specified by the lattice)
-            on the vertices.
-        """
-        # Find a basis for the null space of the coboundary matrix.
-        coboundary = boundary.T
-        basis = coboundary.null_space()
-
-        return np.array(reduce(
-            np.add, 
-            [uniform(0, chain.lattice.field.order)*b for b in basis]
-        ))
-
     
+
     def initial(self, lattice, distribution=uniform):
         """
         Generates a random initial state.

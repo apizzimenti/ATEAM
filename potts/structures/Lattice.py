@@ -4,7 +4,7 @@ import numpy as np
 import galois
 import matplotlib.pyplot as plt
 
-from Simplex import Simplex
+from .Simplex import Simplex
 
 class Lattice:
     """

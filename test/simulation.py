@@ -2,9 +2,7 @@
 import matplotlib.pyplot as plt
 from gerrytools.plotting import districtr
 
-from Lattice import Lattice
-from Chain import Chain
-from Models import SwendsonWang
+from potts import Lattice, SwendsonWang, Chain
 
 # Create the Lattice, then instantiate the Swendson-Wang model.
 L = Lattice([3, 3], field=3)
@@ -24,7 +22,10 @@ for state in chain:
     L.plot(
         edgeAssignment=edgeAssignment, vertexAssignment=vertexAssignment,
         vertexStyle=dict(marker="o", ms=20, markeredgewidth=0), edgeStyle=dict(lw=3),
-        vertexLabels=True, axis=True
+        vertexLabels=True,
     )
-    plt.savefig(f"./output/figures/lattice-step-{chain.step}.pdf", dpi=300, bbox_inches="tight")
+    plt.savefig(f"./output/figures/lattice-step-{chain.step-1}.pdf", dpi=300, bbox_inches="tight")
     plt.clf()
+
+# After we're done, write the model's log to file.
+with open("./output/log.txt", "w") as w: w.write(model.log)

@@ -1,0 +1,80 @@
+### STEP 0 ###
+included edge ((2, 2),(3, 2)) with probability 0.5034146962085905 > 0.09886452468429363
+included edge ((1, 2),(2, 2)) with probability 0.5034146962085905 > 0.07483917184800715
+included edge ((0, 0),(1, 0)) with probability 0.5034146962085905 > 0.3200883635600502
+included edge ((0, 3),(1, 3)) with probability 0.5034146962085905 > 0.19801200300928945
+included edge ((2, 3),(3, 3)) with probability 0.5034146962085905 > 0.008942140452445235
+included edge ((1, 0),(1, 1)) with probability 0.5034146962085905 > 0.4878061036044975
+included edge ((3, 2),(3, 3)) with probability 0.5034146962085905 > 0.3645053344011784
+included edge ((3, 1),(3, 2)) with probability 0.5034146962085905 > 0.457657933817039
+included edge ((2, 0),(3, 0)) with probability 0.5034146962085905 > 0.057274269707976444
+included edge ((2, 2),(2, 3)) with probability 0.5034146962085905 > 0.15091351273004527
+
+
+### STEP 1 ###
+included edge ((1, 2),(2, 2)) with probability 0.5034146962085905 > 0.37723577269376485
+included edge ((2, 3),(3, 3)) with probability 0.5034146962085905 > 0.46655207603168547
+included edge ((2, 0),(3, 0)) with probability 0.5034146962085905 > 0.29665738882802706
+
+
+### STEP 2 ###
+included edge ((2, 2),(3, 2)) with probability 0.5034146962085905 > 0.1374060260573583
+included edge ((3, 1),(3, 2)) with probability 0.5034146962085905 > 0.24907599781494572
+included edge ((2, 0),(3, 0)) with probability 0.5034146962085905 > 0.053877851015106004
+
+
+### STEP 3 ###
+included edge ((2, 2),(3, 2)) with probability 0.5034146962085905 > 0.13762407703119484
+included edge ((0, 1),(0, 2)) with probability 0.5034146962085905 > 0.09619268535959846
+included edge ((1, 1),(1, 2)) with probability 0.5034146962085905 > 0.47101238311136506
+included edge ((2, 0),(2, 1)) with probability 0.5034146962085905 > 0.10371203683613339
+included edge ((1, 0),(1, 1)) with probability 0.5034146962085905 > 0.3912161758936441
+included edge ((3, 1),(3, 2)) with probability 0.5034146962085905 > 0.08026995306245055
+included edge ((2, 0),(3, 0)) with probability 0.5034146962085905 > 0.10715608531497256
+
+
+### STEP 4 ###
+included edge ((1, 2),(2, 2)) with probability 0.5034146962085905 > 0.256703612272255
+included edge ((0, 2),(0, 3)) with probability 0.5034146962085905 > 0.2699494251826592
+included edge ((0, 3),(1, 3)) with probability 0.5034146962085905 > 0.22828324454348692
+included edge ((2, 0),(2, 1)) with probability 0.5034146962085905 > 0.050558248147284046
+included edge ((1, 0),(1, 1)) with probability 0.5034146962085905 > 0.04346096236200936
+included edge ((0, 0),(0, 1)) with probability 0.5034146962085905 > 0.11524443728823097
+
+
+### STEP 5 ###
+included edge ((1, 2),(1, 3)) with probability 0.5034146962085905 > 0.2224641272119653
+included edge ((1, 0),(2, 0)) with probability 0.5034146962085905 > 0.2996937390141321
+included edge ((2, 1),(2, 2)) with probability 0.5034146962085905 > 0.04303726175612621
+included edge ((1, 1),(1, 2)) with probability 0.5034146962085905 > 0.10405950735144986
+included edge ((0, 3),(1, 3)) with probability 0.5034146962085905 > 0.007017326770597854
+included edge ((1, 0),(1, 1)) with probability 0.5034146962085905 > 0.016847578597303126
+
+
+### STEP 6 ###
+included edge ((2, 2),(3, 2)) with probability 0.5034146962085905 > 0.2321094034460668
+included edge ((1, 0),(2, 0)) with probability 0.5034146962085905 > 0.0514150685326028
+included edge ((2, 1),(2, 2)) with probability 0.5034146962085905 > 0.03424954370793065
+included edge ((1, 1),(1, 2)) with probability 0.5034146962085905 > 0.12993694751587903
+included edge ((0, 2),(1, 2)) with probability 0.5034146962085905 > 0.2315804820638877
+included edge ((2, 2),(2, 3)) with probability 0.5034146962085905 > 0.2261581671632279
+
+
+### STEP 7 ###
+included edge ((1, 2),(1, 3)) with probability 0.5034146962085905 > 0.4808388009800283
+included edge ((2, 1),(2, 2)) with probability 0.5034146962085905 > 0.4768181013581323
+included edge ((0, 2),(1, 2)) with probability 0.5034146962085905 > 0.22925237681865296
+included edge ((3, 1),(3, 2)) with probability 0.5034146962085905 > 0.2982955644616513
+included edge ((2, 0),(3, 0)) with probability 0.5034146962085905 > 0.028857033461508474
+included edge ((2, 2),(2, 3)) with probability 0.5034146962085905 > 0.35819863527564766
+
+
+### STEP 8 ###
+included edge ((3, 0),(3, 1)) with probability 0.5034146962085905 > 0.4953917157083393
+
+
+### STEP 9 ###
+included edge ((0, 0),(0, 1)) with probability 0.5034146962085905 > 0.4090679777605699
+included edge ((2, 2),(2, 3)) with probability 0.5034146962085905 > 0.3459269409456436
+
+

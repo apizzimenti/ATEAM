@@ -38,11 +38,6 @@ class Chain:
         """
         Performs the computations specified by the proposal and acceptance schemes.
         """
-        # Kick off the iterations!
-        if self.step == 0:
-            self.step += 1
-            return self.state
-        
         # While we haven't reached the max number of steps, propose a new plan,
         # check whether it's acceptable/valid, and continue.
         while self.step < self.steps:

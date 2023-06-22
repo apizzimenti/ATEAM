@@ -1,4 +1,0 @@
-
-gerrytools
-matplotlib
-galois

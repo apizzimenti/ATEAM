@@ -1,0 +1,1 @@
+## Potts lattice gauge theory.
