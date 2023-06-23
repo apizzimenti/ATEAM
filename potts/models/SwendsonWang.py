@@ -1,6 +1,7 @@
 
 import numpy as np
 import pandas as pd
+import scipy as scp
 from functools import reduce
 from pathlib import Path
 
@@ -40,22 +41,13 @@ class SwendsonWang(Model):
                 (outroot/"matrices").mkdir()
 
 
-    def proposal(self, chain):
+    def _proposal_multiply(self, chain):
         """
-        Proposal scheme for the Swendson-Wang evolution on the Potts model. 
-
-        Args:
-            chain (Chain): Chain object which contains all the information we
-                need.
-
-        Returns:
-            A proposed state.
+        Multiplies the computed boundary matrix B on the left by an edge-inclusion
+        matrix E. As the number of edges grows, this matrix multiplication is
+        expected to take a really long time.
         """
         lattice, state = chain.lattice, chain.state
-
-        # If we're testing, we want to record probabilities; since this is called
-        # at each step, we'll write something to file at each step.
-        self.log += f"### STEP {chain.step} ###\n"
 
         # First, create a matrix that includes/excludes the appropriate edges;
         # we scan through them, and "remove" any edges that have no effect.
@@ -100,12 +92,82 @@ class SwendsonWang(Model):
 
         # Now that we know which edges we're ignoring, we can multiply the two
         # matrices together!
-        boundary = np.matmul(lattice.boundary, included)
+        return np.matmul(lattice.boundary, included)
+    
+
+    def _proposal_copy(self, chain):
+        """
+        Copies the boundary matrix and zeros out rows instead of multiplying
+        large matrices.
+        """
+        lattice, state = chain.lattice, chain.state
+        
+        # First, create a matrix that includes/excludes the appropriate edges;
+        # we scan through them, and "remove" any edges that have no effect.
+        M = lattice.boundary.copy()
+
+        for edge in lattice.structure[1]:
+            u, v = edge.coordinates
+            
+            # We have three cases:
+            #
+            #   1. if the spins on u and v are different, we ignore the edge.
+            #   2. if the spins on u and v are the same, we
+            #       a. include the edge with probability 1-e^beta,
+            #       b. ignore the edge with probability e^beta.
+
+            # Case 1; re-set edge spin to 0.
+            if state[u.index] != state[v.index]:
+                M[:,edge.index] = 0
+                continue
+                
+            # Case 2.
+            else:
+                # Set the probability that an edge is included, and uniformly
+                # randomly select a value in [0,1] to determine whether the edge
+                # is included.
+                p = 1-(np.exp(self.temperature(chain.step)))
+                q = np.random.uniform()
+
+                # Case 2(a).
+                if q < p:
+                    # Testing!
+                    if self.testing: self.log += f"included edge ({u},{v}) with probability {p} > {q}\n"
+                    edge.spin = 1
+                
+                # Case 2(b).
+                else:
+                    M[:,edge.index] = 0
+                    edge.spin = 0
+
+        # Now that we know which edges we're ignoring, we can multiply the two
+        # matrices together!
+        return M
+
+
+    def proposal(self, chain):
+        """
+        Proposal scheme for the Swendson-Wang evolution on the Potts model. 
+
+        Args:
+            chain (Chain): Chain object which contains all the information we
+                need.
+
+        Returns:
+            A proposed state.
+        """
+        lattice, state = chain.lattice, chain.state
+
+        # If we're testing, we want to record probabilities; since this is called
+        # at each step, we'll write something to file at each step.
+        if self.testing: self.log += f"### STEP {chain.step} ###\n"
+        # boundary = self._proposal_multiply(chain)
+        boundary = self._proposal_copy(chain)
 
         # If we're testing, write the matrices to file and indicate which edges
         # are ignored.
         if self.testing:
-            pd.DataFrame(state).to_csv(f"{self.testDirectory}/state-{chain.step}.csv", index=False)
+            pd.DataFrame(state).to_csv(f"./output/matrices/state-{chain.step}.csv", index=False)
             pd.DataFrame(boundary).to_csv(f"./output/matrices/operator-{chain.step}.csv", index=False)
             self.log += "\n\n"
 

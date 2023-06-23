@@ -56,5 +56,5 @@ class Chain:
         Progress bar.
         """
         from tqdm.auto import tqdm
-        return tqdm(self)
+        return tqdm(self, total=self.steps)
             
