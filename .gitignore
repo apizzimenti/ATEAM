@@ -8,3 +8,5 @@ potts.egg-info/
 # Ignore contents, but not directories.
 output/figures/*
 output/matrices/*
+output/profiles/*
+sync.sh

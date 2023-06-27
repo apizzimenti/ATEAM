@@ -3,7 +3,7 @@ from pathlib import Path
 from setuptools import find_packages, setup
 
 requirements = [
-    "numpy", "galois", "matplotlib"
+    "numpy", "galois", "matplotlib", "pandas", "scipy"
 ]
 
 # Set the version --- ensure that the latest tag matches this value.
