@@ -4,7 +4,7 @@ import numpy as np
 import galois
 import matplotlib.pyplot as plt
 
-from .Simplex import Simplex
+from .Cell import Cell
 
 class Lattice:
     """
@@ -32,8 +32,8 @@ class Lattice:
                 coefficients are taken from the finite field of order `field`.
             boundaryDimension (int): Specifies the dimension for which we construct
                 the boundary/coboundary operator matrices; this defaults to 1.
-            maxDimension (int): The maximum dimension of simplex constructed;
-                if nothing is passed, simplices of all dimensions (from 0 to
+            maxDimension (int): The maximum dimension of cell constructed;
+                if nothing is passed, cells of all dimensions (from 0 to
                 the dimension of the lattice) are constructed.
         """
         # Assign corners and dimensionality.
@@ -44,8 +44,8 @@ class Lattice:
         # Construct the lattice.
         self._coordinates()
 
-        # Construct higher-dimensional simplices.
-        self._constructHigherDimensionalSimplices(dimension=maxDimension)
+        # Construct higher-dimensional cells.
+        self._constructHigherDimensionalCells(dimension=maxDimension)
 
         # Construct the boundary operator matrix with the provided dimension.
         self.boundaryOperator(dimension=boundaryDimension)
@@ -94,23 +94,24 @@ class Lattice:
 
         # Now that we've computed the combinations, we need only add.
         coordinates = [
-            reduce(np.add, combination)
+            list(reduce(np.add, combination))
             for combination in combinations
         ]
 
-        # Turn the coordinates into simplices, and then turn the list of
+        # Turn the coordinates into cells, and then turn the list of
         # coordinates into an n-dimensional array.
-        self.coordinates = np.array([
-            Simplex(coordinate, index=index) for index, coordinate in enumerate(coordinates)
-        ])
+        self.coordinates = [
+            Cell(coordinate, index=index) for index, coordinate in enumerate(coordinates)
+        ]
 
         # Create the internal ndarray structure so indexing is easy; this fixes
-        # the amount of memory we'll use on the Lattice.
-        zeroSimplices = np.ndarray(tuple([c+1 for c in self.corners]), dtype=Simplex)
-        for simplex in self.coordinates:
-            zeroSimplices[tuple(simplex.coordinates)] = simplex
+        # the amount of memory we'll use on the Lattice and allows for easy access
+        # when we construct edges.
+        zeroCells = np.ndarray(tuple([c+1 for c in self.corners]), dtype=Cell)
+        for cell in self.coordinates:
+            zeroCells[tuple(cell.coordinates)] = cell
 
-        self.vertices = zeroSimplices
+        self.vertices = zeroCells
 
         # We'll store these structures in a dictionary.
         self.structure = {
@@ -118,16 +119,16 @@ class Lattice:
         }
 
 
-    def _constructHigherDimensionalSimplices(self, dimension=None):
+    def _constructHigherDimensionalCells(self, dimension=None):
         """
-        Given a dimension, construct the simplices of that dimension by building
-        them out of *references* to lower-dimensional simplices; for example, the
-        1-simplices of the lattice are pairs of vertices with coordinates at (l1-)
+        Given a dimension, construct the cells of that dimension by building
+        them out of *references* to lower-dimensional cells; for example, the
+        1-cells of the lattice are pairs of vertices with coordinates at (l1-)
         distance 1 from each other.
 
         Args:
-            dimension (int): The dimension of the simplices we'll be identifying;
-                if no dimension is passed, we construct simplices of all dimensions
+            dimension (int): The dimension of the cells we'll be identifying;
+                if no dimension is passed, we construct cells of all dimensions
                 up to the dimension of the lattice.
         """
         if dimension == 1 or self.structure.get(1, True):
@@ -136,7 +137,7 @@ class Lattice:
     
     def _constructEdges(self):
         """
-        Private method for constructing the 1-simplices (edges) of the lattice.
+        Private method for constructing the 1-cells (edges) of the lattice.
         """
         # Create an empty edge set.
         edges = set()
@@ -173,12 +174,12 @@ class Lattice:
                 second = (vertex, neighbor) in edges
                 if not (same or first or second): edges.add((vertex, neighbor))
 
-        # Now that we have a set of edges, we can construct 1-simplices.
-        oneSimplices = []
+        # Now that we have a set of edges, we can construct 1-cells.
+        oneCells = []
         for index, edge in enumerate(edges):
-            oneSimplices.append(Simplex(np.array(list(edge)), index=index))
+            oneCells.append(Cell(np.array(list(edge)), index=index))
 
-        self.structure[1] = np.array(oneSimplices, dtype=Simplex)
+        self.structure[1] = np.array(oneCells, dtype=Cell)
     
 
     def boundaryOperator(self, dimension=1):
@@ -218,7 +219,7 @@ class Lattice:
             u, v = edge.coordinates
             axes.plot(
                 *([u.coordinates[axis], v.coordinates[axis]] for axis in range(self.dimension)),
-                color=(edgeAssignment[edge.index] if edgeAssignment else "k"),
+                alpha=((1 if edgeAssignment[edge.index] else 1/8) if edgeAssignment else 1),
                 **edgeStyle
             )
 

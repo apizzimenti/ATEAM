@@ -1,5 +1,5 @@
 
-from .Simplex import Simplex
+from .Cell import Cell
 from .Lattice import Lattice
 
-__all__ = ["Simplex", "Lattice"]
+__all__ = ["Cell", "Lattice"]

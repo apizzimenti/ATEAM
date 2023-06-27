@@ -1,8 +1,7 @@
 
 import numpy as np
 import pandas as pd
-import scipy as scp
-from functools import reduce
+import numba as nb
 from pathlib import Path
 
 from ..stats import constant, always, uniform
@@ -11,7 +10,7 @@ from .Model import Model
 
 class SwendsonWang(Model):
     def __init__(
-            self, temperature=constant(0.7), accept=always(), testing=False
+            self, temperature=constant(0.6), accept=always(), testing=False
         ):
         """
         Initializes a Swendson-Wang evolution on the Potts model.
@@ -45,7 +44,7 @@ class SwendsonWang(Model):
         """
         Multiplies the computed boundary matrix B on the left by an edge-inclusion
         matrix E. As the number of edges grows, this matrix multiplication is
-        expected to take a really long time.
+        expected to take a really long time. DEPRECATED.
         """
         lattice, state = chain.lattice, chain.state
 
@@ -94,6 +93,33 @@ class SwendsonWang(Model):
         # matrices together!
         return np.matmul(lattice.boundary, included)
     
+    @staticmethod
+    def _excludeEdges(state, probability):
+        """
+        Given a vector of edges, returns a vector of the same shape with values
+        in {0,1} indicating whether each edge is included or excluded.
+        """
+        # @nb.vectorize()
+        def _(edge):
+            # Obtain the spins on the vertices incident to the edge.
+            u = edge.coordinates[0]
+            v = edge.coordinates[1]
+
+            if state[u.index] != state[v.index]:
+                edge.spin = 0
+                return 0
+            else:
+                q = np.random.uniform()
+
+                if q < probability:
+                    edge.spin = 1
+                    return 1
+                else:
+                    edge.spin = 0
+                    return 0
+
+        return _
+
 
     def _proposal_copy(self, chain):
         """
@@ -101,47 +127,15 @@ class SwendsonWang(Model):
         large matrices.
         """
         lattice, state = chain.lattice, chain.state
-        
-        # First, create a matrix that includes/excludes the appropriate edges;
-        # we scan through them, and "remove" any edges that have no effect.
+
+        # Copy the boundary matrix for editing; we want to make *one* call that
+        # determines which edges are included and which aren't.
         M = lattice.boundary.copy()
+        exclusion = self._excludeEdges(state, 1-(np.exp(self.temperature(chain.step))))
+        excluded = np.array(list(map(exclusion, lattice.structure[1])))
+        exclude = np.where(excluded==0)
+        M[:,exclude] = 0
 
-        for edge in lattice.structure[1]:
-            u, v = edge.coordinates
-            
-            # We have three cases:
-            #
-            #   1. if the spins on u and v are different, we ignore the edge.
-            #   2. if the spins on u and v are the same, we
-            #       a. include the edge with probability 1-e^beta,
-            #       b. ignore the edge with probability e^beta.
-
-            # Case 1; re-set edge spin to 0.
-            if state[u.index] != state[v.index]:
-                M[:,edge.index] = 0
-                continue
-                
-            # Case 2.
-            else:
-                # Set the probability that an edge is included, and uniformly
-                # randomly select a value in [0,1] to determine whether the edge
-                # is included.
-                p = 1-(np.exp(self.temperature(chain.step)))
-                q = np.random.uniform()
-
-                # Case 2(a).
-                if q < p:
-                    # Testing!
-                    if self.testing: self.log += f"included edge ({u},{v}) with probability {p} > {q}\n"
-                    edge.spin = 1
-                
-                # Case 2(b).
-                else:
-                    M[:,edge.index] = 0
-                    edge.spin = 0
-
-        # Now that we know which edges we're ignoring, we can multiply the two
-        # matrices together!
         return M
 
 
@@ -156,8 +150,6 @@ class SwendsonWang(Model):
         Returns:
             A proposed state.
         """
-        lattice, state = chain.lattice, chain.state
-
         # If we're testing, we want to record probabilities; since this is called
         # at each step, we'll write something to file at each step.
         if self.testing: self.log += f"### STEP {chain.step} ###\n"
@@ -167,19 +159,25 @@ class SwendsonWang(Model):
         # If we're testing, write the matrices to file and indicate which edges
         # are ignored.
         if self.testing:
-            pd.DataFrame(state).to_csv(f"./output/matrices/state-{chain.step}.csv", index=False)
+            pd.DataFrame(chain.state).to_csv(f"./output/matrices/state-{chain.step}.csv", index=False)
             pd.DataFrame(boundary).to_csv(f"./output/matrices/operator-{chain.step}.csv", index=False)
             self.log += "\n\n"
-
-        # Now, let's change the states!
+    
+        # Now, let's change the states! First, take the transpose of the boundary
+        # matrix (i.e. the coboundary matrix). Then, find a basis for the null
+        # space of this matrix, which is equivalent to finding a basis for the
+        # vector space of cocycles. Then, (uniformly randomly) sample coefficients
+        # from the field underlying the vector space, and scale the ith column of
+        # the basis matrix (the ith basis vector) by the ith coefficient. Finally,
+        # sum the *rows* of the linear combination, equivalent to summing the
+        # vectors element-wise to produce a cocycle!
         coboundary = boundary.T
         basis = coboundary.null_space()
-        proposed = np.array(reduce(
-            np.add, 
-            [uniform(0, chain.lattice.field.order)*b for b in basis]
-        ))
+        coefficients = np.random.randint(0, chain.lattice.field.order, size=len(basis))
+        linearCombination = (basis.T * coefficients).T
+        solution = np.add.reduce(linearCombination)
 
-        return proposed
+        return solution
     
 
     def initial(self, lattice, distribution=uniform):
