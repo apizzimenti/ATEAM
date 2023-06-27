@@ -1,3 +1,3 @@
 
 cd output
-rm -rf figures/*.pdf matrices/*.csv log
+rm -rf figures/*.pdf figures/*.png matrices/*.csv *.txt

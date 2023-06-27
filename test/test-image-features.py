@@ -7,12 +7,12 @@ from potts import Lattice, SwendsonWang, Chain
 from potts.stats import constant
 
 # Create the Lattice, then instantiate the Swendson-Wang model.
-L = Lattice([20, 20], field=5)
+L = Lattice([3,3,3], field=3)
 model = SwendsonWang(temperature=constant(-np.log(3)))
 initial = model.initial(L)
 
 # Create the chain.
-chain = Chain(L, model, initial, steps=10)
+chain = Chain(L, model, initial, steps=5)
 
 # Colors, for testing.
 colors = districtr(L.field.order)
@@ -33,7 +33,7 @@ for state in chain.progress():
     ax = L.plot(
         edgeAssignment=edgeAssignment,
         vertexAssignment=vertexAssignment,
-        vertexStyle=dict(marker="o", ms=4, markeredgewidth=0),
+        vertexStyle=dict(marker="o", ms=8, markeredgewidth=0),
         edgeStyle=dict(lw=1, color="k"),
         #vertexLabels=True,
     )
@@ -44,12 +44,13 @@ for state in chain.progress():
     latticeDesignation += f" sublattice of $\\mathbb{{Z}}^{len(L.corners)}$"
 
     # Create a string for the temperature designation and the step.
+    field = f", coefficients in $\\mathbb{{F}}_{L.field.order}$"
     temperature = f"$p = 1-e^{{-\\ln(3)}} = \\frac 23$"
     step = f"iteration ${chain.step}$"
-    indicator = latticeDesignation + "\n" + temperature + "\n" + step
+    indicator = latticeDesignation + field + "\n" + temperature + "\n" + step
 
     # Add a little text box in the bottom-left.
-    plt.text(0, -1/2, indicator, ha="left", va="top", fontsize=6)
+    #  plt.text(0, -1/2, indicator, ha="left", va="top", fontsize=6)
 
     # Save the figure.
     plt.savefig(f"./output/figures/lattice-step-{chain.step-1}.png", dpi=300, bbox_inches="tight")
