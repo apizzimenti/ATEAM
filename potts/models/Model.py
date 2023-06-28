@@ -4,3 +4,4 @@ class Model:
     def proposal(self): pass
     def accept(self): pass
     def initial(self): pass
+    def energy(self): pass

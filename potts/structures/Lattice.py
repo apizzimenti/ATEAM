@@ -135,6 +135,7 @@ class Lattice:
             self._constructEdges()
             return
     
+
     def _constructEdges(self):
         """
         Private method for constructing the 1-cells (edges) of the lattice.
@@ -201,7 +202,7 @@ class Lattice:
 
         self.boundary = self.field(B.astype(int))
         self.coboundary = self.field(B.T.astype(int))
-
+    
 
     def plot(
         self, vertexStyle=dict(marker="o", markeredgewidth=0),
@@ -241,3 +242,13 @@ class Lattice:
         axes.set_aspect("equal")
         if not axis: axes.set_axis_off()
         return plt.gcf(), axes
+    
+
+    def assign(self, state):
+        """
+        Given a state, assign spins to each cell.
+
+        Args:
+            state (list): List of spins.
+        """
+        for cell in self.structure[0]: cell.spin = state[cell.index]

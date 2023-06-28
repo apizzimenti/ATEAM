@@ -175,7 +175,7 @@ class SwendsonWang(Model):
         basis = coboundary.null_space()
         coefficients = np.random.randint(0, chain.lattice.field.order, size=len(basis))
         linearCombination = (basis.T * coefficients).T
-        solution = np.add.reduce(linearCombination)
+        solution = list(np.add.reduce(linearCombination))
 
         return solution
     
@@ -203,3 +203,23 @@ class SwendsonWang(Model):
         # should ignore *no* edges.
         if self.testing: return lattice.field(np.array([1]*len(vertices)))
         return lattice.field(cocycle.astype(int))
+
+
+    def energy(self, lattice):
+        """
+        Computes the Hamiltonian (energy) of the lattice in its current state.
+
+        Args:
+            lattice (Lattice): Lattice over which we're working.
+
+        Returns:
+            Integer representing the Hamiltonian.
+        """
+        s = 0
+
+        for edge in lattice.structure[1]:
+            u, v = edge.coordinates
+            s += (1 if u.spin == v.spin else 0)
+
+        return -s
+
