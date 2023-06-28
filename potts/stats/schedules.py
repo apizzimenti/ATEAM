@@ -30,15 +30,15 @@ def critical(field):
         A function passed to a Model constructor that returns the critical
         temperature of the Potts model.
     """
-    p = -np.log(1-(np.sqrt(field)/(1+np.sqrt(field))))
+    critical = -np.log(1-(np.sqrt(field)/(1+np.sqrt(field))))
 
     def _(t):
-        return p
+        return critical
     
     return _
 
 
-def randomizedBelowToConstant(steps, field, hold=1/2, distribution=np.random.normal):
+def randomizedToConstant(steps, field, hold=1/2, distribution=np.random.normal):
     """
     A temperature schedule which samples spin values (according to `distribution`)
     *less than* the critical temperature of the model, then fixes the temperature
@@ -57,9 +57,11 @@ def randomizedBelowToConstant(steps, field, hold=1/2, distribution=np.random.nor
         A function that consumes a step number and returns a temperature.
     """
     holdAtStep = int(steps * (1-hold))
-    critical = np.sqrt(field)/(1+np.sqrt(field))
+    critical = -np.log(1-np.sqrt(field)/(1+np.sqrt(field)))
 
     def _(t):
         if t < holdAtStep: return distribution()
         else: return critical
+
+    return _
     
