@@ -21,6 +21,7 @@ class Metadata:
         return self
     
     def __exit__(self, exc_type, exc_val, exc_tb):
+        # Stop the timer.
         self.end = time.time()
 
         # Get some useful runtime statistics.
@@ -32,7 +33,7 @@ class Metadata:
 
         # Compute some stuff; if the rate is over 1, then we're doing more steps
         # than seconds; otherwise, we're doing more seconds than steps.
-        rate = self.chain.steps * (1/diffSeconds)
+        rate = self.chain.steps/diffSeconds
         if rate >= 1: self.metadata["stepsPerSecond"] = rate
         else: self.metadata["secondsPerStep"] = 1/rate
 

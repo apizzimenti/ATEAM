@@ -36,3 +36,30 @@ def critical(field):
         return p
     
     return _
+
+
+def randomizedBelowToConstant(steps, field, hold=1/2, distribution=np.random.normal):
+    """
+    A temperature schedule which samples spin values (according to `distribution`)
+    *less than* the critical temperature of the model, then fixes the temperature
+    at the critical temperature for some desired proportion of the runtime.
+
+    Args:
+        steps (int): Total number of steps the experiment takes.
+        field (int): Order of the field we're over; used to compute critical
+            temperature.
+        hold (float): Value in [0,1] which represents the proportion of the time
+            the temperature is fixed at the critical temperature. Defaults to
+            half random, half fixed.
+        distribution (Callable): Distribution from which we sample.
+
+    Returns:
+        A function that consumes a step number and returns a temperature.
+    """
+    holdAtStep = int(steps * (1-hold))
+    critical = np.sqrt(field)/(1+np.sqrt(field))
+
+    def _(t):
+        if t < holdAtStep: return distribution()
+        else: return critical
+    

@@ -1,10 +1,13 @@
 
+import math
+
+
 class Chain:
     """
     Implements the Markov chain underlying the multidimensional Ising model.
     """
 
-    def __init__(self, lattice, model, initial, statistics={}, steps=10000):
+    def __init__(self, lattice, model, initial, sampleInterval=0, statistics={}, steps=10000):
         """
         Initializes the Chain object.
 
@@ -17,6 +20,8 @@ class Chain:
             initial (np.array): A NumPy Array (homomorphism from the (k-1)-simplices
                 of the lattice to the finite field over which the simplices are
                 a vector space, i.e. a functional) assigning spins to simplices.
+            sample (int): Number representing the number of spin assignments we
+                should save.
             statistics (dict): A mapping of names to functions which take the lattice
                 as an argument. The Chain keeps track of these at each iteration
                 and stores whatever output is given.
@@ -31,6 +36,10 @@ class Chain:
         self.functions = statistics
         self.functions["energy"] = model.energy
         self.statistics = { name: [] for name in self.functions.keys() }
+
+        # Assignment-related things.
+        self.sampleInterval = sampleInterval
+        self.assignments = []
 
 
     def __iter__(self):
@@ -56,13 +65,22 @@ class Chain:
             # Assign things to the lattice and collect statistics.
             self.lattice.assign(self.state)
             for name, function in self.functions.items(): self.statistics[name].append(function(self.lattice))
+
+            # If we're collecting samples, collect!
+            try:
+                if self.step % self.sampleInterval == 0:
+                    self.assignments.append(list(self.state))
+            except: pass
             
             # Iterate.
             self.step += 1
             
             return self.state
         
-        # Done!
+        # If we haven't returned, we're done; convert the assignments to JSON-ifiable
+        # types, and stop iteration.
+        self.assignments = [[int(s) for s in assignment] for assignment in self.assignments]
+        
         raise StopIteration
     
 
