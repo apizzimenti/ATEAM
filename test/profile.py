@@ -7,6 +7,6 @@ model = SwendsonWang()
 initial = model.initial(L)
 
 # Create and run the chain.
-chain = Chain(L, model, initial, steps=1000)
+chain = Chain(L, model, initial, steps=10)
 
 for state in chain.progress(): pass

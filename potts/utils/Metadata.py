@@ -23,9 +23,18 @@ class Metadata:
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.end = time.time()
 
+        # Get some useful runtime statistics.
+        diff = self.end-self.start
+        diffSeconds = diff/1000
         started = datetime.fromtimestamp(self.start)
         finished = datetime.fromtimestamp(self.end)
-        timeToCompletion = timedelta(milliseconds=self.end-self.start)
+        timeToCompletion = timedelta(milliseconds=diff)
+
+        # Compute some stuff; if the rate is over 1, then we're doing more steps
+        # than seconds; otherwise, we're doing more seconds than steps.
+        rate = self.chain.steps * (1/diffSeconds)
+        if rate >= 1: self.metadata["stepsPerSecond"] = rate
+        else: self.metadata["secondsPerStep"] = 1/rate
 
         self.metadata["started"] = started.strftime("%Y-%m-%d %H:%M:%S")
         self.metadata["completed"] = finished.strftime("%Y-%m-%d %H:%M:%S")
