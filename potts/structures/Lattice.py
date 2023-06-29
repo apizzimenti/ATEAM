@@ -220,7 +220,7 @@ class Lattice:
             u, v = edge.coordinates
             axes.plot(
                 *([u.coordinates[axis], v.coordinates[axis]] for axis in range(self.dimension)),
-                alpha=((1 if edgeAssignment[edge.index] else 1/8) if edgeAssignment else 1),
+                color=(edgeAssignment[edge.index] if edgeAssignment else "k"),
                 **edgeStyle
             )
 

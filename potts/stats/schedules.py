@@ -60,7 +60,7 @@ def randomizedToConstant(steps, field, hold=1/2, distribution=np.random.normal):
     critical = -np.log(1-np.sqrt(field)/(1+np.sqrt(field)))
 
     def _(t):
-        if t < holdAtStep: return distribution()
+        if t < holdAtStep: return distribution()-1
         else: return critical
 
     return _
