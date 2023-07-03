@@ -2,7 +2,7 @@
 from potts import Lattice, SwendsonWang, Chain
 
 # Create the Lattice, then instantiate the Swendson-Wang model.
-L = Lattice([20, 20], field=5)
+L = Lattice([20, 20, 20], field=5)
 model = SwendsonWang()
 initial = model.initial(L)
 

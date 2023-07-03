@@ -30,7 +30,7 @@ def critical(field):
         A function passed to a Model constructor that returns the critical
         temperature of the Potts model.
     """
-    critical = -np.log(1-(np.sqrt(field)/(1+np.sqrt(field))))
+    critical = np.log(1-(np.sqrt(field)/(1+np.sqrt(field))))
 
     def _(t):
         return critical
