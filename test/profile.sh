@@ -1,3 +1,6 @@
 
 fp=./output/profiles/metadata/profile.json
- -c cph profile.py --output-file $fp
+vprof -c cph sample.py --output-file $fp
+
+cfp=./output/profiles/metadata/profile-$1.json
+vprof -c cph sample-$1.py --output-file $cfp
