@@ -43,7 +43,7 @@ class GraphLattice:
         self.dimension = len(corners)
         self.field = galois.GF(field)
 
-        # Create the graph and do some nice reindexing.
+        # Create an initial graph, then re-index and add some
         self.graph = reduce(self._reduceProduct, [self._gridFactory(c) for c in self.corners])
         for i, _ in enumerate(self.graph.nodes()): self.graph[i] = Vertex(self.graph[i], 1, i)
 

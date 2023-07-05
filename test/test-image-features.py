@@ -1,14 +1,13 @@
 
-import numpy as np
 import matplotlib.pyplot as plt
 from gerrytools.plotting import districtr
 
-from potts import Lattice, SwendsonWang, Chain
-from potts.stats import constant
+from potts import GraphLattice, GraphSwendsonWang, Chain
+from potts.stats import critical
 
 # Create the Lattice, then instantiate the Swendson-Wang model.
-L = Lattice([3,3,3], field=3)
-model = SwendsonWang(temperature=constant(-np.log(3)))
+L = GraphLattice([20, 20], field=3)
+model = GraphSwendsonWang(temperature=critical(L.field.order))
 initial = model.initial(L)
 
 # Create the chain.
@@ -19,8 +18,8 @@ colors = districtr(L.field.order)
 
 for state in chain.progress():
     # Create color assignments for each.
-    vertexAssignment = [colors[spin] for spin in state]
-    edgeAssignment = [e.spin for e in L.structure[1]]
+    vertexAssignment = { v.index: colors[v.spin] for v in L.graph.nodes() }
+    edgeAssignment = { e.index: ("k" if e.spin else "#00000025") for e in L.graph.edges() }
 
     # Enable LaTeX.
     plt.rcParams.update({
@@ -31,10 +30,11 @@ for state in chain.progress():
 
     # Plot the lattice.
     ax = L.plot(
+        L.graph,
         edgeAssignment=edgeAssignment,
         vertexAssignment=vertexAssignment,
-        vertexStyle=dict(marker="o", ms=8, markeredgewidth=0),
-        edgeStyle=dict(lw=1, color="k"),
+        vertexStyle=dict(marker="o", ms=3, markeredgewidth=0),
+        edgeStyle=dict(lw=1),
         #vertexLabels=True,
     )
 

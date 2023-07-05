@@ -74,39 +74,22 @@ class GraphSwendsonWang(Model):
                 if q < p:
                     include.append((u.index, v.index))
                     edge.spin = 1
+                else:
+                    edge.spin = 0
 
             else:
                 edge.spin = 0
 
         # Do stuff to the subgraph.
         subgraph = G.edge_subgraph(include)
-        edges = G.edge_list()
         components = connectedComponents(subgraph)
-        colors = districtr(len(components))
-        print(components)
-        print(len(components), len(colors))
+        
+        # For each vertex in each component, assign a spin.
+        for vertexset in components:
+            q = np.random.randint(low=0, high=chain.lattice.field.order)
+            for index in vertexset: G[index].spin = q
 
-        fig, ax = plt.subplots()
-
-        chain.lattice.plot(
-            subgraph,
-            edgeStyle=dict(linewidth=1.2, alpha=1/4),
-            ax=ax
-        )
-
-        for color, component in zip(colors, components):
-            component = subgraph.edge_subgraph([edges[k] for k in component])
-            chain.lattice.plot(
-                component,
-                edgeStyle=dict(linewidth=1.2, alpha=1),
-                vertexAssignment={ v.index: color for v in component.nodes() },
-                ax=ax
-            )
-        plt.show()
-        plt.close()
-        plt.clf()
-
-        return chain.state
+        return [v.spin for v in G.nodes()]
 
 
     def initial(self, lattice, distribution=uniform):
