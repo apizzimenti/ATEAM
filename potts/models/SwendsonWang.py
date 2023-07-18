@@ -10,7 +10,7 @@ from .Model import Model
 
 class SwendsonWang(Model):
     def __init__(
-            self, temperature=constant(-0.6), accept=always(), testing=False
+            self, temperature=constant(-0.6), accept=always, testing=False
         ):
         """
         Initializes a Swendson-Wang evolution on the Potts model.

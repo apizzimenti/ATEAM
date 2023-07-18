@@ -1,13 +1,15 @@
 
-import math
-
+from .stats import always
 
 class Chain:
     """
     Implements the Markov chain underlying the multidimensional Ising model.
     """
 
-    def __init__(self, lattice, model, initial, sampleInterval=0, statistics={}, steps=10000):
+    def __init__(
+            self, lattice, model, initial, accept=always, sampleInterval=0, statistics={},
+            steps=10000
+        ):
         """
         Initializes the Chain object.
 
@@ -15,12 +17,12 @@ class Chain:
             lattice (Lattice): A Lattice object.
             proposal (callable): A function which consumes this Chain object and
                 proposes a new state.
-            accept (callable): A function which consumes this Chain object and
-                determines whether we travel to it.
             initial (np.array): A NumPy Array (homomorphism from the (k-1)-simplices
                 of the lattice to the finite field over which the simplices are
                 a vector space, i.e. a functional) assigning spins to simplices.
-            sample (int): Number representing the number of spin assignments we
+            accept (callable): A function which consumes the lattice, model, and
+                state to determine whether we're going to a good place.
+            sampleInterval (int): Number representing the number of spin assignments we
                 should save.
             statistics (dict): A mapping of names to functions which take the lattice
                 as an argument. The Chain keeps track of these at each iteration
@@ -31,6 +33,7 @@ class Chain:
         self.model = model
         self.initial = initial
         self.steps = steps
+        self.accept = accept(self)
 
         # Store stats and things.
         self.functions = statistics
@@ -60,11 +63,11 @@ class Chain:
         while self.step < self.steps:
             # Propose the next state and check whether it's valid.
             proposed = self.model.proposal(self)
-            self.state = (proposed if self.model.accept(self) else self.state)
+            self.state = (proposed if self.accept(proposed) else self.state)
 
             # Assign things to the lattice and collect statistics.
             self.lattice.assign(self.state)
-            for name, function in self.functions.items(): self.statistics[name].append(function(self.lattice))
+            for name, function in self.functions.items(): self.statistics[name].append(function(self.lattice, self.state))
 
             # If we're collecting samples, collect!
             try:

@@ -1,23 +1,15 @@
 
 import numpy as np
-import pandas as pd
-import numba as nb
-from gerrytools.plotting import districtr
-from rustworkx import minimum_spanning_tree as msp
-from rustworkx import minimum_spanning_edges as mse
 from rustworkx import connected_components as connectedComponents
 from pathlib import Path
 
-import matplotlib.pyplot as plt
-from rustworkx.visualization import mpl_draw as draw
-
-from ..stats import constant, always, uniform
+from ..stats import constant, uniform
 from .Model import Model
 
 
 class GraphSwendsonWang(Model):
     def __init__(
-            self, temperature=constant(-0.6), accept=always(), testing=False
+            self, temperatureFunction=constant(-0.6), testing=False
         ):
         """
         Initializes a Swendson-Wang evolution on the Potts model.
@@ -26,16 +18,14 @@ class GraphSwendsonWang(Model):
             temperature (Callable): A function taking an integer argument which
                 returns a real-valued temperature. Defaults to the constant
                 schedule.
-            accept (Callable): A function which takes a Chain as input and returns
-                a boolean.
+            testing (Bool): Are we testing?
         """
-        self.temperature = temperature
-        self.accept = accept
+        self.temperatureFunction = temperatureFunction
         self.testing = testing
         self.log = ""
 
         self._directorySetup()
-
+    
 
     def _directorySetup(self):
         if self.testing:
@@ -59,7 +49,8 @@ class GraphSwendsonWang(Model):
             A proposed state.
         """
         # Compute the probability of choosing any individual edge in the graph.
-        p = 1-np.exp(self.temperature(chain.step))
+        self.temperature = self.temperatureFunction(chain.step)
+        p = 1-np.exp(self.temperature)
 
         # Get the graph and choose which edges to include.
         G = chain.lattice.graph
@@ -113,20 +104,24 @@ class GraphSwendsonWang(Model):
         return [v.spin for v in vertices]
 
 
-    def energy(self, lattice):
+    def energy(self, lattice, state):
         """
         Computes the Hamiltonian (energy) of the lattice in its current state.
 
         Args:
-            lattice (Lattice): Lattice over which we're working.
+            lattice (Lattice): The lattice we're working over.
+            state (list): Optional argument for computing the energy of an
+                arbitrary state instead of the current one in the chain.
 
         Returns:
             Integer representing the Hamiltonian.
         """
+        G = lattice.graph
+
         s = 0
-        for edge in lattice.graph.edges():
+        for edge in G.edges():
             u, v = edge.at
-            s += (1 if u.spin == v.spin else 0)
+            s += (1 if state[u.index] == state[v.index] else 0)
 
         return -s
 

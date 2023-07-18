@@ -64,4 +64,22 @@ def randomizedToConstant(steps, field, hold=1/2, distribution=np.random.normal):
         else: return critical
 
     return _
-    
+
+
+def linear(steps, low=-10, high=10):
+    """
+    A linear temperature schedule.
+
+    Args:
+        steps (int): Total number of steps in the experiment.
+        low (float): Lowest temperature we assign.
+        high (float): Highest temperature we assign.
+
+    Returns:
+        A function that consumes a step number and returns a temperature.
+    """
+    def _(t):
+        q = t * ((high-low)/steps) + low
+        return q if q != 0 else 0.0000000000001
+
+    return _
