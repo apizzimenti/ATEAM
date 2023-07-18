@@ -205,7 +205,7 @@ class SwendsonWang(Model):
         return lattice.field(cocycle.astype(int))
 
 
-    def energy(self, lattice):
+    def energy(self, lattice, state):
         """
         Computes the Hamiltonian (energy) of the lattice in its current state.
 
