@@ -7,7 +7,7 @@ from potts.stats import critical
 
 # Create the Lattice, then instantiate the Swendson-Wang model.
 L = GraphLattice([20, 20], field=3)
-model = GraphSwendsonWang(temperature=critical(L.field.order))
+model = GraphSwendsonWang(temperatureFunction=critical(L.field.order))
 initial = model.initial(L)
 
 # Create the chain.
