@@ -24,8 +24,8 @@ def metropolis(chain):
         newEnergy = chain.model.energy(chain.lattice, proposed)
 
         # Compute the differences in the states' temperatures.
-        diff = oldEnergy-newEnergy
-        p = min(np.exp(chain.model.temperature * diff), 1)
+        diff = newEnergy-oldEnergy
+        p = min(np.exp(chain.model.temperatureFunction(chain.step) * diff), 1)
         q = np.random.uniform()
 
         if newEnergy < oldEnergy:
