@@ -29,8 +29,7 @@ for state in chain:
     <do whatever>
 ```
 
-The `Lattice` class also provides features to generate and export images of two-
-and three-dimensional integer lattices colored by inclusion; example code can
-be found in `test/test-image-features.py`, which produces `.png` files like this one:
+Using the imaging features, we can make pretty outputs, like this simulation of
+the Ising model on a 32x32 lattice at _just_ below the critical temperature.
 
-![The eighth iteration of the Swendson-Wang evolution on the Potts model over a 20x20 integer lattice with coefficients in GF(5)](docs/example-iteration.png)
+![States of the Lenz-Ising model on a 32x32 lattice.](test/output/figures/lattice.gif)
