@@ -14,11 +14,11 @@ then output directories are created (though they should already exist) where the
 `SwendsonWang` class expects them to exist.
 
 ```python
-from potts import Lattice, SwendsonWang, Chain
+from potts import Lattice, GraphSwendsonWang, Chain
 
 # Create the Lattice, then instantiate the Swendson-Wang model.
-L = Lattice([3, 3], field=3)
-model = SwendsonWang()
+L = Lattice([32, 32], field=2)
+model = GraphSwendsonWang()
 initial = model.initial(L)
 
 # Create the chain.
