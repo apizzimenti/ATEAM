@@ -32,4 +32,6 @@ for state in chain:
 Using the imaging features, we can make pretty outputs, like this simulation of
 the Ising model on a 32x32 lattice at _just_ below the critical temperature.
 
-![States of the Lenz-Ising model on a 32x32 lattice.](test/output/figures/lattice.gif)
+<p align="center">
+  <img src="test/output/figures/lattice.gif" alt="animated" />
+</p>
