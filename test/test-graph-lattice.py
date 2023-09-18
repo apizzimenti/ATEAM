@@ -1,11 +1,12 @@
 
-from potts.models import GraphSwendsonWang
+from potts.models import GraphPercolation
 from potts.structures import GraphLattice
 from potts.stats import critical
 from potts import Chain
+import pandas as pd
 
-GL = GraphLattice([1000, 1000], field=7)
-model = GraphSwendsonWang(temperatureFunction=critical(GL.field.order))
+GL = GraphLattice([20,20], field=2)
+model = GraphPercolation(temperatureFunction=critical(GL.field.order))
 initial = model.initial(GL) 
 
 # Create and run the chain.

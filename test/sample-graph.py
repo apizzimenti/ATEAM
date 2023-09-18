@@ -1,14 +1,22 @@
 
-from potts.models import GraphIsing
+from potts.models import GraphIsing, GraphSwendsonWang, GraphPercolation
 from potts.structures import GraphLattice
-from potts.stats import critical, metropolis
+from potts.stats import critical, metropolis, linear, randomizedToConstant
 from potts import Chain
+import math
+import numpy as np
 
-GL = GraphLattice([40, 40], field=2)
-model = GraphIsing(temperatureFunction=critical(GL.field.order))
-initial = model.initial(GL) 
+steps = 1000
+q = 2
+GL = GraphLattice([20, 20], field=q)
+model = GraphPercolation(
+    temperatureFunction=randomizedToConstant(
+        -math.log(1/2), steps, distribution=np.random.uniform
+    )
+)
+initial = model.initial(GL)
 
 # Create and run the chain.
-chain = Chain(GL, model, initial, steps=10, accept=metropolis)
+chain = Chain(GL, model, initial, accept=metropolis, steps=steps)
 
 for state in chain.progress(): pass
