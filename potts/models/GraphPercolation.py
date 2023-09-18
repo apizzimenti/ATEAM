@@ -1,13 +1,16 @@
 
 import numpy as np
 import math
+from pathlib import Path
 
 from ..stats import constant, uniform
 from .Model import Model
 
 
-class GraphIsing(Model):
-    def __init__(self, temperatureFunction=constant(-math.log(math.sqrt(2)/(1+math.sqrt(2))))):
+class GraphPercolation(Model):
+    def __init__(
+            self, temperatureFunction=constant(-math.log(1/2)), testing=False
+        ):
         """
         Initializes a Swendson-Wang evolution on the Potts model.
 
@@ -18,11 +21,25 @@ class GraphIsing(Model):
             testing (Bool): Are we testing?
         """
         self.temperatureFunction = temperatureFunction
+        self.testing = testing
+        self.log = ""
+
+        self._directorySetup()
+    
+
+    def _directorySetup(self):
+        if self.testing:
+            # Creates an output directory if none exists.
+            outroot = Path("./output/")
+            if not outroot.exists():
+                outroot.mkdir()
+                (outroot/"figures").mkdir()
+                (outroot/"matrices").mkdir()
     
 
     def proposal(self, chain):
         """
-        Proposal scheme for the Swendson-Wang evolution on the Potts model. 
+        Proposal scheme for a typical percolation model. 
 
         Args:
             chain (Chain): Chain object which contains all the information we
@@ -31,13 +48,25 @@ class GraphIsing(Model):
         Returns:
             A proposed state.
         """
-        # Uniformly randomly sample a vertex from the graph and change its spin.
-        vertices = chain.lattice.structure[0]
-        v = vertices[np.random.randint(low=0, high=len(vertices))]
-        v.spin = (v.spin+1)%2
+        # Compute the probability of choosing any individual edge in the graph.
+        self.temperature = -self.temperatureFunction(chain.step)
+        p = math.exp(self.temperature)
 
-        # Return the sequence of spins.
-        return [v.spin for v in vertices]
+        # Spin the vertices.
+        G = chain.lattice.graph
+
+        for v in G.nodes():
+            q = np.random.uniform()
+            spun = q < p
+
+            v.spin = 1 if spun else 0
+
+        for e in G.edges():
+            u, v = e.at
+            if u.spin == v.spin: e.spin = 1
+            else: e.spin = 0
+
+        return [v.spin for v in G.nodes()]
 
 
     def initial(self, lattice, distribution=uniform):
@@ -57,7 +86,7 @@ class GraphIsing(Model):
         G = lattice.graph
         vertices = G.nodes()
 
-        for vertex in vertices: vertex.spin = np.random.randint(low=0, high=2)
+        for vertex in vertices: vertex.spin = int(distribution(0, lattice.field.order))
         return [v.spin for v in vertices]
 
 
@@ -78,7 +107,7 @@ class GraphIsing(Model):
         s = 0
         for edge in G.edges():
             u, v = edge.at
-            s += state[u.index]*state[v.index]
+            s += (1 if state[u.index] == state[v.index] else 0)
 
         return -s
 

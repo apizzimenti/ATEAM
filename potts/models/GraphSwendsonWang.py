@@ -49,7 +49,7 @@ class GraphSwendsonWang(Model):
             A proposed state.
         """
         # Compute the probability of choosing any individual edge in the graph.
-        self.temperature = self.temperatureFunction(chain.step)
+        self.temperature = -self.temperatureFunction(chain.step)
         p = 1-np.exp(self.temperature)
 
         # Get the graph and choose which edges to include.
