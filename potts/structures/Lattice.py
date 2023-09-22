@@ -18,7 +18,10 @@ class Lattice:
             the lattice.
     """
 
-    def __init__(self, corners, field=2, boundaryDimension=1, maxDimension=None):
+    def __init__(
+            self, corners, field=2, boundaryDimension=1, maxDimension=None,
+            periodicBoundaryConditions=True
+        ):
         """
         Instantiates an integer lattice.
 
@@ -35,6 +38,8 @@ class Lattice:
             maxDimension (int): The maximum dimension of cell constructed;
                 if nothing is passed, cells of all dimensions (from 0 to
                 the dimension of the lattice) are constructed.
+            periodicBoundaryConditions (bool): If truthy, identifies "antipodal"
+                edge vertices, so we're actually doing things on a torus.
         """
         # Assign corners and dimensionality.
         self.corners = corners

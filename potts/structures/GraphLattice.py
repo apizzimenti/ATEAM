@@ -3,7 +3,7 @@ import galois
 import matplotlib.pyplot as plt
 from functools import reduce
 from rustworkx import PyGraph
-from rustworkx import cartesian_product as product
+from rustworkx import cartesian_product as product, graph_adjacency_matrix as gam
 
 from .Components import Vertex, Edge
 
@@ -20,7 +20,10 @@ class GraphLattice:
         graph: Lattice as a graph.
     """
 
-    def __init__(self, corners, field=2, boundaryDimension=1, maxDimension=None):
+    def __init__(
+            self, corners, field=2, boundaryDimension=1, maxDimension=None,
+            periodicBoundaryConditions=True
+        ):
         """
         Instantiates an integer lattice.
 
@@ -42,8 +45,10 @@ class GraphLattice:
         self.corners = corners
         self.dimension = len(corners)
         self.field = galois.GF(field)
+        self.periodicBoundaryConditions = periodicBoundaryConditions
 
-        # Create an initial graph, then re-index and add some
+        # Create an initial graph, then re-index and add stuff based on boundary
+        # conditions.
         self.graph = reduce(self._reduceProduct, [self._gridFactory(c) for c in self.corners])
         for i, _ in enumerate(self.graph.nodes()): self.graph[i] = Vertex(self.graph[i], 1, i)
 
@@ -87,8 +92,7 @@ class GraphLattice:
         return L
     
 
-    @staticmethod
-    def _gridFactory(l):
+    def _gridFactory(self, l):
         """
         Factory for creating new grid graphs.
 
@@ -99,8 +103,15 @@ class GraphLattice:
             PyGraph object representing a path of length `l`.
         """
         path = PyGraph()
-        for coordinate in range(l+1): path.add_node(coordinate)
-        for coordinate in range(1, l+1): path.add_edge(coordinate-1, coordinate, (path[coordinate-1], path[coordinate]))
+
+        # Add the appropriate coordinates. 
+        for coordinate in range(l): path.add_node(coordinate)
+        for coordinate in range(1, l): path.add_edge(coordinate-1, coordinate, (path[coordinate-1], path[coordinate]))
+
+        # If we're using periodic boundary conditions, we're pac-manning our
+        # graph: that is, we draw an edge between the first and last vertices, so
+        # our graph is actually a torus.
+        if self.periodicBoundaryConditions: path.add_edge(l-1, 0, (path[l-1], path[0]))
         return path
     
 
