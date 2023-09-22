@@ -41,6 +41,6 @@
                 float: right;
             }
         </style>
-        <img class="resize" src="" alt="iteration on the Potts model">
+        <img class="resize" src="https://github.com/apizzimenti/potts/blob/main/docs/lattice.gif?raw=true" alt="iteration on the Potts model">
     </a>
 </header>
