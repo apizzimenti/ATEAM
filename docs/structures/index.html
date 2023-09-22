@@ -1,0 +1,974 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.10.0" />
+<title>potts.structures API documentation</title>
+<meta name="description" content="" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS_CHTML" integrity="sha256-kZafAc6mZvK3W3v1pHOcUix30OHQN6pU/NO2oFkqZVw=" crossorigin></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>potts.structures</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">from .Cell import Cell
+from .Lattice import Lattice
+from .Components import Vertex, Edge
+from .GraphLattice import GraphLattice
+
+__all__ = [&#34;Cell&#34;, &#34;Vertex&#34;, &#34;Edge&#34;, &#34;Lattice&#34;, &#34;GraphLattice&#34;]</code></pre>
+</details>
+</section>
+<section>
+<h2 class="section-title" id="header-submodules">Sub-modules</h2>
+<dl>
+<dt><code class="name"><a title="potts.structures.Components" href="Components.html">potts.structures.Components</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="potts.structures.Cell"><code class="flex name class">
+<span>class <span class="ident">Cell</span></span>
+<span>(</span><span>coordinates, orientation=1, index=0)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Initializes a cell of any dimension.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>coordinates</code></strong> :&ensp;<code>list</code></dt>
+<dd>Will be integers (0-cell) or cell entries
+(k-cell, k &gt; 0).</dd>
+<dt><strong><code>orientation</code></strong> :&ensp;<code>int</code></dt>
+<dd>Which way do we traverse the entries in <code>coordinates</code>?</dd>
+<dt><strong><code>index</code></strong> :&ensp;<code>int</code></dt>
+<dd>When constructing matrices, the index to which this cell
+corresponds.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Cell:
+    # Default spin.
+    spin = 0;
+
+    def __init__(self, coordinates, orientation=1, index=0):
+        &#34;&#34;&#34;
+        Initializes a cell of any dimension.
+
+        Args:
+            coordinates (list): Will be integers (0-cell) or cell entries
+                (k-cell, k &gt; 0).
+            orientation (int): Which way do we traverse the entries in `coordinates`?
+            index (int): When constructing matrices, the index to which this cell
+                corresponds.
+        &#34;&#34;&#34;
+        # This determines which kind of cell we&#39;re dealing with: if it&#39;s a
+        # 0-dimensional cell, then `coordinates` will have integer entries; if
+        # it&#39;s any higher-dimensional one, its entries will be instances of cell.
+        if type(coordinates[0]) in {int, np.int32, np.int64}:
+            self.dimension = 0
+        else:
+            self.dimension = coordinates[0].dimension + 1
+
+        self.coordinates = coordinates
+        self.orientation = orientation
+        self.index = index
+
+    def __repr__(self): return self.__str__()
+
+    def __str__(self):
+        &#34;&#34;&#34;
+        Stringification.
+        &#34;&#34;&#34;
+        if self.dimension &lt; 1:
+            return str(tuple(self.coordinates))
+        else:
+            return f&#34;{self.dimension}-dimensional cell at index {self.index}&#34;
+        
+    def __eq__(self, other):
+        &#34;&#34;&#34;
+        Testing for equality; this asks whether the coordinates of each cell
+        are the same.
+        &#34;&#34;&#34;
+        return self.coordinates == other.coordinates
+    
+    def __lt__(self, other):
+        pass
+
+    def __hash__(self):
+        &#34;&#34;&#34;
+        Returns a unique property from each cell.
+        &#34;&#34;&#34;
+        return hash(tuple(self.coordinates))</code></pre>
+</details>
+<h3>Class variables</h3>
+<dl>
+<dt id="potts.structures.Cell.spin"><code class="name">var <span class="ident">spin</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+<dt id="potts.structures.Edge"><code class="flex name class">
+<span>class <span class="ident">Edge</span></span>
+<span>(</span><span>at, spin, index)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Edge:
+    def __init__(self, at, spin, index):
+        self.at = at
+        self.spin = spin
+        self.index = index
+
+    def asIndices(self): return self.at[0].index, self.at[1].index
+
+    def __eq__(self, other): return self.at == other.at
+
+    def __hash__(self): return hash(self.at)
+
+    def __str__(self):
+        return f&#34;({str(self.at[0].at)},{self.at[1].at})\t\t spin = {self.spin}\t\t index = {self.index}&#34;</code></pre>
+</details>
+<h3>Methods</h3>
+<dl>
+<dt id="potts.structures.Edge.asIndices"><code class="name flex">
+<span>def <span class="ident">asIndices</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def asIndices(self): return self.at[0].index, self.at[1].index</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="potts.structures.GraphLattice"><code class="flex name class">
+<span>class <span class="ident">GraphLattice</span></span>
+<span>(</span><span>corners, field=2, boundaryDimension=1, maxDimension=None, periodicBoundaryConditions=True)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Encodes a d-dimensional integer lattice.</p>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>corners</code></strong></dt>
+<dd>Bounds of the integer lattice; equivalent to boundary constraints.</dd>
+<dt><strong><code>dimension</code></strong></dt>
+<dd>Dimension of the integer lattice as determined by the number
+of corners (boundary constraints).</dd>
+<dt><strong><code>field</code></strong></dt>
+<dd>Galois field from which we sample things.</dd>
+<dt><strong><code>graph</code></strong></dt>
+<dd>Lattice as a graph.</dd>
+</dl>
+<p>Instantiates an integer lattice.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>corners</code></strong> :&ensp;<code>list</code></dt>
+<dd>An iterable collection of "corners" for the lattice:
+for example, the argument <code>[1,1,1]</code> gives the unit cube in a
+3-dimensional integer lattice. More generally, an argument of
+<code>[c1, &hellip;, cn]</code> admits an n-dimensional integer lattice with the
+ith copy of Z bounded below by 0 and above by ci (inclusive).</dd>
+<dt><strong><code>field</code></strong> :&ensp;<code>int</code></dt>
+<dd>The finite field over which we're working; that is,
+coefficients are taken from the finite field of order <code>field</code>.</dd>
+<dt><strong><code>boundaryDimension</code></strong> :&ensp;<code>int</code></dt>
+<dd>Specifies the dimension for which we construct
+the boundary/coboundary operator matrices; this defaults to 1.</dd>
+<dt><strong><code>maxDimension</code></strong> :&ensp;<code>int</code></dt>
+<dd>The maximum dimension of cell constructed;
+if nothing is passed, cells of all dimensions (from 0 to
+the dimension of the lattice) are constructed.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class GraphLattice:
+    &#34;&#34;&#34;
+    Encodes a d-dimensional integer lattice.
+
+    Attributes:
+        corners: Bounds of the integer lattice; equivalent to boundary constraints.
+        dimension: Dimension of the integer lattice as determined by the number
+            of corners (boundary constraints).
+        field: Galois field from which we sample things.
+        graph: Lattice as a graph.
+    &#34;&#34;&#34;
+
+    def __init__(
+            self, corners, field=2, boundaryDimension=1, maxDimension=None,
+            periodicBoundaryConditions=True
+        ):
+        &#34;&#34;&#34;
+        Instantiates an integer lattice.
+
+        Args:
+            corners (list): An iterable collection of &#34;corners&#34; for the lattice:
+                for example, the argument `[1,1,1]` gives the unit cube in a
+                3-dimensional integer lattice. More generally, an argument of
+                `[c1, ..., cn]` admits an n-dimensional integer lattice with the
+                ith copy of Z bounded below by 0 and above by ci (inclusive).
+            field (int): The finite field over which we&#39;re working; that is,
+                coefficients are taken from the finite field of order `field`.
+            boundaryDimension (int): Specifies the dimension for which we construct
+                the boundary/coboundary operator matrices; this defaults to 1.
+            maxDimension (int): The maximum dimension of cell constructed;
+                if nothing is passed, cells of all dimensions (from 0 to
+                the dimension of the lattice) are constructed.
+        &#34;&#34;&#34;
+        # Assign corners and dimensionality.
+        self.corners = corners
+        self.dimension = len(corners)
+        self.field = galois.GF(field)
+        self.periodicBoundaryConditions = periodicBoundaryConditions
+
+        # Create an initial graph, then re-index and add stuff based on boundary
+        # conditions.
+        self.graph = reduce(self._reduceProduct, [self._gridFactory(c) for c in self.corners])
+        for i, _ in enumerate(self.graph.nodes()): self.graph[i] = Vertex(self.graph[i], 1, i)
+
+        for i, (j, k) in enumerate(self.graph.edge_list()):
+            u, v = self.graph[j], self.graph[k]
+            self.graph.update_edge_by_index(i, Edge((u, v), 1, i))
+
+        # Construct our structure so it fits in well with the proposal.
+        self.structure = {
+            0: self.graph.nodes(),
+            1: self.graph.edges()
+        }
+
+
+    @staticmethod
+    def _reduceProduct(G, H):
+        &#34;&#34;&#34;
+        Static method for taking the cartesian product of two *graphs* and making
+        the vertex labels nice.
+
+        Args:
+            G (rustworkx.PyGraph): PyGraph object to be multiplied on the right.
+            H (rustworkx.PyGraph): PyGraph object to be multiplied on the left.
+
+        Returns:
+            PyGraph object which represents the product of G and H and labeled
+            appropriately. 
+        &#34;&#34;&#34;
+        L, _ = product(G, H)
+
+        # Update vertices.
+        for i, vertex in enumerate(L.nodes()):
+            u, v = vertex
+            if not(type(u) is int and type(v) is int): L[i] = (*u, v)
+
+        # Update edges.
+        for i, edge in enumerate(L.edge_list()):
+            u, v = edge
+            L.update_edge_by_index(i, (L[u], L[v]))
+
+        return L
+    
+
+    def _gridFactory(self, l):
+        &#34;&#34;&#34;
+        Factory for creating new grid graphs.
+
+        Args:
+            l (int): Length of the path.
+
+        Returns:
+            PyGraph object representing a path of length `l`.
+        &#34;&#34;&#34;
+        path = PyGraph()
+
+        # Add the appropriate coordinates. 
+        for coordinate in range(l): path.add_node(coordinate)
+        for coordinate in range(1, l): path.add_edge(coordinate-1, coordinate, (path[coordinate-1], path[coordinate]))
+
+        # If we&#39;re using periodic boundary conditions, we&#39;re pac-manning our
+        # graph: that is, we draw an edge between the first and last vertices, so
+        # our graph is actually a torus.
+        if self.periodicBoundaryConditions: path.add_edge(l-1, 0, (path[l-1], path[0]))
+        return path
+    
+
+    def assign(self, state):
+        &#34;&#34;&#34;
+        Assigns spins to vertices.
+
+        Args:
+            state (list): States to apply to vertices.
+        &#34;&#34;&#34;
+        for index, spin in enumerate(state): self.graph[index].spin = spin
+        for edge in self.graph.edges():
+            u, v = edge.at
+            edge.spin = (0 if u.spin != v.spin else 1)
+    
+
+    @staticmethod
+    def plot(
+        graph, vertexStyle=dict(marker=&#34;o&#34;, markeredgewidth=0),
+        edgeStyle=dict(linewidth=1/2, alpha=1/2), edgeAssignment=None,
+        vertexAssignment=None, ax=None
+    ):
+        
+        if not ax: _, ax = plt.subplots()
+        
+        for edge in graph.edges():
+            u, v = edge.at
+            ax.plot(
+                *([u.at[axis], v.at[axis]] for axis in range(len(u.at))),
+                color=(edgeAssignment[edge.index] if edgeAssignment else &#34;k&#34;),
+                **edgeStyle
+            )
+
+        for vertex in graph.nodes():
+            ax.plot(
+                *vertex.at,
+                color=(vertexAssignment[vertex.index] if vertexAssignment else &#34;k&#34;),
+                **vertexStyle
+            )
+
+        # Set axes to be equal, turn off panes.
+        ax.set_aspect(&#34;equal&#34;)
+        ax.set_axis_off()
+        return plt.gcf(), ax</code></pre>
+</details>
+<h3>Static methods</h3>
+<dl>
+<dt id="potts.structures.GraphLattice.plot"><code class="name flex">
+<span>def <span class="ident">plot</span></span>(<span>graph, vertexStyle={'marker': 'o', 'markeredgewidth': 0}, edgeStyle={'linewidth': 0.5, 'alpha': 0.5}, edgeAssignment=None, vertexAssignment=None, ax=None)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def plot(
+    graph, vertexStyle=dict(marker=&#34;o&#34;, markeredgewidth=0),
+    edgeStyle=dict(linewidth=1/2, alpha=1/2), edgeAssignment=None,
+    vertexAssignment=None, ax=None
+):
+    
+    if not ax: _, ax = plt.subplots()
+    
+    for edge in graph.edges():
+        u, v = edge.at
+        ax.plot(
+            *([u.at[axis], v.at[axis]] for axis in range(len(u.at))),
+            color=(edgeAssignment[edge.index] if edgeAssignment else &#34;k&#34;),
+            **edgeStyle
+        )
+
+    for vertex in graph.nodes():
+        ax.plot(
+            *vertex.at,
+            color=(vertexAssignment[vertex.index] if vertexAssignment else &#34;k&#34;),
+            **vertexStyle
+        )
+
+    # Set axes to be equal, turn off panes.
+    ax.set_aspect(&#34;equal&#34;)
+    ax.set_axis_off()
+    return plt.gcf(), ax</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="potts.structures.GraphLattice.assign"><code class="name flex">
+<span>def <span class="ident">assign</span></span>(<span>self, state)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Assigns spins to vertices.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>state</code></strong> :&ensp;<code>list</code></dt>
+<dd>States to apply to vertices.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def assign(self, state):
+    &#34;&#34;&#34;
+    Assigns spins to vertices.
+
+    Args:
+        state (list): States to apply to vertices.
+    &#34;&#34;&#34;
+    for index, spin in enumerate(state): self.graph[index].spin = spin
+    for edge in self.graph.edges():
+        u, v = edge.at
+        edge.spin = (0 if u.spin != v.spin else 1)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="potts.structures.Lattice"><code class="flex name class">
+<span>class <span class="ident">Lattice</span></span>
+<span>(</span><span>corners, field=2, boundaryDimension=1, maxDimension=None, periodicBoundaryConditions=True)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Encodes a d-dimensional integer lattice.</p>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>corners</code></strong></dt>
+<dd>Bounds of the integer lattice; equivalent to boundary constraints.</dd>
+<dt><strong><code>dimension</code></strong></dt>
+<dd>Dimension of the integer lattice as determined by the number
+of corners (boundary constraints).</dd>
+<dt><strong><code>coordinates</code></strong></dt>
+<dd>In-order integer-valued vectors representing the vertices of
+the lattice.</dd>
+</dl>
+<p>Instantiates an integer lattice.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>corners</code></strong> :&ensp;<code>list</code></dt>
+<dd>An iterable collection of "corners" for the lattice:
+for example, the argument <code>[1,1,1]</code> gives the unit cube in a
+3-dimensional integer lattice. More generally, an argument of
+<code>[c1, &hellip;, cn]</code> admits an n-dimensional integer lattice with the
+ith copy of Z bounded below by 0 and above by ci (inclusive).</dd>
+<dt><strong><code>field</code></strong> :&ensp;<code>int</code></dt>
+<dd>The finite field over which we're working; that is,
+coefficients are taken from the finite field of order <code>field</code>.</dd>
+<dt><strong><code>boundaryDimension</code></strong> :&ensp;<code>int</code></dt>
+<dd>Specifies the dimension for which we construct
+the boundary/coboundary operator matrices; this defaults to 1.</dd>
+<dt><strong><code>maxDimension</code></strong> :&ensp;<code>int</code></dt>
+<dd>The maximum dimension of cell constructed;
+if nothing is passed, cells of all dimensions (from 0 to
+the dimension of the lattice) are constructed.</dd>
+<dt><strong><code>periodicBoundaryConditions</code></strong> :&ensp;<code>bool</code></dt>
+<dd>If truthy, identifies "antipodal"
+edge vertices, so we're actually doing things on a torus.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Lattice:
+    &#34;&#34;&#34;
+    Encodes a d-dimensional integer lattice.
+
+    Attributes:
+        corners: Bounds of the integer lattice; equivalent to boundary constraints.
+        dimension: Dimension of the integer lattice as determined by the number
+            of corners (boundary constraints).
+        coordinates: In-order integer-valued vectors representing the vertices of
+            the lattice.
+    &#34;&#34;&#34;
+
+    def __init__(
+            self, corners, field=2, boundaryDimension=1, maxDimension=None,
+            periodicBoundaryConditions=True
+        ):
+        &#34;&#34;&#34;
+        Instantiates an integer lattice.
+
+        Args:
+            corners (list): An iterable collection of &#34;corners&#34; for the lattice:
+                for example, the argument `[1,1,1]` gives the unit cube in a
+                3-dimensional integer lattice. More generally, an argument of
+                `[c1, ..., cn]` admits an n-dimensional integer lattice with the
+                ith copy of Z bounded below by 0 and above by ci (inclusive).
+            field (int): The finite field over which we&#39;re working; that is,
+                coefficients are taken from the finite field of order `field`.
+            boundaryDimension (int): Specifies the dimension for which we construct
+                the boundary/coboundary operator matrices; this defaults to 1.
+            maxDimension (int): The maximum dimension of cell constructed;
+                if nothing is passed, cells of all dimensions (from 0 to
+                the dimension of the lattice) are constructed.
+            periodicBoundaryConditions (bool): If truthy, identifies &#34;antipodal&#34;
+                edge vertices, so we&#39;re actually doing things on a torus.
+        &#34;&#34;&#34;
+        # Assign corners and dimensionality.
+        self.corners = corners
+        self.dimension = len(corners)
+        self.field = galois.GF(field)
+
+        # Construct the lattice.
+        self._coordinates()
+
+        # Construct higher-dimensional cells.
+        self._constructHigherDimensionalCells(dimension=maxDimension)
+
+        # Construct the boundary operator matrix with the provided dimension.
+        self.boundaryOperator(dimension=boundaryDimension)
+
+
+    def _coordinates(self):
+        &#34;&#34;&#34;
+        Private method for generating the coordinates (vertices) in the lattice.
+        &#34;&#34;&#34;
+        # Procedurally generate all of the coordinates in the lattice bounded
+        # by the given corners. First, `basis` will consist of the integer-valued
+        # vectors defining each axis; then, these vectors will be combined to
+        # generate the remaining coordinates.
+        allVectorsByAxis = []
+
+        for axis in range(self.dimension):
+            vectorsForAxis = []
+
+            for k in range(self.corners[axis] + 1):
+                v = [0]*self.dimension
+                v[axis] = k
+                vectorsForAxis.append(v)
+            
+            allVectorsByAxis.append(vectorsForAxis)
+
+        # Initialize the coordinates to be only those in the first axis. Then,
+        # we attack this problem in a dynamic-programming way: because we don&#39;t
+        # know the number of loops required ahead-of-time, we&#39;ll progressively
+        # pair each vector on the first axis with each vector on the second axis;
+        # then, we&#39;ll add each vector in the third axis to each of those pairs;
+        # we&#39;ll continue in this way until we end up with all possible combinations
+        # of integer-scaled vectors. Afterwards, all we have to do is elementwise-add
+        # the vectors in each combination, and we&#39;ll have the coordinates outright.
+        combinations = [[b] for b in allVectorsByAxis[0]]
+        
+        for axisIndex in range(1, len(allVectorsByAxis)):
+            intermediate = []
+            
+            for rightAdjoin in allVectorsByAxis[axisIndex]:
+                for combination in combinations:
+                    ccombination = list(combination)
+                    ccombination.append(rightAdjoin)
+                    intermediate.append(ccombination)
+            
+            combinations = intermediate
+
+        # Now that we&#39;ve computed the combinations, we need only add.
+        coordinates = [
+            list(reduce(np.add, combination))
+            for combination in combinations
+        ]
+
+        # Turn the coordinates into cells, and then turn the list of
+        # coordinates into an n-dimensional array.
+        self.coordinates = [
+            Cell(coordinate, index=index) for index, coordinate in enumerate(coordinates)
+        ]
+
+        # Create the internal ndarray structure so indexing is easy; this fixes
+        # the amount of memory we&#39;ll use on the Lattice and allows for easy access
+        # when we construct edges.
+        zeroCells = np.ndarray(tuple([c+1 for c in self.corners]), dtype=Cell)
+        for cell in self.coordinates:
+            zeroCells[tuple(cell.coordinates)] = cell
+
+        self.vertices = zeroCells
+
+        # We&#39;ll store these structures in a dictionary.
+        self.structure = {
+            0: self.coordinates
+        }
+
+
+    def _constructHigherDimensionalCells(self, dimension=None):
+        &#34;&#34;&#34;
+        Given a dimension, construct the cells of that dimension by building
+        them out of *references* to lower-dimensional cells; for example, the
+        1-cells of the lattice are pairs of vertices with coordinates at (l1-)
+        distance 1 from each other.
+
+        Args:
+            dimension (int): The dimension of the cells we&#39;ll be identifying;
+                if no dimension is passed, we construct cells of all dimensions
+                up to the dimension of the lattice.
+        &#34;&#34;&#34;
+        if dimension == 1 or self.structure.get(1, True):
+            self._constructEdges()
+            return
+    
+
+    def _constructEdges(self):
+        &#34;&#34;&#34;
+        Private method for constructing the 1-cells (edges) of the lattice.
+        &#34;&#34;&#34;
+        # Create an empty edge set.
+        edges = set()
+
+        for vertex in self.vertices.flatten():
+            neighbors = set()
+
+            # For each coordinate, we want to get all possible neighbors; since
+            # this is an integer lattice, this involves grabbing all vertices at
+            # (l1) distance 1 from the current coordinate.
+            for axis, coordinate in enumerate(vertex.coordinates):
+
+                # First, if our coordinate is in between the smallest and largest
+                # integer values on the axis (exclusive), we just grab neighbors
+                # to the left/right.
+                if 0 &lt; coordinate &lt; self.corners[axis]: offsets = [-1, 1]
+
+                # Next, if our coordinate is at one of the extremes, we look to
+                # the left or the right to determine its neighbors.
+                elif coordinate == 0: offsets = [1]
+                else: offsets = [-1]
+
+                for offset in offsets:
+                    ccoordinate = list(vertex.coordinates)
+                    ccoordinate[axis] = ccoordinate[axis] + offset
+                    neighbors.add(self.vertices[tuple(ccoordinate)])
+
+            # Add each neighbor in `neighbors` to the set of edges; sort the
+            # neighbors in the edges (dictionary-style) first, so we don&#39;t add
+            # duplicates. These don&#39;t have an order.
+            for neighbor in neighbors:
+                same = neighbor == vertex
+                first = (neighbor, vertex) in edges
+                second = (vertex, neighbor) in edges
+                if not (same or first or second): edges.add((vertex, neighbor))
+
+        # Now that we have a set of edges, we can construct 1-cells.
+        oneCells = []
+        for index, edge in enumerate(edges):
+            oneCells.append(Cell(np.array(list(edge)), index=index))
+
+        self.structure[1] = np.array(oneCells, dtype=Cell)
+    
+
+    def boundaryOperator(self, dimension=1):
+        &#34;&#34;&#34;
+        Constructs the `dimension`-dimensional boundary operator matrix (and, by
+        extension, the coboundary matrix).
+
+        Args:
+            dimension (int): For which dimension are we constructing the matrix?
+        &#34;&#34;&#34;
+        # Create the columns: we do so by inducing an orientation on the 
+        B = np.zeros((len(self.structure[dimension-1]), len(self.structure[dimension])))
+
+        # Impose an arbitrary orientation on the edges; we just need the vertex
+        # labels to cancel.
+        for edge in self.structure[1]:
+            for vertex, coefficient in zip(edge.coordinates, [1, self.field.order-1]):
+                B[vertex.index, edge.index] = coefficient
+
+        self.boundary = self.field(B.astype(int))
+        self.coboundary = self.field(B.T.astype(int))
+    
+
+    def plot(
+        self, vertexStyle=dict(marker=&#34;o&#34;, markeredgewidth=0),
+        edgeStyle=dict(linewidth=1/2, alpha=1/2), edgeAssignment=None,
+        vertexAssignment=None, vertexLabels=False, axis=False
+    ):
+        &#34;&#34;&#34;
+        Plot the lattice (if it&#39;s of dimension 3 or lower).
+        &#34;&#34;&#34;
+        if self.dimension &gt; 3: return
+        elif self.dimension == 2: _, axes = plt.subplots()
+        elif self.dimension == 3: axes = plt.figure().add_subplot(projection=&#34;3d&#34;)
+
+        for edge in self.structure[1]:
+            u, v = edge.coordinates
+            axes.plot(
+                *([u.coordinates[axis], v.coordinates[axis]] for axis in range(self.dimension)),
+                color=(edgeAssignment[edge.index] if edgeAssignment else &#34;k&#34;),
+                **edgeStyle
+            )
+
+        for vertex in self.structure[0]:
+            axes.plot(
+                *vertex.coordinates,
+                color=(vertexAssignment[vertex.index] if vertexAssignment else &#34;k&#34;),
+                **vertexStyle
+            )
+
+            if vertexLabels and self.dimension &lt; 3:
+                axes.text(
+                    vertex.coordinates[0], vertex.coordinates[1],
+                    f&#34;({vertex.coordinates[0]},{vertex.coordinates[1]})&#34;,
+                    ha=&#34;center&#34;, va=&#34;center&#34;
+                )
+
+        # Set axes to be equal, turn off panes.
+        axes.set_aspect(&#34;equal&#34;)
+        if not axis: axes.set_axis_off()
+        return plt.gcf(), axes
+    
+
+    def assign(self, state):
+        &#34;&#34;&#34;
+        Given a state, assign spins to each cell.
+
+        Args:
+            state (list): List of spins.
+        &#34;&#34;&#34;
+        for cell in self.structure[0]: cell.spin = state[cell.index]</code></pre>
+</details>
+<h3>Methods</h3>
+<dl>
+<dt id="potts.structures.Lattice.assign"><code class="name flex">
+<span>def <span class="ident">assign</span></span>(<span>self, state)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Given a state, assign spins to each cell.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>state</code></strong> :&ensp;<code>list</code></dt>
+<dd>List of spins.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def assign(self, state):
+    &#34;&#34;&#34;
+    Given a state, assign spins to each cell.
+
+    Args:
+        state (list): List of spins.
+    &#34;&#34;&#34;
+    for cell in self.structure[0]: cell.spin = state[cell.index]</code></pre>
+</details>
+</dd>
+<dt id="potts.structures.Lattice.boundaryOperator"><code class="name flex">
+<span>def <span class="ident">boundaryOperator</span></span>(<span>self, dimension=1)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Constructs the <code>dimension</code>-dimensional boundary operator matrix (and, by
+extension, the coboundary matrix).</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>dimension</code></strong> :&ensp;<code>int</code></dt>
+<dd>For which dimension are we constructing the matrix?</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def boundaryOperator(self, dimension=1):
+    &#34;&#34;&#34;
+    Constructs the `dimension`-dimensional boundary operator matrix (and, by
+    extension, the coboundary matrix).
+
+    Args:
+        dimension (int): For which dimension are we constructing the matrix?
+    &#34;&#34;&#34;
+    # Create the columns: we do so by inducing an orientation on the 
+    B = np.zeros((len(self.structure[dimension-1]), len(self.structure[dimension])))
+
+    # Impose an arbitrary orientation on the edges; we just need the vertex
+    # labels to cancel.
+    for edge in self.structure[1]:
+        for vertex, coefficient in zip(edge.coordinates, [1, self.field.order-1]):
+            B[vertex.index, edge.index] = coefficient
+
+    self.boundary = self.field(B.astype(int))
+    self.coboundary = self.field(B.T.astype(int))</code></pre>
+</details>
+</dd>
+<dt id="potts.structures.Lattice.plot"><code class="name flex">
+<span>def <span class="ident">plot</span></span>(<span>self, vertexStyle={'marker': 'o', 'markeredgewidth': 0}, edgeStyle={'linewidth': 0.5, 'alpha': 0.5}, edgeAssignment=None, vertexAssignment=None, vertexLabels=False, axis=False)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Plot the lattice (if it's of dimension 3 or lower).</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def plot(
+    self, vertexStyle=dict(marker=&#34;o&#34;, markeredgewidth=0),
+    edgeStyle=dict(linewidth=1/2, alpha=1/2), edgeAssignment=None,
+    vertexAssignment=None, vertexLabels=False, axis=False
+):
+    &#34;&#34;&#34;
+    Plot the lattice (if it&#39;s of dimension 3 or lower).
+    &#34;&#34;&#34;
+    if self.dimension &gt; 3: return
+    elif self.dimension == 2: _, axes = plt.subplots()
+    elif self.dimension == 3: axes = plt.figure().add_subplot(projection=&#34;3d&#34;)
+
+    for edge in self.structure[1]:
+        u, v = edge.coordinates
+        axes.plot(
+            *([u.coordinates[axis], v.coordinates[axis]] for axis in range(self.dimension)),
+            color=(edgeAssignment[edge.index] if edgeAssignment else &#34;k&#34;),
+            **edgeStyle
+        )
+
+    for vertex in self.structure[0]:
+        axes.plot(
+            *vertex.coordinates,
+            color=(vertexAssignment[vertex.index] if vertexAssignment else &#34;k&#34;),
+            **vertexStyle
+        )
+
+        if vertexLabels and self.dimension &lt; 3:
+            axes.text(
+                vertex.coordinates[0], vertex.coordinates[1],
+                f&#34;({vertex.coordinates[0]},{vertex.coordinates[1]})&#34;,
+                ha=&#34;center&#34;, va=&#34;center&#34;
+            )
+
+    # Set axes to be equal, turn off panes.
+    axes.set_aspect(&#34;equal&#34;)
+    if not axis: axes.set_axis_off()
+    return plt.gcf(), axes</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="potts.structures.Vertex"><code class="flex name class">
+<span>class <span class="ident">Vertex</span></span>
+<span>(</span><span>at, spin, index)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Vertex:
+    def __init__(self, at, spin, index):
+        self.at = at
+        self.spin = spin
+        self.index = index
+
+    def __eq__(self, other): return self.at == other.at
+
+    def __hash__(self): return hash(self.at)
+
+    def __str__(self):
+        return str(self.at) + f&#34;\t\t spin = {self.spin}\t\t index = {self.index}&#34;</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<!-- include a script for adding stuff to the end of proofs. -->
+<script>
+// Get all the proofs in the document.
+proofs = document.getElementsByClassName("proof");
+// For each of the proofs, attach a floating child element in the bottom-right
+// corner.
+for (var proof of proofs) {
+// Create a proof-ending tombstone.
+square = document.createElement("div");
+square.className = "tombstone";
+square.innerHTML = "◼️";
+// Attach the tombstone to the proof.
+proof.appendChild(square);
+}
+</script>
+<header>
+<a class="homelink" rel="home" title="potts" href="https://github.com/apizzimenti/potts">
+<style>
+header > h1 { display: none; }
+img.resize {
+max-width: 80%;
+max-height: 80%;
+display: block;
+margin: 0 auto;
+}
+div.proof {
+border: 1px solid black;
+padding: 0em 1em;
+width: 90%;
+margin: 1em auto;
+}
+.tombstone {
+margin-top: -2em;
+float: right;
+}
+</style>
+<img class="resize" src="../lattice.gif" alt="iteration on the Potts model">
+</a>
+</header>
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="potts" href="../index.html">potts</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-submodules">Sub-modules</a></h3>
+<ul>
+<li><code><a title="potts.structures.Components" href="Components.html">potts.structures.Components</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="potts.structures.Cell" href="#potts.structures.Cell">Cell</a></code></h4>
+<ul class="">
+<li><code><a title="potts.structures.Cell.spin" href="#potts.structures.Cell.spin">spin</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="potts.structures.Edge" href="#potts.structures.Edge">Edge</a></code></h4>
+<ul class="">
+<li><code><a title="potts.structures.Edge.asIndices" href="#potts.structures.Edge.asIndices">asIndices</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="potts.structures.GraphLattice" href="#potts.structures.GraphLattice">GraphLattice</a></code></h4>
+<ul class="">
+<li><code><a title="potts.structures.GraphLattice.assign" href="#potts.structures.GraphLattice.assign">assign</a></code></li>
+<li><code><a title="potts.structures.GraphLattice.plot" href="#potts.structures.GraphLattice.plot">plot</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="potts.structures.Lattice" href="#potts.structures.Lattice">Lattice</a></code></h4>
+<ul class="">
+<li><code><a title="potts.structures.Lattice.assign" href="#potts.structures.Lattice.assign">assign</a></code></li>
+<li><code><a title="potts.structures.Lattice.boundaryOperator" href="#potts.structures.Lattice.boundaryOperator">boundaryOperator</a></code></li>
+<li><code><a title="potts.structures.Lattice.plot" href="#potts.structures.Lattice.plot">plot</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="potts.structures.Vertex" href="#potts.structures.Vertex">Vertex</a></code></h4>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
+</footer>
+</body>
+</html>

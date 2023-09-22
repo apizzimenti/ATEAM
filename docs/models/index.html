@@ -1,0 +1,1387 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.10.0" />
+<title>potts.models API documentation</title>
+<meta name="description" content="" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS_CHTML" integrity="sha256-kZafAc6mZvK3W3v1pHOcUix30OHQN6pU/NO2oFkqZVw=" crossorigin></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>potts.models</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">from .GraphIsing import GraphIsing
+from .GraphSwendsonWang import GraphSwendsonWang
+from .SwendsonWang import SwendsonWang
+from .GraphPercolation import GraphPercolation
+from .Model import Model
+
+__all__ = [&#34;Model&#34;, &#34;SwendsonWang&#34;, &#34;GraphSwendsonWang&#34;, &#34;GraphPercolation&#34;, &#34;GraphIsing&#34;]</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="potts.models.GraphIsing"><code class="flex name class">
+<span>class <span class="ident">GraphIsing</span></span>
+<span>(</span><span>temperatureFunction=&lt;function constant.&lt;locals&gt;._&gt;)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Initializes a Swendson-Wang evolution on the Potts model.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>temperature</code></strong> :&ensp;<code>Callable</code></dt>
+<dd>A function taking an integer argument which
+returns a real-valued temperature. Defaults to the constant
+schedule.</dd>
+<dt><strong><code>testing</code></strong> :&ensp;<code>Bool</code></dt>
+<dd>Are we testing?</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class GraphIsing(Model):
+    def __init__(self, temperatureFunction=constant(-math.log(math.sqrt(2)/(1+math.sqrt(2))))):
+        &#34;&#34;&#34;
+        Initializes a Swendson-Wang evolution on the Potts model.
+
+        Args:
+            temperature (Callable): A function taking an integer argument which
+                returns a real-valued temperature. Defaults to the constant
+                schedule.
+            testing (Bool): Are we testing?
+        &#34;&#34;&#34;
+        self.temperatureFunction = temperatureFunction
+    
+
+    def proposal(self, chain):
+        &#34;&#34;&#34;
+        Proposal scheme for the Swendson-Wang evolution on the Potts model. 
+
+        Args:
+            chain (Chain): Chain object which contains all the information we
+                need.
+
+        Returns:
+            A proposed state.
+        &#34;&#34;&#34;
+        # Uniformly randomly sample a vertex from the graph and change its spin.
+        vertices = chain.lattice.structure[0]
+        v = vertices[np.random.randint(low=0, high=len(vertices))]
+        v.spin = (v.spin+1)%2
+
+        # Return the sequence of spins.
+        return [v.spin for v in vertices]
+
+
+    def initial(self, lattice, distribution=uniform):
+        &#34;&#34;&#34;
+        Generates a random initial state.
+
+        Args:
+            lattice (Lattice): The integer lattice we&#39;re experimenting on.
+            distribution (Callable): A distribution from which we&#39;ll select;
+                this distribution must be _discrete_ and take _two integer inputs_
+                representing the lower and higher endpoints of the interval over
+                the integers.
+
+        Returns:
+            A cocycle with initial states.
+        &#34;&#34;&#34;
+        G = lattice.graph
+        vertices = G.nodes()
+
+        for vertex in vertices: vertex.spin = np.random.randint(low=0, high=2)
+        return [v.spin for v in vertices]
+
+
+    def energy(self, lattice, state):
+        &#34;&#34;&#34;
+        Computes the Hamiltonian (energy) of the lattice in its current state.
+
+        Args:
+            lattice (Lattice): The lattice we&#39;re working over.
+            state (list): Optional argument for computing the energy of an
+                arbitrary state instead of the current one in the chain.
+
+        Returns:
+            Integer representing the Hamiltonian.
+        &#34;&#34;&#34;
+        G = lattice.graph
+
+        s = 0
+        for edge in G.edges():
+            u, v = edge.at
+            s += state[u.index]*state[v.index]
+
+        return -s</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>potts.models.Model.Model</li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="potts.models.GraphIsing.energy"><code class="name flex">
+<span>def <span class="ident">energy</span></span>(<span>self, lattice, state)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Computes the Hamiltonian (energy) of the lattice in its current state.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>lattice</code></strong> :&ensp;<code>Lattice</code></dt>
+<dd>The lattice we're working over.</dd>
+<dt><strong><code>state</code></strong> :&ensp;<code>list</code></dt>
+<dd>Optional argument for computing the energy of an
+arbitrary state instead of the current one in the chain.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Integer representing the Hamiltonian.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def energy(self, lattice, state):
+    &#34;&#34;&#34;
+    Computes the Hamiltonian (energy) of the lattice in its current state.
+
+    Args:
+        lattice (Lattice): The lattice we&#39;re working over.
+        state (list): Optional argument for computing the energy of an
+            arbitrary state instead of the current one in the chain.
+
+    Returns:
+        Integer representing the Hamiltonian.
+    &#34;&#34;&#34;
+    G = lattice.graph
+
+    s = 0
+    for edge in G.edges():
+        u, v = edge.at
+        s += state[u.index]*state[v.index]
+
+    return -s</code></pre>
+</details>
+</dd>
+<dt id="potts.models.GraphIsing.initial"><code class="name flex">
+<span>def <span class="ident">initial</span></span>(<span>self, lattice, distribution=&lt;function uniform&gt;)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Generates a random initial state.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>lattice</code></strong> :&ensp;<code>Lattice</code></dt>
+<dd>The integer lattice we're experimenting on.</dd>
+<dt><strong><code>distribution</code></strong> :&ensp;<code>Callable</code></dt>
+<dd>A distribution from which we'll select;
+this distribution must be <em>discrete</em> and take <em>two integer inputs</em>
+representing the lower and higher endpoints of the interval over
+the integers.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>A cocycle with initial states.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def initial(self, lattice, distribution=uniform):
+    &#34;&#34;&#34;
+    Generates a random initial state.
+
+    Args:
+        lattice (Lattice): The integer lattice we&#39;re experimenting on.
+        distribution (Callable): A distribution from which we&#39;ll select;
+            this distribution must be _discrete_ and take _two integer inputs_
+            representing the lower and higher endpoints of the interval over
+            the integers.
+
+    Returns:
+        A cocycle with initial states.
+    &#34;&#34;&#34;
+    G = lattice.graph
+    vertices = G.nodes()
+
+    for vertex in vertices: vertex.spin = np.random.randint(low=0, high=2)
+    return [v.spin for v in vertices]</code></pre>
+</details>
+</dd>
+<dt id="potts.models.GraphIsing.proposal"><code class="name flex">
+<span>def <span class="ident">proposal</span></span>(<span>self, chain)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Proposal scheme for the Swendson-Wang evolution on the Potts model. </p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>chain</code></strong> :&ensp;<code>Chain</code></dt>
+<dd>Chain object which contains all the information we
+need.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>A proposed state.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def proposal(self, chain):
+    &#34;&#34;&#34;
+    Proposal scheme for the Swendson-Wang evolution on the Potts model. 
+
+    Args:
+        chain (Chain): Chain object which contains all the information we
+            need.
+
+    Returns:
+        A proposed state.
+    &#34;&#34;&#34;
+    # Uniformly randomly sample a vertex from the graph and change its spin.
+    vertices = chain.lattice.structure[0]
+    v = vertices[np.random.randint(low=0, high=len(vertices))]
+    v.spin = (v.spin+1)%2
+
+    # Return the sequence of spins.
+    return [v.spin for v in vertices]</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="potts.models.GraphPercolation"><code class="flex name class">
+<span>class <span class="ident">GraphPercolation</span></span>
+<span>(</span><span>temperatureFunction=&lt;function constant.&lt;locals&gt;._&gt;, testing=False)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Initializes a Swendson-Wang evolution on the Potts model.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>temperature</code></strong> :&ensp;<code>Callable</code></dt>
+<dd>A function taking an integer argument which
+returns a real-valued temperature. Defaults to the constant
+schedule.</dd>
+<dt><strong><code>testing</code></strong> :&ensp;<code>Bool</code></dt>
+<dd>Are we testing?</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class GraphPercolation(Model):
+    def __init__(
+            self, temperatureFunction=constant(-math.log(1/2)), testing=False
+        ):
+        &#34;&#34;&#34;
+        Initializes a Swendson-Wang evolution on the Potts model.
+
+        Args:
+            temperature (Callable): A function taking an integer argument which
+                returns a real-valued temperature. Defaults to the constant
+                schedule.
+            testing (Bool): Are we testing?
+        &#34;&#34;&#34;
+        self.temperatureFunction = temperatureFunction
+        self.testing = testing
+        self.log = &#34;&#34;
+
+        self._directorySetup()
+    
+
+    def _directorySetup(self):
+        if self.testing:
+            # Creates an output directory if none exists.
+            outroot = Path(&#34;./output/&#34;)
+            if not outroot.exists():
+                outroot.mkdir()
+                (outroot/&#34;figures&#34;).mkdir()
+                (outroot/&#34;matrices&#34;).mkdir()
+    
+
+    def proposal(self, chain):
+        &#34;&#34;&#34;
+        Proposal scheme for a typical percolation model. 
+
+        Args:
+            chain (Chain): Chain object which contains all the information we
+                need.
+
+        Returns:
+            A proposed state.
+        &#34;&#34;&#34;
+        # Compute the probability of choosing any individual edge in the graph.
+        self.temperature = -self.temperatureFunction(chain.step)
+        p = math.exp(self.temperature)
+
+        # Spin the vertices.
+        G = chain.lattice.graph
+
+        for v in G.nodes():
+            q = np.random.uniform()
+            spun = q &lt; p
+
+            v.spin = 1 if spun else 0
+
+        for e in G.edges():
+            u, v = e.at
+            if u.spin == v.spin: e.spin = 1
+            else: e.spin = 0
+
+        return [v.spin for v in G.nodes()]
+
+
+    def initial(self, lattice, distribution=uniform):
+        &#34;&#34;&#34;
+        Generates a random initial state.
+
+        Args:
+            lattice (Lattice): The integer lattice we&#39;re experimenting on.
+            distribution (Callable): A distribution from which we&#39;ll select;
+                this distribution must be _discrete_ and take _two integer inputs_
+                representing the lower and higher endpoints of the interval over
+                the integers.
+
+        Returns:
+            A cocycle with initial states.
+        &#34;&#34;&#34;
+        G = lattice.graph
+        vertices = G.nodes()
+
+        for vertex in vertices: vertex.spin = int(distribution(0, lattice.field.order))
+        return [v.spin for v in vertices]
+
+
+    def energy(self, lattice, state):
+        &#34;&#34;&#34;
+        Computes the Hamiltonian (energy) of the lattice in its current state.
+
+        Args:
+            lattice (Lattice): The lattice we&#39;re working over.
+            state (list): Optional argument for computing the energy of an
+                arbitrary state instead of the current one in the chain.
+
+        Returns:
+            Integer representing the Hamiltonian.
+        &#34;&#34;&#34;
+        G = lattice.graph
+
+        s = 0
+        for edge in G.edges():
+            u, v = edge.at
+            s += (1 if state[u.index] == state[v.index] else 0)
+
+        return -s</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>potts.models.Model.Model</li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="potts.models.GraphPercolation.energy"><code class="name flex">
+<span>def <span class="ident">energy</span></span>(<span>self, lattice, state)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Computes the Hamiltonian (energy) of the lattice in its current state.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>lattice</code></strong> :&ensp;<code>Lattice</code></dt>
+<dd>The lattice we're working over.</dd>
+<dt><strong><code>state</code></strong> :&ensp;<code>list</code></dt>
+<dd>Optional argument for computing the energy of an
+arbitrary state instead of the current one in the chain.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Integer representing the Hamiltonian.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def energy(self, lattice, state):
+    &#34;&#34;&#34;
+    Computes the Hamiltonian (energy) of the lattice in its current state.
+
+    Args:
+        lattice (Lattice): The lattice we&#39;re working over.
+        state (list): Optional argument for computing the energy of an
+            arbitrary state instead of the current one in the chain.
+
+    Returns:
+        Integer representing the Hamiltonian.
+    &#34;&#34;&#34;
+    G = lattice.graph
+
+    s = 0
+    for edge in G.edges():
+        u, v = edge.at
+        s += (1 if state[u.index] == state[v.index] else 0)
+
+    return -s</code></pre>
+</details>
+</dd>
+<dt id="potts.models.GraphPercolation.initial"><code class="name flex">
+<span>def <span class="ident">initial</span></span>(<span>self, lattice, distribution=&lt;function uniform&gt;)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Generates a random initial state.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>lattice</code></strong> :&ensp;<code>Lattice</code></dt>
+<dd>The integer lattice we're experimenting on.</dd>
+<dt><strong><code>distribution</code></strong> :&ensp;<code>Callable</code></dt>
+<dd>A distribution from which we'll select;
+this distribution must be <em>discrete</em> and take <em>two integer inputs</em>
+representing the lower and higher endpoints of the interval over
+the integers.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>A cocycle with initial states.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def initial(self, lattice, distribution=uniform):
+    &#34;&#34;&#34;
+    Generates a random initial state.
+
+    Args:
+        lattice (Lattice): The integer lattice we&#39;re experimenting on.
+        distribution (Callable): A distribution from which we&#39;ll select;
+            this distribution must be _discrete_ and take _two integer inputs_
+            representing the lower and higher endpoints of the interval over
+            the integers.
+
+    Returns:
+        A cocycle with initial states.
+    &#34;&#34;&#34;
+    G = lattice.graph
+    vertices = G.nodes()
+
+    for vertex in vertices: vertex.spin = int(distribution(0, lattice.field.order))
+    return [v.spin for v in vertices]</code></pre>
+</details>
+</dd>
+<dt id="potts.models.GraphPercolation.proposal"><code class="name flex">
+<span>def <span class="ident">proposal</span></span>(<span>self, chain)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Proposal scheme for a typical percolation model. </p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>chain</code></strong> :&ensp;<code>Chain</code></dt>
+<dd>Chain object which contains all the information we
+need.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>A proposed state.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def proposal(self, chain):
+    &#34;&#34;&#34;
+    Proposal scheme for a typical percolation model. 
+
+    Args:
+        chain (Chain): Chain object which contains all the information we
+            need.
+
+    Returns:
+        A proposed state.
+    &#34;&#34;&#34;
+    # Compute the probability of choosing any individual edge in the graph.
+    self.temperature = -self.temperatureFunction(chain.step)
+    p = math.exp(self.temperature)
+
+    # Spin the vertices.
+    G = chain.lattice.graph
+
+    for v in G.nodes():
+        q = np.random.uniform()
+        spun = q &lt; p
+
+        v.spin = 1 if spun else 0
+
+    for e in G.edges():
+        u, v = e.at
+        if u.spin == v.spin: e.spin = 1
+        else: e.spin = 0
+
+    return [v.spin for v in G.nodes()]</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="potts.models.GraphSwendsonWang"><code class="flex name class">
+<span>class <span class="ident">GraphSwendsonWang</span></span>
+<span>(</span><span>temperatureFunction=&lt;function constant.&lt;locals&gt;._&gt;, testing=False)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Initializes a Swendson-Wang evolution on the Potts model.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>temperature</code></strong> :&ensp;<code>Callable</code></dt>
+<dd>A function taking an integer argument which
+returns a real-valued temperature. Defaults to the constant
+schedule.</dd>
+<dt><strong><code>testing</code></strong> :&ensp;<code>Bool</code></dt>
+<dd>Are we testing?</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class GraphSwendsonWang(Model):
+    def __init__(
+            self, temperatureFunction=constant(-0.6), testing=False
+        ):
+        &#34;&#34;&#34;
+        Initializes a Swendson-Wang evolution on the Potts model.
+
+        Args:
+            temperature (Callable): A function taking an integer argument which
+                returns a real-valued temperature. Defaults to the constant
+                schedule.
+            testing (Bool): Are we testing?
+        &#34;&#34;&#34;
+        self.temperatureFunction = temperatureFunction
+        self.testing = testing
+        self.log = &#34;&#34;
+
+        self._directorySetup()
+    
+
+    def _directorySetup(self):
+        if self.testing:
+            # Creates an output directory if none exists.
+            outroot = Path(&#34;./output/&#34;)
+            if not outroot.exists():
+                outroot.mkdir()
+                (outroot/&#34;figures&#34;).mkdir()
+                (outroot/&#34;matrices&#34;).mkdir()
+    
+
+    def proposal(self, chain):
+        &#34;&#34;&#34;
+        Proposal scheme for the Swendson-Wang evolution on the Potts model. 
+
+        Args:
+            chain (Chain): Chain object which contains all the information we
+                need.
+
+        Returns:
+            A proposed state.
+        &#34;&#34;&#34;
+        # Compute the probability of choosing any individual edge in the graph.
+        self.temperature = -self.temperatureFunction(chain.step)
+        p = 1-np.exp(self.temperature)
+
+        # Get the graph and choose which edges to include.
+        G = chain.lattice.graph
+        include = []
+
+        for edge in G.edges():
+            u, v = edge.at
+
+            if u.spin == v.spin:
+                q = np.random.uniform()
+                
+                if q &lt; p:
+                    include.append((u.index, v.index))
+                    edge.spin = 1
+                else:
+                    edge.spin = 0
+
+            else:
+                edge.spin = 0
+
+        # Do stuff to the subgraph.
+        subgraph = G.edge_subgraph(include)
+        components = connectedComponents(subgraph)
+        
+        # For each vertex in each component, assign a spin.
+        for vertexset in components:
+            q = np.random.randint(low=0, high=chain.lattice.field.order)
+            for index in vertexset: G[index].spin = q
+
+        return [v.spin for v in G.nodes()]
+
+
+    def initial(self, lattice, distribution=uniform):
+        &#34;&#34;&#34;
+        Generates a random initial state.
+
+        Args:
+            lattice (Lattice): The integer lattice we&#39;re experimenting on.
+            distribution (Callable): A distribution from which we&#39;ll select;
+                this distribution must be _discrete_ and take _two integer inputs_
+                representing the lower and higher endpoints of the interval over
+                the integers.
+
+        Returns:
+            A cocycle with initial states.
+        &#34;&#34;&#34;
+        G = lattice.graph
+        vertices = G.nodes()
+
+        for vertex in vertices: vertex.spin = int(distribution(0, lattice.field.order))
+        return [v.spin for v in vertices]
+
+
+    def energy(self, lattice, state):
+        &#34;&#34;&#34;
+        Computes the Hamiltonian (energy) of the lattice in its current state.
+
+        Args:
+            lattice (Lattice): The lattice we&#39;re working over.
+            state (list): Optional argument for computing the energy of an
+                arbitrary state instead of the current one in the chain.
+
+        Returns:
+            Integer representing the Hamiltonian.
+        &#34;&#34;&#34;
+        G = lattice.graph
+
+        s = 0
+        for edge in G.edges():
+            u, v = edge.at
+            s += (1 if state[u.index] == state[v.index] else 0)
+
+        return -s</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>potts.models.Model.Model</li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="potts.models.GraphSwendsonWang.energy"><code class="name flex">
+<span>def <span class="ident">energy</span></span>(<span>self, lattice, state)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Computes the Hamiltonian (energy) of the lattice in its current state.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>lattice</code></strong> :&ensp;<code>Lattice</code></dt>
+<dd>The lattice we're working over.</dd>
+<dt><strong><code>state</code></strong> :&ensp;<code>list</code></dt>
+<dd>Optional argument for computing the energy of an
+arbitrary state instead of the current one in the chain.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Integer representing the Hamiltonian.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def energy(self, lattice, state):
+    &#34;&#34;&#34;
+    Computes the Hamiltonian (energy) of the lattice in its current state.
+
+    Args:
+        lattice (Lattice): The lattice we&#39;re working over.
+        state (list): Optional argument for computing the energy of an
+            arbitrary state instead of the current one in the chain.
+
+    Returns:
+        Integer representing the Hamiltonian.
+    &#34;&#34;&#34;
+    G = lattice.graph
+
+    s = 0
+    for edge in G.edges():
+        u, v = edge.at
+        s += (1 if state[u.index] == state[v.index] else 0)
+
+    return -s</code></pre>
+</details>
+</dd>
+<dt id="potts.models.GraphSwendsonWang.initial"><code class="name flex">
+<span>def <span class="ident">initial</span></span>(<span>self, lattice, distribution=&lt;function uniform&gt;)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Generates a random initial state.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>lattice</code></strong> :&ensp;<code>Lattice</code></dt>
+<dd>The integer lattice we're experimenting on.</dd>
+<dt><strong><code>distribution</code></strong> :&ensp;<code>Callable</code></dt>
+<dd>A distribution from which we'll select;
+this distribution must be <em>discrete</em> and take <em>two integer inputs</em>
+representing the lower and higher endpoints of the interval over
+the integers.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>A cocycle with initial states.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def initial(self, lattice, distribution=uniform):
+    &#34;&#34;&#34;
+    Generates a random initial state.
+
+    Args:
+        lattice (Lattice): The integer lattice we&#39;re experimenting on.
+        distribution (Callable): A distribution from which we&#39;ll select;
+            this distribution must be _discrete_ and take _two integer inputs_
+            representing the lower and higher endpoints of the interval over
+            the integers.
+
+    Returns:
+        A cocycle with initial states.
+    &#34;&#34;&#34;
+    G = lattice.graph
+    vertices = G.nodes()
+
+    for vertex in vertices: vertex.spin = int(distribution(0, lattice.field.order))
+    return [v.spin for v in vertices]</code></pre>
+</details>
+</dd>
+<dt id="potts.models.GraphSwendsonWang.proposal"><code class="name flex">
+<span>def <span class="ident">proposal</span></span>(<span>self, chain)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Proposal scheme for the Swendson-Wang evolution on the Potts model. </p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>chain</code></strong> :&ensp;<code>Chain</code></dt>
+<dd>Chain object which contains all the information we
+need.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>A proposed state.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def proposal(self, chain):
+    &#34;&#34;&#34;
+    Proposal scheme for the Swendson-Wang evolution on the Potts model. 
+
+    Args:
+        chain (Chain): Chain object which contains all the information we
+            need.
+
+    Returns:
+        A proposed state.
+    &#34;&#34;&#34;
+    # Compute the probability of choosing any individual edge in the graph.
+    self.temperature = -self.temperatureFunction(chain.step)
+    p = 1-np.exp(self.temperature)
+
+    # Get the graph and choose which edges to include.
+    G = chain.lattice.graph
+    include = []
+
+    for edge in G.edges():
+        u, v = edge.at
+
+        if u.spin == v.spin:
+            q = np.random.uniform()
+            
+            if q &lt; p:
+                include.append((u.index, v.index))
+                edge.spin = 1
+            else:
+                edge.spin = 0
+
+        else:
+            edge.spin = 0
+
+    # Do stuff to the subgraph.
+    subgraph = G.edge_subgraph(include)
+    components = connectedComponents(subgraph)
+    
+    # For each vertex in each component, assign a spin.
+    for vertexset in components:
+        q = np.random.randint(low=0, high=chain.lattice.field.order)
+        for index in vertexset: G[index].spin = q
+
+    return [v.spin for v in G.nodes()]</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="potts.models.Model"><code class="flex name class">
+<span>class <span class="ident">Model</span></span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Model:
+    def __init__(self): pass
+    def proposal(self): pass
+    def accept(self): pass
+    def initial(self): pass
+    def energy(self): pass</code></pre>
+</details>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li>potts.models.GraphIsing.GraphIsing</li>
+<li>potts.models.GraphPercolation.GraphPercolation</li>
+<li>potts.models.GraphSwendsonWang.GraphSwendsonWang</li>
+<li>potts.models.SwendsonWang.SwendsonWang</li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="potts.models.Model.accept"><code class="name flex">
+<span>def <span class="ident">accept</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def accept(self): pass</code></pre>
+</details>
+</dd>
+<dt id="potts.models.Model.energy"><code class="name flex">
+<span>def <span class="ident">energy</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def energy(self): pass</code></pre>
+</details>
+</dd>
+<dt id="potts.models.Model.initial"><code class="name flex">
+<span>def <span class="ident">initial</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def initial(self): pass</code></pre>
+</details>
+</dd>
+<dt id="potts.models.Model.proposal"><code class="name flex">
+<span>def <span class="ident">proposal</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def proposal(self): pass</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="potts.models.SwendsonWang"><code class="flex name class">
+<span>class <span class="ident">SwendsonWang</span></span>
+<span>(</span><span>temperature=&lt;function constant.&lt;locals&gt;._&gt;, accept=&lt;function always&gt;, testing=False)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Initializes a Swendson-Wang evolution on the Potts model.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>temperature</code></strong> :&ensp;<code>Callable</code></dt>
+<dd>A function taking an integer argument which
+returns a real-valued temperature. Defaults to the constant
+schedule.</dd>
+<dt><strong><code>accept</code></strong> :&ensp;<code>Callable</code></dt>
+<dd>A function which takes a Chain as input and returns
+a boolean.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class SwendsonWang(Model):
+    def __init__(
+            self, temperature=constant(-0.6), accept=always, testing=False
+        ):
+        &#34;&#34;&#34;
+        Initializes a Swendson-Wang evolution on the Potts model.
+
+        Args:
+            temperature (Callable): A function taking an integer argument which
+                returns a real-valued temperature. Defaults to the constant
+                schedule.
+            accept (Callable): A function which takes a Chain as input and returns
+                a boolean.
+        &#34;&#34;&#34;
+        self.temperature = temperature
+        self.accept = accept
+        self.testing = testing
+        self.log = &#34;&#34;
+
+        self._directorySetup()
+
+
+    def _directorySetup(self):
+        if self.testing:
+            # Creates an output directory if none exists.
+            outroot = Path(&#34;./output/&#34;)
+            if not outroot.exists():
+                outroot.mkdir()
+                (outroot/&#34;figures&#34;).mkdir()
+                (outroot/&#34;matrices&#34;).mkdir()
+
+
+    def _proposal_multiply(self, chain):
+        &#34;&#34;&#34;
+        Multiplies the computed boundary matrix B on the left by an edge-inclusion
+        matrix E. As the number of edges grows, this matrix multiplication is
+        expected to take a really long time. DEPRECATED.
+        &#34;&#34;&#34;
+        lattice, state = chain.lattice, chain.state
+
+        # First, create a matrix that includes/excludes the appropriate edges;
+        # we scan through them, and &#34;remove&#34; any edges that have no effect.
+        M = len(lattice.structure[1])
+        included = lattice.field(np.zeros((M, M), dtype=int))
+
+        for edge in lattice.structure[1]:
+            u, v = edge.coordinates
+            
+            # We have three cases:
+            #
+            #   1. if the spins on u and v are different, we ignore the edge.
+            #   2. if the spins on u and v are the same, we
+            #       a. include the edge with probability 1-e^beta,
+            #       b. ignore the edge with probability e^beta.
+
+            # Case 1; re-set edge spin to 0.
+            if state[u.index] != state[v.index]:
+                edge.spin = 0
+                continue
+                
+            # Case 2.
+            else:
+                # Set the probability that an edge is included, and uniformly
+                # randomly select a value in [0,1] to determine whether the edge
+                # is included.
+                p = 1-(np.exp(self.temperature(chain.step)))
+                q = np.random.uniform()
+
+                # Case 2(a).
+                if q &lt; p:
+                    # Testing!
+                    if self.testing: self.log += f&#34;included edge ({u},{v}) with probability {p} &gt; {q}\n&#34;
+                    
+                    # Set the spins of the edges appropriately.
+                    included[edge.index, edge.index] = 1
+                    edge.spin = 1
+                
+                # Case 2(b).
+                else:
+                    edge.spin = 0
+
+        # Now that we know which edges we&#39;re ignoring, we can multiply the two
+        # matrices together!
+        return np.matmul(lattice.boundary, included)
+    
+    @staticmethod
+    def _excludeEdges(state, probability):
+        &#34;&#34;&#34;
+        Given a vector of edges, returns a vector of the same shape with values
+        in {0,1} indicating whether each edge is included or excluded.
+        &#34;&#34;&#34;
+        # @nb.vectorize()
+        def _(edge):
+            # Obtain the spins on the vertices incident to the edge.
+            u = edge.coordinates[0]
+            v = edge.coordinates[1]
+
+            if state[u.index] != state[v.index]:
+                edge.spin = 0
+                return 0
+            else:
+                q = np.random.uniform()
+
+                if q &lt; probability:
+                    edge.spin = 1
+                    return 1
+                else:
+                    edge.spin = 0
+                    return 0
+
+        return _
+
+
+    def _proposal_copy(self, chain):
+        &#34;&#34;&#34;
+        Copies the boundary matrix and zeros out rows instead of multiplying
+        large matrices.
+        &#34;&#34;&#34;
+        lattice, state = chain.lattice, chain.state
+
+        # Copy the boundary matrix for editing; we want to make *one* call that
+        # determines which edges are included and which aren&#39;t.
+        M = lattice.boundary.copy()
+        exclusion = self._excludeEdges(state, 1-(np.exp(self.temperature(chain.step))))
+        excluded = np.array(list(map(exclusion, lattice.structure[1])))
+        exclude = np.where(excluded==0)
+        M[:,exclude] = 0
+
+        return M
+
+
+    def proposal(self, chain):
+        &#34;&#34;&#34;
+        Proposal scheme for the Swendson-Wang evolution on the Potts model. 
+
+        Args:
+            chain (Chain): Chain object which contains all the information we
+                need.
+
+        Returns:
+            A proposed state.
+        &#34;&#34;&#34;
+        # If we&#39;re testing, we want to record probabilities; since this is called
+        # at each step, we&#39;ll write something to file at each step.
+        if self.testing: self.log += f&#34;### STEP {chain.step} ###\n&#34;
+        # boundary = self._proposal_multiply(chain)
+        boundary = self._proposal_copy(chain)
+
+        # If we&#39;re testing, write the matrices to file and indicate which edges
+        # are ignored.
+        if self.testing:
+            pd.DataFrame(chain.state).to_csv(f&#34;./output/matrices/state-{chain.step}.csv&#34;, index=False)
+            pd.DataFrame(boundary).to_csv(f&#34;./output/matrices/operator-{chain.step}.csv&#34;, index=False)
+            self.log += &#34;\n\n&#34;
+    
+        # Now, let&#39;s change the states! First, take the transpose of the boundary
+        # matrix (i.e. the coboundary matrix). Then, find a basis for the null
+        # space of this matrix, which is equivalent to finding a basis for the
+        # vector space of cocycles. Then, (uniformly randomly) sample coefficients
+        # from the field underlying the vector space, and scale the ith column of
+        # the basis matrix (the ith basis vector) by the ith coefficient. Finally,
+        # sum the *rows* of the linear combination, equivalent to summing the
+        # vectors element-wise to produce a cocycle!
+        coboundary = boundary.T
+        basis = coboundary.null_space()
+        coefficients = np.random.randint(0, chain.lattice.field.order, size=len(basis))
+        linearCombination = (basis.T * coefficients).T
+        solution = list(np.add.reduce(linearCombination))
+
+        return solution
+    
+
+    def initial(self, lattice, distribution=uniform):
+        &#34;&#34;&#34;
+        Generates a random initial state.
+
+        Args:
+            lattice (Lattice): The integer lattice we&#39;re experimenting on.
+            distribution (Callable): A distribution from which we&#39;ll select;
+                this distribution must be _discrete_ and take _two integer inputs_
+                representing the lower and higher endpoints of the interval over
+                the integers.
+
+        Returns:
+            A cocycle with initial states.
+        &#34;&#34;&#34;
+        vertices = lattice.structure[0]
+        cocycle = np.array([
+            distribution(0, lattice.field.order) for _ in range(len(vertices))
+        ])
+
+        # If we&#39;re testing, give all the vertices the same spin. This way, we
+        # should ignore *no* edges.
+        if self.testing: return lattice.field(np.array([1]*len(vertices)))
+        return lattice.field(cocycle.astype(int))
+
+
+    def energy(self, lattice, state):
+        &#34;&#34;&#34;
+        Computes the Hamiltonian (energy) of the lattice in its current state.
+
+        Args:
+            lattice (Lattice): Lattice over which we&#39;re working.
+
+        Returns:
+            Integer representing the Hamiltonian.
+        &#34;&#34;&#34;
+        s = 0
+
+        for edge in lattice.structure[1]:
+            u, v = edge.coordinates
+            s += (1 if u.spin == v.spin else 0)
+
+        return -s</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>potts.models.Model.Model</li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="potts.models.SwendsonWang.energy"><code class="name flex">
+<span>def <span class="ident">energy</span></span>(<span>self, lattice, state)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Computes the Hamiltonian (energy) of the lattice in its current state.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>lattice</code></strong> :&ensp;<code>Lattice</code></dt>
+<dd>Lattice over which we're working.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Integer representing the Hamiltonian.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def energy(self, lattice, state):
+    &#34;&#34;&#34;
+    Computes the Hamiltonian (energy) of the lattice in its current state.
+
+    Args:
+        lattice (Lattice): Lattice over which we&#39;re working.
+
+    Returns:
+        Integer representing the Hamiltonian.
+    &#34;&#34;&#34;
+    s = 0
+
+    for edge in lattice.structure[1]:
+        u, v = edge.coordinates
+        s += (1 if u.spin == v.spin else 0)
+
+    return -s</code></pre>
+</details>
+</dd>
+<dt id="potts.models.SwendsonWang.initial"><code class="name flex">
+<span>def <span class="ident">initial</span></span>(<span>self, lattice, distribution=&lt;function uniform&gt;)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Generates a random initial state.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>lattice</code></strong> :&ensp;<code>Lattice</code></dt>
+<dd>The integer lattice we're experimenting on.</dd>
+<dt><strong><code>distribution</code></strong> :&ensp;<code>Callable</code></dt>
+<dd>A distribution from which we'll select;
+this distribution must be <em>discrete</em> and take <em>two integer inputs</em>
+representing the lower and higher endpoints of the interval over
+the integers.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>A cocycle with initial states.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def initial(self, lattice, distribution=uniform):
+    &#34;&#34;&#34;
+    Generates a random initial state.
+
+    Args:
+        lattice (Lattice): The integer lattice we&#39;re experimenting on.
+        distribution (Callable): A distribution from which we&#39;ll select;
+            this distribution must be _discrete_ and take _two integer inputs_
+            representing the lower and higher endpoints of the interval over
+            the integers.
+
+    Returns:
+        A cocycle with initial states.
+    &#34;&#34;&#34;
+    vertices = lattice.structure[0]
+    cocycle = np.array([
+        distribution(0, lattice.field.order) for _ in range(len(vertices))
+    ])
+
+    # If we&#39;re testing, give all the vertices the same spin. This way, we
+    # should ignore *no* edges.
+    if self.testing: return lattice.field(np.array([1]*len(vertices)))
+    return lattice.field(cocycle.astype(int))</code></pre>
+</details>
+</dd>
+<dt id="potts.models.SwendsonWang.proposal"><code class="name flex">
+<span>def <span class="ident">proposal</span></span>(<span>self, chain)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Proposal scheme for the Swendson-Wang evolution on the Potts model. </p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>chain</code></strong> :&ensp;<code>Chain</code></dt>
+<dd>Chain object which contains all the information we
+need.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>A proposed state.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def proposal(self, chain):
+    &#34;&#34;&#34;
+    Proposal scheme for the Swendson-Wang evolution on the Potts model. 
+
+    Args:
+        chain (Chain): Chain object which contains all the information we
+            need.
+
+    Returns:
+        A proposed state.
+    &#34;&#34;&#34;
+    # If we&#39;re testing, we want to record probabilities; since this is called
+    # at each step, we&#39;ll write something to file at each step.
+    if self.testing: self.log += f&#34;### STEP {chain.step} ###\n&#34;
+    # boundary = self._proposal_multiply(chain)
+    boundary = self._proposal_copy(chain)
+
+    # If we&#39;re testing, write the matrices to file and indicate which edges
+    # are ignored.
+    if self.testing:
+        pd.DataFrame(chain.state).to_csv(f&#34;./output/matrices/state-{chain.step}.csv&#34;, index=False)
+        pd.DataFrame(boundary).to_csv(f&#34;./output/matrices/operator-{chain.step}.csv&#34;, index=False)
+        self.log += &#34;\n\n&#34;
+
+    # Now, let&#39;s change the states! First, take the transpose of the boundary
+    # matrix (i.e. the coboundary matrix). Then, find a basis for the null
+    # space of this matrix, which is equivalent to finding a basis for the
+    # vector space of cocycles. Then, (uniformly randomly) sample coefficients
+    # from the field underlying the vector space, and scale the ith column of
+    # the basis matrix (the ith basis vector) by the ith coefficient. Finally,
+    # sum the *rows* of the linear combination, equivalent to summing the
+    # vectors element-wise to produce a cocycle!
+    coboundary = boundary.T
+    basis = coboundary.null_space()
+    coefficients = np.random.randint(0, chain.lattice.field.order, size=len(basis))
+    linearCombination = (basis.T * coefficients).T
+    solution = list(np.add.reduce(linearCombination))
+
+    return solution</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<!-- include a script for adding stuff to the end of proofs. -->
+<script>
+// Get all the proofs in the document.
+proofs = document.getElementsByClassName("proof");
+// For each of the proofs, attach a floating child element in the bottom-right
+// corner.
+for (var proof of proofs) {
+// Create a proof-ending tombstone.
+square = document.createElement("div");
+square.className = "tombstone";
+square.innerHTML = "◼️";
+// Attach the tombstone to the proof.
+proof.appendChild(square);
+}
+</script>
+<header>
+<a class="homelink" rel="home" title="potts" href="https://github.com/apizzimenti/potts">
+<style>
+header > h1 { display: none; }
+img.resize {
+max-width: 80%;
+max-height: 80%;
+display: block;
+margin: 0 auto;
+}
+div.proof {
+border: 1px solid black;
+padding: 0em 1em;
+width: 90%;
+margin: 1em auto;
+}
+.tombstone {
+margin-top: -2em;
+float: right;
+}
+</style>
+<img class="resize" src="../lattice.gif" alt="iteration on the Potts model">
+</a>
+</header>
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="potts" href="../index.html">potts</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="potts.models.GraphIsing" href="#potts.models.GraphIsing">GraphIsing</a></code></h4>
+<ul class="">
+<li><code><a title="potts.models.GraphIsing.energy" href="#potts.models.GraphIsing.energy">energy</a></code></li>
+<li><code><a title="potts.models.GraphIsing.initial" href="#potts.models.GraphIsing.initial">initial</a></code></li>
+<li><code><a title="potts.models.GraphIsing.proposal" href="#potts.models.GraphIsing.proposal">proposal</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="potts.models.GraphPercolation" href="#potts.models.GraphPercolation">GraphPercolation</a></code></h4>
+<ul class="">
+<li><code><a title="potts.models.GraphPercolation.energy" href="#potts.models.GraphPercolation.energy">energy</a></code></li>
+<li><code><a title="potts.models.GraphPercolation.initial" href="#potts.models.GraphPercolation.initial">initial</a></code></li>
+<li><code><a title="potts.models.GraphPercolation.proposal" href="#potts.models.GraphPercolation.proposal">proposal</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="potts.models.GraphSwendsonWang" href="#potts.models.GraphSwendsonWang">GraphSwendsonWang</a></code></h4>
+<ul class="">
+<li><code><a title="potts.models.GraphSwendsonWang.energy" href="#potts.models.GraphSwendsonWang.energy">energy</a></code></li>
+<li><code><a title="potts.models.GraphSwendsonWang.initial" href="#potts.models.GraphSwendsonWang.initial">initial</a></code></li>
+<li><code><a title="potts.models.GraphSwendsonWang.proposal" href="#potts.models.GraphSwendsonWang.proposal">proposal</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="potts.models.Model" href="#potts.models.Model">Model</a></code></h4>
+<ul class="">
+<li><code><a title="potts.models.Model.accept" href="#potts.models.Model.accept">accept</a></code></li>
+<li><code><a title="potts.models.Model.energy" href="#potts.models.Model.energy">energy</a></code></li>
+<li><code><a title="potts.models.Model.initial" href="#potts.models.Model.initial">initial</a></code></li>
+<li><code><a title="potts.models.Model.proposal" href="#potts.models.Model.proposal">proposal</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="potts.models.SwendsonWang" href="#potts.models.SwendsonWang">SwendsonWang</a></code></h4>
+<ul class="">
+<li><code><a title="potts.models.SwendsonWang.energy" href="#potts.models.SwendsonWang.energy">energy</a></code></li>
+<li><code><a title="potts.models.SwendsonWang.initial" href="#potts.models.SwendsonWang.initial">initial</a></code></li>
+<li><code><a title="potts.models.SwendsonWang.proposal" href="#potts.models.SwendsonWang.proposal">proposal</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
+</footer>
+</body>
+</html>

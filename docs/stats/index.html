@@ -1,0 +1,407 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.10.0" />
+<title>potts.stats API documentation</title>
+<meta name="description" content="" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS_CHTML" integrity="sha256-kZafAc6mZvK3W3v1pHOcUix30OHQN6pU/NO2oFkqZVw=" crossorigin></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>potts.stats</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">from .accepts import always, metropolis
+from .distributions import uniform
+from .schedules import constant, critical, randomizedToConstant, linear
+
+__all__ = [
+    &#34;always&#34;, &#34;uniform&#34;, &#34;constant&#34;, &#34;critical&#34;, &#34;randomizedToConstant&#34;, &#34;linear&#34;,
+    &#34;metropolis&#34;
+]</code></pre>
+</details>
+</section>
+<section>
+<h2 class="section-title" id="header-submodules">Sub-modules</h2>
+<dl>
+<dt><code class="name"><a title="potts.stats.accepts" href="accepts.html">potts.stats.accepts</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt><code class="name"><a title="potts.stats.distributions" href="distributions.html">potts.stats.distributions</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt><code class="name"><a title="potts.stats.schedules" href="schedules.html">potts.stats.schedules</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="potts.stats.always"><code class="name flex">
+<span>def <span class="ident">always</span></span>(<span>chain)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>An acceptance function which always accepts the proposed state; we do nothing
+with the arguments to this function.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>chain</code></strong> :&ensp;<code>Chain</code></dt>
+<dd>Chain object containing the model and current state.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>A function which always returns True.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def always(chain):
+    &#34;&#34;&#34;
+    An acceptance function which always accepts the proposed state; we do nothing
+    with the arguments to this function.
+
+    Args:
+        chain (Chain): Chain object containing the model and current state.
+
+    Returns:
+        A function which always returns True.
+    &#34;&#34;&#34;
+    def _(proposed): return True
+    return _</code></pre>
+</details>
+</dd>
+<dt id="potts.stats.constant"><code class="name flex">
+<span>def <span class="ident">constant</span></span>(<span>temperature)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>A constant annealing schedule.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>temperature</code></strong> :&ensp;<code>float</code></dt>
+<dd>The temperature to be returned.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>A function passed to a model constructor.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def constant(temperature):
+    &#34;&#34;&#34;
+    A constant annealing schedule.
+
+    Args:
+        temperature (float): The temperature to be returned.
+
+    Returns:
+        A function passed to a model constructor.
+    &#34;&#34;&#34;
+    def _(t):
+        return temperature
+    
+    return _</code></pre>
+</details>
+</dd>
+<dt id="potts.stats.critical"><code class="name flex">
+<span>def <span class="ident">critical</span></span>(<span>field)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>A constant annealing schedule which calculates the critical temperature
+of the model.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>field</code></strong> :&ensp;<code>int</code></dt>
+<dd>The order of the field we're over.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>A function passed to a Model constructor that returns the critical
+temperature of the Potts model.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def critical(field):
+    &#34;&#34;&#34;
+    A constant annealing schedule which calculates the critical temperature
+    of the model.
+
+    Args:
+        field (int): The order of the field we&#39;re over.
+
+    Returns:
+        A function passed to a Model constructor that returns the critical
+        temperature of the Potts model.
+    &#34;&#34;&#34;
+    critical = -np.log(1-(np.sqrt(field)/(1+np.sqrt(field))))
+
+    def _(t):
+        return critical
+    
+    return _</code></pre>
+</details>
+</dd>
+<dt id="potts.stats.linear"><code class="name flex">
+<span>def <span class="ident">linear</span></span>(<span>steps, low=-10, high=10)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>A linear temperature schedule.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>steps</code></strong> :&ensp;<code>int</code></dt>
+<dd>Total number of steps in the experiment.</dd>
+<dt><strong><code>low</code></strong> :&ensp;<code>float</code></dt>
+<dd>Lowest temperature we assign.</dd>
+<dt><strong><code>high</code></strong> :&ensp;<code>float</code></dt>
+<dd>Highest temperature we assign.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>A function that consumes a step number and returns a temperature.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def linear(steps, low=-10, high=10):
+    &#34;&#34;&#34;
+    A linear temperature schedule.
+
+    Args:
+        steps (int): Total number of steps in the experiment.
+        low (float): Lowest temperature we assign.
+        high (float): Highest temperature we assign.
+
+    Returns:
+        A function that consumes a step number and returns a temperature.
+    &#34;&#34;&#34;
+    def _(t):
+        q = t * ((high-low)/steps) + low
+        return q if q != 0 else 0.0000000000001
+
+    return _</code></pre>
+</details>
+</dd>
+<dt id="potts.stats.metropolis"><code class="name flex">
+<span>def <span class="ident">metropolis</span></span>(<span>burnIn=0.01)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def metropolis(burnIn=1/100):
+    def _metropolis(chain):
+        def _(proposed):
+            # First, check if we&#39;re within the burn-in window.
+            wait = np.ceil(burnIn*chain.steps)
+            if chain.step &lt; wait: return True
+            
+            # Compute the energies of each state.
+            oldEnergy = chain.model.energy(chain.lattice, chain.state)
+            newEnergy = chain.model.energy(chain.lattice, proposed)
+
+            # Compute the differences in the states&#39; energy; if the energy has *increased*
+            # (a thing we don&#39;t want), then our difference is less than 0, and we
+            # navigate there with some small nonzero chance; if the energy is higher,
+            # we always go there.
+            diff = newEnergy-oldEnergy
+
+            # Otherwise, if the difference is negative --- that is, the move is bad ---
+            # we want to travel to this state with probability inversely exponential
+            # to the difference (times our temperature parameter).
+            p = min(math.exp(-chain.model.temperatureFunction(chain.step)*diff), 1)
+            q = np.random.uniform()
+            
+            return q &lt; p
+        
+        return _
+    return _metropolis</code></pre>
+</details>
+</dd>
+<dt id="potts.stats.randomizedToConstant"><code class="name flex">
+<span>def <span class="ident">randomizedToConstant</span></span>(<span>constant, steps, hold=0.5, distribution=&lt;built-in method normal of numpy.random.mtrand.RandomState object&gt;)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>A temperature schedule which samples spin values (according to <code>distribution</code>)
+<em>less than</em> the critical temperature of the model, then fixes the temperature
+at the critical temperature for some desired proportion of the runtime.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>steps</code></strong> :&ensp;<code>int</code></dt>
+<dd>Total number of steps the experiment takes.</dd>
+<dt><strong><code>field</code></strong> :&ensp;<code>int</code></dt>
+<dd>Order of the field we're over; used to compute critical
+temperature.</dd>
+<dt><strong><code>hold</code></strong> :&ensp;<code>float</code></dt>
+<dd>Value in [0,1] which represents the proportion of the time
+the temperature is fixed at the critical temperature. Defaults to
+half random, half fixed.</dd>
+<dt><strong><code>distribution</code></strong> :&ensp;<code>Callable</code></dt>
+<dd>Distribution from which we sample.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>A function that consumes a step number and returns a temperature.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def randomizedToConstant(constant, steps, hold=1/2, distribution=np.random.normal):
+    &#34;&#34;&#34;
+    A temperature schedule which samples spin values (according to `distribution`)
+    *less than* the critical temperature of the model, then fixes the temperature
+    at the critical temperature for some desired proportion of the runtime.
+
+    Args:
+        steps (int): Total number of steps the experiment takes.
+        field (int): Order of the field we&#39;re over; used to compute critical
+            temperature.
+        hold (float): Value in [0,1] which represents the proportion of the time
+            the temperature is fixed at the critical temperature. Defaults to
+            half random, half fixed.
+        distribution (Callable): Distribution from which we sample.
+
+    Returns:
+        A function that consumes a step number and returns a temperature.
+    &#34;&#34;&#34;
+    holdAtStep = int(steps * (1-hold))
+
+    def _(t):
+        if t &lt; holdAtStep: return distribution()
+        else: return constant
+
+    return _</code></pre>
+</details>
+</dd>
+<dt id="potts.stats.uniform"><code class="name flex">
+<span>def <span class="ident">uniform</span></span>(<span>low, high)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Discrete uniform distribution on [low, high).</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>low</code></strong> :&ensp;<code>int</code></dt>
+<dd>Lower end of interval.</dd>
+<dt><strong><code>high</code></strong> :&ensp;<code>int</code></dt>
+<dd>Upper end of interval.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>A value selected uniformly randomly from the interval [low, high).</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def uniform(low, high):
+    &#34;&#34;&#34;
+    Discrete uniform distribution on [low, high).
+
+    Args:
+        low (int): Lower end of interval.
+        high (int): Upper end of interval.
+    
+    Returns:
+        A value selected uniformly randomly from the interval [low, high).
+    &#34;&#34;&#34;
+    return np.random.randint(low, high=high)</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+</article>
+<nav id="sidebar">
+<!-- include a script for adding stuff to the end of proofs. -->
+<script>
+// Get all the proofs in the document.
+proofs = document.getElementsByClassName("proof");
+// For each of the proofs, attach a floating child element in the bottom-right
+// corner.
+for (var proof of proofs) {
+// Create a proof-ending tombstone.
+square = document.createElement("div");
+square.className = "tombstone";
+square.innerHTML = "◼️";
+// Attach the tombstone to the proof.
+proof.appendChild(square);
+}
+</script>
+<header>
+<a class="homelink" rel="home" title="potts" href="https://github.com/apizzimenti/potts">
+<style>
+header > h1 { display: none; }
+img.resize {
+max-width: 80%;
+max-height: 80%;
+display: block;
+margin: 0 auto;
+}
+div.proof {
+border: 1px solid black;
+padding: 0em 1em;
+width: 90%;
+margin: 1em auto;
+}
+.tombstone {
+margin-top: -2em;
+float: right;
+}
+</style>
+<img class="resize" src="../lattice.gif" alt="iteration on the Potts model">
+</a>
+</header>
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="potts" href="../index.html">potts</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-submodules">Sub-modules</a></h3>
+<ul>
+<li><code><a title="potts.stats.accepts" href="accepts.html">potts.stats.accepts</a></code></li>
+<li><code><a title="potts.stats.distributions" href="distributions.html">potts.stats.distributions</a></code></li>
+<li><code><a title="potts.stats.schedules" href="schedules.html">potts.stats.schedules</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="potts.stats.always" href="#potts.stats.always">always</a></code></li>
+<li><code><a title="potts.stats.constant" href="#potts.stats.constant">constant</a></code></li>
+<li><code><a title="potts.stats.critical" href="#potts.stats.critical">critical</a></code></li>
+<li><code><a title="potts.stats.linear" href="#potts.stats.linear">linear</a></code></li>
+<li><code><a title="potts.stats.metropolis" href="#potts.stats.metropolis">metropolis</a></code></li>
+<li><code><a title="potts.stats.randomizedToConstant" href="#potts.stats.randomizedToConstant">randomizedToConstant</a></code></li>
+<li><code><a title="potts.stats.uniform" href="#potts.stats.uniform">uniform</a></code></li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
+</footer>
+</body>
+</html>
