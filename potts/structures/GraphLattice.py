@@ -123,9 +123,10 @@ class GraphLattice:
             state (list): States to apply to vertices.
         """
         for index, spin in enumerate(state): self.graph[index].spin = spin
+
         for edge in self.graph.edges():
             u, v = edge.at
-            edge.spin = (0 if u.spin != v.spin else 1)
+            edge.spin = 1 if u.spin == v.spin else 0
     
 
     @staticmethod

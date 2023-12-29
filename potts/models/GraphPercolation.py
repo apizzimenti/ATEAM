@@ -58,13 +58,11 @@ class GraphPercolation(Model):
         for v in G.nodes():
             q = np.random.uniform()
             spun = q < p
-
             v.spin = 1 if spun else 0
 
         for e in G.edges():
             u, v = e.at
-            if u.spin == v.spin: e.spin = 1
-            else: e.spin = 0
+            e.spin = 1 if u.spin == v.spin else 0
 
         return [v.spin for v in G.nodes()]
 
