@@ -4,7 +4,7 @@ from itertools import product
 from numba import jit, njit
 
 
-@jit(forceobj=True)
+# @jit(forceobj=True)
 def coordinates(corners):
     """
     Determines all possible lattice coordinates with the given corners.
@@ -34,10 +34,10 @@ def elementwiseAdd(A, B): return [A[i]+B[i] for i in range(len(A))]
 def subtractMany(A, b): return [elementwiseSubtract(a, b) for a in A]
 
 # @jit
-def binaryEncode(a): return int(''.join([str(t) for t in a]), base=2)
+def binaryEncode(a, n): return tuple(int(s) for s in bin(a)[2:].zfill(n))
 
 # @jit
-def binaryUnencode(n, l): return tuple([int(d) for d in str(bin(n))[2:].zfill(l)])
+def binaryUnencode(t): return sum(t)
 
 
 # @numba.jit

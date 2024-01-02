@@ -1,13 +1,11 @@
 
 import galois
-import scipy as scp
-import numpy as np
-from numba import jit, njit
-from math import comb
+import copy
 from itertools import combinations
+from functools import reduce
 
 from ..utils import coordinates, binaryEncode, subtractMany, increment, binaryUnencode
-from .Cell import ReducedCell
+from .Cell import ReducedCell, BinaryReducedCell
 
 
 class Lattice:
@@ -54,36 +52,65 @@ class Lattice:
         vertices = coordinates(self.corners)
         
         # Construct 0-cells (vertices).
-        self.skeleta[0] = {
-            v: ReducedCell(v, vertex=True) for v in vertices
-        }
+        self.skeleta = {}
 
         # Construct higher-dimensional cells.
         self._higherDimensionalCells()
 
     
     def _higherDimensionalCells(self):
-        vertices = self.skeleta[0].values()
+        # First, create a prototypical Hamming cube of the specified dimension.
+        prototype = self._HammingPrototype()
 
-        for dimension in range(1, self.dimension+1):
-            for vertex in vertices:
-                # Get the "anchor" vertex; if this vertex is a boundary vertex (i.e.
-                # is too close to the edge in any coordinate) we ignore and continue.
-                # For example, a 1x1x1 integer lattice should have *precisely* one
-                # cube, six squares, 12 edges, and eight vertices.
-                _anchor = vertex.vertices[0]
-                if not all(_anchor[t] < self.corners[t] for t in range(len(self.corners))): continue
+        # Next, based on the dimensions of the lattice, we glue *copies* of
+        # the hypercube together. 
 
-                # Get the integer value of the coordinates. For each dimension from
-                # 1 to the dimension of the complex (or the user-specified dimension,
-                # whichever is lower) we find the appropriately-sized hypercubes and
-                # construct cells. We do so by figuring out how many different ways
-                # there are to combine our basis elements!
-                anchor = binaryEncode(_anchor)
-                basis = [2**k for k in range(len(_anchor))]
 
-                # Figure out the ways we can combine elements to determine faces.
-                linearCombinations = combinations(basis, r=dimension)
-                print(anchor)
-                print(list(linearCombinations))
-                print()
+    def _HammingPrototype(self):
+        """
+        Creates a prototypical Hamming cube of the specified dimension.
+        """
+        # Basis (powers of two) for the Hamming cube.
+        basis = [2**k for k in range(self.dimension)]
+
+        # Cosntruct vertices and edges separately.
+        faces = { d: {} for d in range(self.dimension+1) }
+        faces[0] = { k: BinaryReducedCell(k, True)  for k in range(2**self.dimension) }
+        faces[1] = { frozenset([b]): BinaryReducedCell([faces[0][0], faces[0][b]]) for b in basis }
+        
+        # Get all linear combinations of basis elements, and encode them as
+        # frozensets so they're hashable.
+        _linearCombinations = [list(combinations(basis, k)) for k in range(2, self.dimension+1)]
+        linearCombinations = [frozenset(s) for s in reduce(lambda a, b: a+b, _linearCombinations)]
+
+        for linearCombination in linearCombinations:
+            # Determine the dimension of the hypercube we're constructing;
+            # determine all the left-hand (i.e. incident to 0) hypercube
+            # encodings of one dimension less. 
+            dimension = len(linearCombination)
+            subsets = [frozenset(c) for c in combinations(linearCombination, dimension-1)]
+            components = []
+
+            # For each hypercube encoding, find the corresponding ReducedCell
+            # (which, by induction, exists) and "shift" the hypercube over by the
+            # basis element *not* included in the encoding. For example, we get
+            # the edge (2, 3) by adding 2 to each coordinate of the edge (0, 1).
+            # Combine the old components with the new, and we have our new
+            # component. Continue until we've exhausted the linear combinations.
+            for subset in subsets:
+                component = faces[dimension-1][subset]
+                shift = set(linearCombination-subset).pop()
+                shifted = copy.deepcopy(component)
+                shifted.shift(shift)
+
+                components.extend([component, shifted])
+
+            # Add a new face.
+            faces[dimension][linearCombination] = BinaryReducedCell(components)
+
+        # The topmost face is the hypercube we aimed to construct: a Hamming
+        # cube which contains information about *all* of its constituent faces.
+        # All that's left now is to convert the vertices to coordinates, and
+        # we're ready to do some shifting.
+        HammingCube = copy.deepcopy(faces[self.dimension][linearCombination])
+        print(HammingCube)
