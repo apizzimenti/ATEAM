@@ -1,6 +1,6 @@
 
 from functools import reduce
-from itertools import product
+from itertools import product, chain
 from numba import jit, njit
 
 
@@ -20,8 +20,13 @@ def coordinates(corners):
             (left, right) if isinstance(left, int) else left+(right,)
             for left, right in product(A,B)
         ],
-        [list(range(corner+1)) for corner in corners]
+        [list(range(corner)) for corner in corners]
     ))
+
+# @jit(nopython=True) 
+def flattenAndSortSetUnion(A):
+    settable = list(set(chain.from_iterable(A)))
+    return settable
 
 
 @njit
@@ -29,6 +34,9 @@ def elementwiseSubtract(A, B): return [A[i]-B[i] for i in range(len(A))]
 
 @njit
 def elementwiseAdd(A, B): return [A[i]+B[i] for i in range(len(A))]
+
+# @njit
+def elementwiseAddOne(A, k): return [A[i]+k for i in range(len(A))]
 
 # @jit
 def subtractMany(A, b): return [elementwiseSubtract(a, b) for a in A]

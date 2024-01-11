@@ -1,4 +1,4 @@
 
 from potts import Lattice
 
-L = Lattice([1, 1])
+L = Lattice([20, 20, 20])
