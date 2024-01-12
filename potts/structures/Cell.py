@@ -1,7 +1,4 @@
 
-from functools import reduce
-from numba.typed import List
-from numba import int64
 from ..utils import flattenAndSortSetUnion, elementwiseAddOne
 
 
@@ -26,7 +23,11 @@ class ReducedCell():
         self.hash = hash(self.encoding)
         self.str = str(self.encoding)
 
+
+    def __lt__(self, other): return self.encoding < other.encoding
+    def __gt__(self, other): return self.encoding > other.encoding
     def __eq__(self, other): return self.encoding == other.encoding
+
     def __str__(self): return self.str
     def __hash__(self): return self.hash
 
@@ -35,7 +36,7 @@ class IntegerReducedCell():
     def __init__(self, faces, vertex=False):
         self.dimension = 0 if vertex else faces[0].dimension+1
         self.vertices = [faces] if vertex else flattenAndSortSetUnion([face.vertices for face in faces])
-        self.encoding = tuple(list(sorted(self.vertices))) + (self.dimension,)
+        self.encoding = tuple(self.vertices) + (self.dimension,)
         self.faces = set(faces if self.dimension > 0 else [faces])
 
         self.hash = hash(self.encoding)
@@ -44,7 +45,10 @@ class IntegerReducedCell():
     def shiftedEncoding(self, k):
         return tuple(elementwiseAddOne(self.vertices, k)) + (self.dimension,)
     
+    def __lt__(self, other): return self.encoding < other.encoding
+    def __gt__(self, other): return self.encoding > other.encoding
     def __eq__(self, other): return self.encoding == other.encoding
+
     def __str__(self): return self.str
     def __hash__(self): return self.hash
 

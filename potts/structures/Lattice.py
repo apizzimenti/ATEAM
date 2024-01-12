@@ -1,5 +1,7 @@
 
 import galois
+import numpy as np
+import scipy as scp
 from itertools import combinations as combs
 from functools import reduce
 
@@ -41,6 +43,9 @@ class Lattice:
         self.skeleta = { k: {} for k in range(self.dimension+1)}
         self._bottomUp()
 
+        # Construct the boundary matrix.
+        self._constructBoundaryMatrix()
+
 
     def _initializeComputables(self):
         # Construct the integer basis for a *single* cube.
@@ -70,7 +75,6 @@ class Lattice:
             self.innerShifts[subset] = [set(subset-c).pop() for c in subsetBasisElements]
 
 
-
     def IntegerHammingCube(self):
         """
         Constructs an integer-cornered Hamming cube.
@@ -91,6 +95,9 @@ class Lattice:
 
         for subset in self.power:
             dimension = len(subset)
+
+            # Check whether we even need to construct an element of this kind.
+            if dimension > self.dimension: break
 
             # First, find the amounts we'll shift each face by. Leave out the
             # identity shift (i.e. the 0-combination).
@@ -177,7 +184,7 @@ class Lattice:
                 # We translate everything and *reverse* the encoding, otherwise
                 # the coordinate orders don't match up.
                 translate = ReducedCell(
-                    tuple(reversed(binaryEncode(cube.vertices[0], N))),
+                    tuple(reversed(binaryEncode(cube.vertices[0], len(self.corners)))),
                     vertex=True
                 )
             else:
@@ -196,6 +203,7 @@ class Lattice:
         coordinateCube = descendIntoFace(integerCube)
         return coordinateCube
     
+
     @staticmethod
     def translateCell(cell, corner):
         """
@@ -255,3 +263,30 @@ class Lattice:
             cube = self.CoordinateHammingCube()
             translated = self.translateCell(cube, vertex)
             existing = self.replaceFaces(translated)
+
+
+    def _constructBoundaryMatrix(self):
+        """
+        Constructs the (co)boundary matrix for this cubical lattice.
+        """
+        faces = list(self.skeleta[self.dimension-1].values())
+        cubes = list(self.skeleta[self.dimension].values())
+        
+        # Create indexes, mapping encodings to row or column indices.
+        faceIndex = dict(zip(faces, range(len(faces))))
+        cubeIndex = dict(zip(cubes, range(len(cubes))))
+
+        # Construct a compressed sparse column (CSC) matrix of the required size.
+        faceCount = len(faces)
+        cubeCount = len(cubes)
+        B = scp.sparse.csc_array((faceCount, cubeCount), dtype=int)
+
+        # Iterate over the cubes, accounting for faces.
+        for cube in cubes:
+            j = cubeIndex[cube]
+            for face in cube.faces:
+                i = faceIndex[face]
+                B[i,j] = 1
+
+        self.boundary = B
+        self.coboundary = B.transpose()

@@ -26,7 +26,7 @@ def coordinates(corners):
 # @jit(nopython=True) 
 def flattenAndSortSetUnion(A):
     settable = list(set(chain.from_iterable(A)))
-    return settable
+    return list(sorted(settable))
 
 
 @njit
