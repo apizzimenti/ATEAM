@@ -6,7 +6,7 @@ import ast
 from itertools import combinations as combs
 from functools import reduce
 
-from ..arithmetic import coordinates, binaryEncode, elementwiseAdd
+from ..arithmetic import coordinates, binaryEncode, elementwiseAdd, elementwiseAddModuli
 from .Cell import Cell, IntegerCell, ReducedCell
 
 
@@ -42,9 +42,12 @@ class Lattice:
                 conditions (i.e. are we making a torus)?
         """
         self.dimension = dimension if dimension else len(corners)
+        self.periodicBoundaryConditions = periodicBoundaryConditions
+
+        # Construct an initial LargeLattice.
         _L = LargeLattice(
             corners=corners, dimension=self.dimension,
-            periodicBoundaryConditions=periodicBoundaryConditions
+            periodicBoundaryConditions=self.periodicBoundaryConditions
         )
 
         # Construct the finite field object.
@@ -84,33 +87,28 @@ class Lattice:
                 "cubes": {
                     str(cube.encoding): [self.index.faces[f] for f in cube.faces]
                     for cube in self.cubes
-                }
-            }, fp
+                },
+                "field": self.field.order,
+                "dimension": self.dimension,
+                "periodicBoundaryConditions": int(self.periodicBoundaryConditions)
+            }, fp, indent=2
         )
         
 
-    def fromFile(self, fp, field, dimension, periodicBoundaryConditions):
+    def fromFile(self, fp):
         """
         Reconstructs a serialized Lattice.
 
         Args:
             fp: Python file object; must be in read mode.
-            field (int): Characteristic of finite field from which cells take
-                coefficients.
-            dimension (int): Maximal cell dimension; if this argument is larger
-                than that permitted by the underlying cell structure, this is
-                re-set to the maximal legal dimension. Defaults to 1, so the
-                lattice is constructed only of vertices (0-cells) and edges
-                (1-cells).
-            periodicBoundaryConditions (bool): Do we use periodic boundary
-                conditions (i.e. are we making a torus)?
         """
-        # Set field and dimension.
-        self.field = galois.GF(field)
-        self.dimension = dimension
-        
         # Read file into memory.
         serialized = json.load(fp)
+
+        # Set field and dimension.
+        self.field = galois.GF(int(serialized["field"]))
+        self.dimension = int(serialized["dimension"])
+        self.periodicBoundaryConditions = bool(serialized["periodicBoundaryConditions"])
 
         # Create faces and cubes.
         faces = {
@@ -351,21 +349,25 @@ class LargeLattice:
     
 
     @staticmethod
-    def translateCell(cell, corner):
+    def translateCell(cell, anchor, corners=None):
         """
         Translates this ReducedCell so it is anchored at the given coordinate
         `corner`.
 
         Args:
-            corner (tuple): Destination coordinate for the bottom-left corner of
-                this Cell. 
+            cell (Cell): Cell into whose faces we'll be delving.
+            anchor (tuple): Destination coordinate for the bottom-left corner of
+                this Cell.
+            corners (list): List of corners of the Lattice.
         """
         def descendToVertices(cube):
             # If the cube is a vertex, we modify the coordinates of the vertex.
             # Otherwise, we just apply this map to all the faces of the cube.
             if cube.dimension == 0:
-                cube.vertices = [tuple(elementwiseAdd(cube.vertices[0], corner))]
-                # cube.vertices = [tuple(sum(z) for z in zip(cube.vertices[0], corner))]
+                cube.vertices = [
+                    tuple(elementwiseAddModuli(cube.vertices[0], anchor, corners)) if corners
+                    else tuple(elementwiseAdd(cube.vertices[0], anchor))
+                ]
             else:
                 for face in cube.faces: descendToVertices(face)
 
@@ -407,7 +409,10 @@ class LargeLattice:
         # replace it with what already exists.
         for vertex in vertices:
             cube = self.CoordinateHammingCube()
-            translated = self.translateCell(cube, vertex)
+            translated = self.translateCell(
+                cube, vertex,
+                corners=self.corners if self.periodicBoundaryConditions else None
+            )
             self.replaceFaces(translated)
 
         # Set the "cubes" and "faces" of the lattice.

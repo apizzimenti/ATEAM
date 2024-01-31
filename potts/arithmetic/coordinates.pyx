@@ -32,6 +32,8 @@ cpdef list flattenAndSortSetUnion(list A):
 
 def elementwiseSubtract(A, B): return [A[i]-B[i] for i in range(len(A))]
 
+def elementwiseAddModuli(A, B, moduli): return [(A[i]+B[i])%moduli[i] for i in range(len(A))]
+
 def elementwiseAdd(A, B): return [A[i]+B[i] for i in range(len(A))]
 
 def elementwiseAddOne(A, k): return [A[i]+k for i in range(len(A))]
