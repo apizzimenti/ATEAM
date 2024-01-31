@@ -1,6 +1,6 @@
 
 from .Lattice import Lattice
-from .Cell import ReducedCell, IntegerReducedCell
+from .Cell import Cell, IntegerCell
 from .GraphLattice import GraphLattice
 
-__all__ = ["ReducedCell", "IntegerReducedCell", "Lattice", "GraphLattice"]
+__all__ = ["Cell", "IntegerCell", "Lattice", "GraphLattice"]

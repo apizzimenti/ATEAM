@@ -7,14 +7,14 @@ class Chain:
     """
 
     def __init__(
-            self, lattice, model, initial, accept=always, sampleInterval=0, statistics={},
+            self, model, initial=None, accept=always, sampleInterval=0, statistics={},
             steps=10000
         ):
         """
         Initializes the Chain object.
 
         Args:
-            lattice (Lattice): A Lattice object.
+
             proposal (callable): A function which consumes this Chain object and
                 proposes a new state.
             initial (np.array): A NumPy Array (homomorphism from the (k-1)-simplices
@@ -29,15 +29,13 @@ class Chain:
                 and stores whatever output is given.
             steps (int): The number of iterations in the chain.
         """
-        self.lattice = lattice
         self.model = model
-        self.initial = initial
+        self.initial = initial if initial else model.initial()
         self.steps = steps
         self.accept = accept(self)
 
         # Store stats and things.
         self.functions = statistics
-        self.functions["energy"] = model.energy
         self.statistics = { name: [] for name in self.functions.keys() }
 
         # Assignment-related things.
@@ -61,19 +59,21 @@ class Chain:
         # While we haven't reached the max number of steps, propose a new plan,
         # check whether it's acceptable/valid, and continue.
         while self.step < self.steps:
-            # Propose the next state and check whether it's valid.
-            proposed = self.model.proposal(self)
+            # Propose the next state and check whether it's valid; assign the
+            # state to the Model.
+            proposed = self.model.proposal(self.step)
             self.state = (proposed if self.accept(proposed) else self.state)
+            self.model.assign(self.state)
 
-            # Assign things to the lattice and collect statistics.
-            self.lattice.assign(self.state)
-            for name, function in self.functions.items(): self.statistics[name].append(function(self.lattice, self.state))
+            # Compute statistics.
+            for name, function in self.functions.items():
+                self.statistics[name].append(function(self.model, self.state))
 
             # If we're collecting samples, collect!
-            try:
-                if self.step % self.sampleInterval == 0:
-                    self.assignments.append(list(self.state))
-            except: pass
+            # try:
+            #     if self.step % self.sampleInterval == 0:
+            #         self.assignments.append(list(self.state))
+            # except: pass
             
             # Iterate.
             self.step += 1
@@ -82,7 +82,7 @@ class Chain:
         
         # If we haven't returned, we're done; convert the assignments to JSON-ifiable
         # types, and stop iteration.
-        self.assignments = [[int(s) for s in assignment] for assignment in self.assignments]
+        # self.assignments = [[int(s) for s in assignment] for assignment in self.assignments]
         
         raise StopIteration
     

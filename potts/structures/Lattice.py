@@ -1,18 +1,29 @@
 
 import galois
 import numpy as np
-import scipy as scp
+import json
+import ast
 from itertools import combinations as combs
 from functools import reduce
 
-from ..utils import coordinates, binaryEncode, elementwiseAdd
-from .Cell import ReducedCell, IntegerReducedCell
+from ..arithmetic import coordinates, binaryEncode, elementwiseAdd
+from .Cell import Cell, IntegerCell, ReducedCell
+
+
+class Index:
+    cubes = {}
+    faces = {}
 
 
 class Lattice:
-    def __init__(
-            self, corners, field=2, dimension=None, periodicBoundaryConditions=True
-        ):
+    """
+    A class which, post-construction of the giganto-lattice, keeps only records
+    of the encodings of cubes and faces. This format is much smaller and far
+    easier to serialize and store.
+    """
+    def __init__(self): pass
+    
+    def fromCorners(self, corners, field=2, dimension=None, periodicBoundaryConditions=True):
         """
         Creates a cell complex with the given corners made of cells of the
         provided dimension.
@@ -30,10 +41,148 @@ class Lattice:
             periodicBoundaryConditions (bool): Do we use periodic boundary
                 conditions (i.e. are we making a torus)?
         """
+        self.dimension = dimension if dimension else len(corners)
+        _L = LargeLattice(
+            corners=corners, dimension=self.dimension,
+            periodicBoundaryConditions=periodicBoundaryConditions
+        )
+
+        # Construct the finite field object.
+        self.field = galois.GF(field)
+
+        # Reduced cells; they carry only the encoding and, if they're cubes, the
+        # list of faces making them up.
+        self.faces = list(sorted(ReducedCell(f.encoding[:-1]) for f in _L.skeleta[self.dimension-1].values()))
+        _faceLookup = { f.encoding: f for f in self.faces}
+
+        self.cubes = list(sorted(
+            ReducedCell(c.encoding[:-1], faces=[_faceLookup[f.encoding[:-1]] for f in c.faces])
+            for c in _L.skeleta[self.dimension].values()
+        ))
+
+        # Index.
+        self._index()
+
+        # Construct the boundary matrix.
+        self._constructBoundaryMatrix()
+
+        # Force garbage collection on the Lattice and the lookup.
+        del _faceLookup
+        del _L
+
+
+    def toFile(self, fp):
+        """
+        JSON-serializes this object and writes it to file so we can reconstruct
+        it later.
+
+        Args:
+            fp: File object; must be in write mode.
+        """
+        json.dump({
+                "faces": { k: str(f.encoding) for f, k in self.index.faces.items() },
+                "cubes": {
+                    str(cube.encoding): [self.index.faces[f] for f in cube.faces]
+                    for cube in self.cubes
+                }
+            }, fp
+        )
+        
+
+    def fromFile(self, fp, field, dimension, periodicBoundaryConditions):
+        """
+        Reconstructs a serialized Lattice.
+
+        Args:
+            fp: Python file object; must be in read mode.
+            field (int): Characteristic of finite field from which cells take
+                coefficients.
+            dimension (int): Maximal cell dimension; if this argument is larger
+                than that permitted by the underlying cell structure, this is
+                re-set to the maximal legal dimension. Defaults to 1, so the
+                lattice is constructed only of vertices (0-cells) and edges
+                (1-cells).
+            periodicBoundaryConditions (bool): Do we use periodic boundary
+                conditions (i.e. are we making a torus)?
+        """
+        # Set field and dimension.
+        self.field = galois.GF(field)
+        self.dimension = dimension
+        
+        # Read file into memory.
+        serialized = json.load(fp)
+
+        # Create faces and cubes.
+        faces = {
+            int(k): ReducedCell(ast.literal_eval(f)) for k, f in serialized["faces"].items()
+        }
+
+        self.faces = list(sorted(faces.values()))
+        self.cubes = list(sorted(
+            ReducedCell(ast.literal_eval(c), faces=list(sorted(faces[k] for k in indices)))
+            for c, indices in serialized["cubes"].items()
+        ))
+
+        # Create indices and construct the boundary matrix.
+        self._index()
+        self._constructBoundaryMatrix()
+
+        del serialized
+        del faces
+
+    
+    def _index(self):
+        """
+        Creates an internal index for the faces and cubes of the Lattice.
+        """
+        # Create an indexing subobject.
+        self.index = Index()
+        self.index.cubes = { c: k for k, c in enumerate(self.cubes) }
+        self.index.faces = { f: k for k, f in enumerate(self.faces) }
+
+    
+    def _constructBoundaryMatrix(self):
+        """
+        Constructs the (co)boundary matrix for this cubical lattice.
+        """
+        faceCount = len(self.faces)
+        cubeCount = len(self.cubes)
+        
+        # Construct the boundary matrix.
+        B = np.zeros((faceCount, cubeCount), dtype=int)
+        
+        for cube in self.cubes:
+            j = self.index.cubes[cube]
+            for face in cube.faces:
+                i = self.index.faces[face]
+                B[i,j] = 1
+        
+        self.boundary = self.field(B)
+        self.coboundary = self.field(B.transpose())
+
+
+class LargeLattice:
+    def __init__(
+            self, corners, dimension=None, periodicBoundaryConditions=True
+        ):
+        """
+        Creates a cell complex with the given corners made of cells of the
+        provided dimension.
+
+        Args:
+            corners (list): Corners of the lattice; determines the maximal
+                cell dimension.
+            dimension (int): Maximal cell dimension; if this argument is larger
+                than that permitted by the underlying cell structure, this is
+                re-set to the maximal legal dimension. Defaults to 1, so the
+                lattice is constructed only of vertices (0-cells) and edges
+                (1-cells).
+            periodicBoundaryConditions (bool): Do we use periodic boundary
+                conditions (i.e. are we making a torus)?
+        """
         # Defaults.
         self.corners = corners
         self.dimension = dimension if dimension and dimension <= len(corners) else len(corners)
-        self.field = galois.GF(field)
         self.periodicBoundaryConditions = periodicBoundaryConditions
 
         # Pre-compute stuff that's pre-computable.
@@ -42,9 +191,6 @@ class Lattice:
         # Construct the lattice.
         self.skeleta = { k: {} for k in range(self.dimension+1)}
         self._bottomUp()
-
-        # Construct the boundary matrix.
-        self._constructBoundaryMatrix()
 
 
     def _initializeComputables(self):
@@ -87,7 +233,7 @@ class Lattice:
         skeleta = { k: {} for k in range(self.dimension+1) }
 
         # Create vertices.
-        vertices = [IntegerReducedCell(k, True) for k in range(2**self.dimension)]
+        vertices = [IntegerCell(k, True) for k in range(2**self.dimension)]
         skeleta[0] = { c.encoding: c for c in vertices }
 
         # Initialize basis elements. We get creative here!
@@ -112,7 +258,7 @@ class Lattice:
                 b = set(subset).pop()
                 u = skeleta[0][(0, 0)]
                 v = skeleta[0][(b, 0)]
-                cube = IntegerReducedCell([u, v])
+                cube = IntegerCell([u, v])
                 basisFaces[subset] = cube
                 skeleta[1][(u, v, 1)] = cube
 
@@ -123,7 +269,7 @@ class Lattice:
                     shiftedEncoding = cube.shiftedEncoding(shift)
                     w, x, _ = shiftedEncoding
                     if not skeleta[1].get(shiftedEncoding, False):
-                        shiftedCube = IntegerReducedCell([basisFaces[w], basisFaces[x]])
+                        shiftedCube = IntegerCell([basisFaces[w], basisFaces[x]])
                         skeleta[1][shiftedEncoding] = shiftedCube
                         
                 # Go to the next thing right away.
@@ -145,7 +291,7 @@ class Lattice:
             # Combine the basis faces and the shifted basis faces to get *all* the
             # faces for this hypercube, and create the object.
             shiftedFaces = subsetBasisFaces + subsetShiftedBasisFaces
-            newBasisCube = IntegerReducedCell(shiftedFaces)
+            newBasisCube = IntegerCell(shiftedFaces)
             basisFaces[subset] = newBasisCube
             skeleta[dimension][newBasisCube.encoding] = newBasisCube
 
@@ -157,7 +303,7 @@ class Lattice:
                 if not skeleta[dimension].get(shiftedCubeEncoding, False):
                     shiftedFaceEncodings = [face.shiftedEncoding(shift) for face in newBasisCube.faces]
                     shiftedFaces = [skeleta[dimension-1][e] for e in shiftedFaceEncodings]
-                    shiftedCube = IntegerReducedCell(shiftedFaces)
+                    shiftedCube = IntegerCell(shiftedFaces)
 
                     skeleta[dimension][shiftedCubeEncoding] = shiftedCube
 
@@ -177,18 +323,18 @@ class Lattice:
         coordinateSkeleta = { d: {} for d in range(self.dimension+1) }
 
         integerCube = list(integerSkeleta[self.dimension].values())[0]
-        N = self.dimension
+        N = len(self.corners)
 
         def descendIntoFace(cube):
             if cube.dimension == 0:
                 # We translate everything and *reverse* the encoding, otherwise
                 # the coordinate orders don't match up.
-                translate = ReducedCell(
-                    tuple(reversed(binaryEncode(cube.vertices[0], len(self.corners)))),
+                translate = Cell(
+                    tuple(reversed(binaryEncode(cube.vertices[0], N))),
                     vertex=True
                 )
             else:
-                translate = ReducedCell([descendIntoFace(f) for f in cube.faces])
+                translate = Cell([descendIntoFace(f) for f in cube.faces])
 
             # Check if we've already created this face. If not, chuck it into the
             # dictionary, and return the translation (whether it's been created
@@ -262,31 +408,8 @@ class Lattice:
         for vertex in vertices:
             cube = self.CoordinateHammingCube()
             translated = self.translateCell(cube, vertex)
-            existing = self.replaceFaces(translated)
+            self.replaceFaces(translated)
 
-
-    def _constructBoundaryMatrix(self):
-        """
-        Constructs the (co)boundary matrix for this cubical lattice.
-        """
-        faces = list(self.skeleta[self.dimension-1].values())
-        cubes = list(self.skeleta[self.dimension].values())
-        
-        # Create indexes, mapping encodings to row or column indices.
-        faceIndex = dict(zip(faces, range(len(faces))))
-        cubeIndex = dict(zip(cubes, range(len(cubes))))
-
-        # Construct a compressed sparse column (CSC) matrix of the required size.
-        faceCount = len(faces)
-        cubeCount = len(cubes)
-        B = scp.sparse.csc_array((faceCount, cubeCount), dtype=int)
-
-        # Iterate over the cubes, accounting for faces.
-        for cube in cubes:
-            j = cubeIndex[cube]
-            for face in cube.faces:
-                i = faceIndex[face]
-                B[i,j] = 1
-
-        self.boundary = B
-        self.coboundary = B.transpose()
+        # Set the "cubes" and "faces" of the lattice.
+        self.cubes = list(self.skeleta[self.dimension].values())
+        self.faces = list(self.skeleta[self.dimension-1].values())
