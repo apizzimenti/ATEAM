@@ -3,10 +3,11 @@ import galois
 import numpy as np
 import json
 import ast
-from itertools import combinations as combs
+from rustworkx import PyGraph, cycle_basis as basis
+from itertools import combinations as combs, product
 from functools import reduce
 
-from ..arithmetic import coordinates, binaryEncode, elementwiseAdd, elementwiseAddModuli
+from ..arithmetic import coordinates, binaryEncode, elementwiseAdd
 from .Cell import Cell, IntegerCell, ReducedCell
 
 
@@ -63,11 +64,10 @@ class Lattice:
             for c in _L.skeleta[self.dimension].values()
         ))
 
-        # Index.
+        # Construct indices, boundary matrix, and graph.
         self._index()
-
-        # Construct the boundary matrix.
         self._constructBoundaryMatrix()
+        self._constructGraph()
 
         # Force garbage collection on the Lattice and the lookup.
         del _faceLookup
@@ -91,7 +91,7 @@ class Lattice:
                 "field": self.field.order,
                 "dimension": self.dimension,
                 "periodicBoundaryConditions": int(self.periodicBoundaryConditions)
-            }, fp, indent=2
+            }, fp
         )
         
 
@@ -121,9 +121,10 @@ class Lattice:
             for c, indices in serialized["cubes"].items()
         ))
 
-        # Create indices and construct the boundary matrix.
+        # Construct indices, boundary matrix, and graph.
         self._index()
         self._constructBoundaryMatrix()
+        self._constructGraph()
 
         del serialized
         del faces
@@ -158,6 +159,37 @@ class Lattice:
         self.boundary = self.field(B)
         self.coboundary = self.field(B.transpose())
 
+
+    def _constructGraph(self):
+        """
+        Constructs and maintains a graph, where faces are vertices and cubes are
+        edges; two cubes are adjacent if and only if they share a face.
+
+        TODO: we're currently doing this naïvely, and it'd be better to do it in
+        a more... efficient fashion. (Really we're just hitting the array twice.)
+        """
+        # Catalogue to which cubes each face belongs.
+        adjacencies = { f: set() for f in self.faces }
+
+        for cube in self.cubes:
+            for face in cube.faces:
+                adjacencies[face].add(cube)
+
+        # Construct a graph (on the cubes) from the adjacencies!
+        A = np.zeros((len(self.cubes), len(self.cubes)))
+
+        for face, cubes in adjacencies.items():
+            # Get the indices for the cubes; take the product over the list and
+            # add ones.
+            indices = product([self.index.cubes[c] for c in cubes], repeat=2)
+            indices = [(i,j) for i,j in indices if i!=j]
+            for coord in indices: A[coord] = 1
+
+        # Construct a graph from the matrix A. The indices of the vertices *should*
+        # map onto the indices of the graph.
+        self.graph = PyGraph().from_adjacency_matrix(A)
+
+        
 
 class LargeLattice:
     def __init__(
@@ -365,8 +397,7 @@ class LargeLattice:
             # Otherwise, we just apply this map to all the faces of the cube.
             if cube.dimension == 0:
                 cube.vertices = [
-                    tuple(elementwiseAddModuli(cube.vertices[0], anchor, corners)) if corners
-                    else tuple(elementwiseAdd(cube.vertices[0], anchor))
+                    tuple(elementwiseAdd(cube.vertices[0], anchor))
                 ]
             else:
                 for face in cube.faces: descendToVertices(face)
@@ -381,9 +412,32 @@ class LargeLattice:
     def replaceFaces(self, cube):
         """
         Checks whether the faces of a given cube already exist in this Lattice;
-        if they do, replace them; if not, add them.
+        if they do, replace them; if not, add them. If we've asserted periodic
+        boundary conditions, we replace any boundary face (i.e. any face which
+        is part of exactly one cube) with sthe face at the opposite end of the
+        Lattice.
         """
         def depthFirst(face):
+            # Check for boundary conditions, replacing vertices when necessary.
+            # This will propagate up to the higher-dimensional cubes.
+            if face.dimension == 0 and self.periodicBoundaryConditions:
+                # Find *all* indices where the location of the vertex is incident
+                # to the outer face.
+                location = face.encoding[:-1][0]
+                indices = [
+                    i for i, (j, k) in enumerate(zip(location, self.corners))
+                    if j == k
+                ]
+
+                # If there are any indices in the list, we need to replace the
+                # vertex!
+                if len(indices) > 0:
+                    modifiedEncoding = (
+                        tuple(location[i] if i not in indices else 0 for i in range(len(self.corners))),
+                        0
+                    )
+                    face = self.skeleta[0][modifiedEncoding]
+        
             if not self.skeleta[face.dimension].get(face.encoding, False):
                 face.faces = set(depthFirst(f) for f in face.faces)
                 self.skeleta[face.dimension][face.encoding] = face
@@ -414,6 +468,21 @@ class LargeLattice:
                 corners=self.corners if self.periodicBoundaryConditions else None
             )
             self.replaceFaces(translated)
+
+        if self.periodicBoundaryConditions:
+            # We now scan through the skeleta, deleting faces with improper vertices;
+            # we only do this if the user has specified periodic boundary conditions
+            # on the Lattice.
+            proper = set(f[0] for f in self.skeleta[0].keys())
+            
+            for dimension in range(1, self.dimension+1):
+                good = {}
+
+                for cube in self.skeleta[dimension].values():
+                    cube.reEncode()
+                    if set(cube.encoding[:-1]).issubset(proper): good[cube.encoding] = cube
+
+                self.skeleta[dimension] = good
 
         # Set the "cubes" and "faces" of the lattice.
         self.cubes = list(self.skeleta[self.dimension].values())
