@@ -40,7 +40,6 @@ class SwendsenWang(Model):
             A NumPy array representing a vector of spin assignments.
         """
         return np.array([np.random.randint(0, self.lattice.field.order) for _ in self.lattice.faces])
-        # return linalg.sampleFromKernel(self.lattice.coboundary, self.lattice.field)
     
 
     def proposal(self, time):
@@ -56,6 +55,7 @@ class SwendsenWang(Model):
         # Compute the probability of choosing any individual cube in the complex.
         self.temperature = self.temperatureFunction(time)
         p = 1-np.exp(self.temperature)
+        assert 0 <= p <= 1
 
         # Choose cubes (i.e. columns) to include: we do so by asking whether the
         # sum of the faces is 0 and a weighted coin flip succeeds.
