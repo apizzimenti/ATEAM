@@ -159,6 +159,9 @@ class Lattice:
         self.boundary = self.field(B)
         self.coboundary = self.field(B.transpose())
 
+        self.subboundary = None
+        self.subcoboundary = None
+
 
     def _constructGraph(self):
         """
@@ -185,9 +188,14 @@ class Lattice:
             indices = [(i,j) for i,j in indices if i!=j]
             for coord in indices: A[coord] = 1
 
-        # Construct a graph from the matrix A. The indices of the vertices *should*
-        # map onto the indices of the graph.
+        # Construct a graph from the matrix A. The indices of the cubes *should*
+        # map onto the indices of the graph. We also attach a pointer to each
+        # Cube to each vertex in this graph.
         self.graph = PyGraph().from_adjacency_matrix(A)
+        for cube, index in self.index.cubes.items(): self.graph[index] = cube
+
+        # Create a subgraph object for later.
+        self.subgraph = None
 
         
 
@@ -212,7 +220,7 @@ class LargeLattice:
         """
         # Defaults.
         self.corners = corners
-        self.dimension = dimension if dimension and dimension <= len(corners) else len(corners)
+        self.dimension = len(self.corners)
         self.periodicBoundaryConditions = periodicBoundaryConditions
 
         # Pre-compute stuff that's pre-computable.
@@ -263,11 +271,11 @@ class LargeLattice:
         skeleta = { k: {} for k in range(self.dimension+1) }
 
         # Create vertices.
-        vertices = [IntegerCell(k, True) for k in range(2**self.dimension)]
+        vertices = [IntegerCell(k, True) for k in range(2**(self.dimension))]
         skeleta[0] = { c.encoding: c for c in vertices }
 
         # Initialize basis elements. We get creative here!
-        basisFaces = { k: vertices[k] for k in range(2**self.dimension) }
+        basisFaces = { k: v for k, v in enumerate(vertices) }
 
         for subset in self.power:
             dimension = len(subset)
@@ -290,7 +298,7 @@ class LargeLattice:
                 v = skeleta[0][(b, 0)]
                 cube = IntegerCell([u, v])
                 basisFaces[subset] = cube
-                skeleta[1][(u, v, 1)] = cube
+                skeleta[1][cube.encoding] = cube
 
                 # For each set of shifts, find the encoding and check whether
                 # this cube has already been found. This *shouldn't* be the case,
@@ -352,7 +360,7 @@ class LargeLattice:
         integerSkeleta = self.IntegerHammingCube()
         coordinateSkeleta = { d: {} for d in range(self.dimension+1) }
 
-        integerCube = list(integerSkeleta[self.dimension].values())[0]
+        cube = list(integerSkeleta[self.dimension].values())[0]
         N = len(self.corners)
 
         def descendIntoFace(cube):
@@ -376,12 +384,11 @@ class LargeLattice:
         
         # Convert the integer-cornered Hamming cube, adding its components to
         # the skeleton's lattice.
-        coordinateCube = descendIntoFace(integerCube)
-        return coordinateCube
+        return descendIntoFace(cube)
     
 
     @staticmethod
-    def translateCell(cell, anchor, corners=None):
+    def translateCell(cell, anchor):
         """
         Translates this ReducedCell so it is anchored at the given coordinate
         `corner`.
@@ -390,7 +397,6 @@ class LargeLattice:
             cell (Cell): Cell into whose faces we'll be delving.
             anchor (tuple): Destination coordinate for the bottom-left corner of
                 this Cell.
-            corners (list): List of corners of the Lattice.
         """
         def descendToVertices(cube):
             # If the cube is a vertex, we modify the coordinates of the vertex.
@@ -463,10 +469,7 @@ class LargeLattice:
         # replace it with what already exists.
         for vertex in vertices:
             cube = self.CoordinateHammingCube()
-            translated = self.translateCell(
-                cube, vertex,
-                corners=self.corners if self.periodicBoundaryConditions else None
-            )
+            translated = self.translateCell(cube, vertex)
             self.replaceFaces(translated)
 
         if self.periodicBoundaryConditions:

@@ -8,7 +8,7 @@ class ReducedCell:
     """
     def __init__(self, encoding, faces=None):
         self.encoding = self._sortEncoding(encoding)
-        self.faces = faces
+        self.faces = set(faces) if faces else None
         self.hash = hash(self.encoding)
         self.str = str(self.encoding)
     
