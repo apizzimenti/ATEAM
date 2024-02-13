@@ -38,7 +38,19 @@ def critical(field):
     return _
 
 
-def randomizedToConstant(constant, steps, hold=1/2, distribution=np.random.normal):
+def scaledUniform():
+    """
+    Negative log-normal distribution to get something like uniformity on [0,1]
+    when exponentiated.
+
+    Returns:
+        The negative of a draw from the log-normal distribution with mean 2 and
+        variance 2.
+    """
+    return -np.random.lognormal(mean=2, sigma=2)
+
+
+def randomizedToConstant(constant, steps, hold=1/2, distribution=scaledUniform):
     """
     A temperature schedule which samples spin values (according to `distribution`)
     *less than* the critical temperature of the model, then fixes the temperature
@@ -51,8 +63,9 @@ def randomizedToConstant(constant, steps, hold=1/2, distribution=np.random.norma
         hold (float): Value in [0,1] which represents the proportion of the time
             the temperature is fixed at the critical temperature. Defaults to
             half random, half fixed.
-        distribution (Callable): Distribution from which we sample.
-
+        distribution (Callable): Distribution from which we sample; default is
+            a ln-normal distribution centered at 2 with variance 2.
+    
     Returns:
         A function that consumes a step number and returns a temperature.
     """

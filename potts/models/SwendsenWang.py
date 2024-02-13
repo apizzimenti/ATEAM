@@ -59,25 +59,42 @@ class SwendsenWang(Model):
 
         # Choose cubes (i.e. columns) to include: we do so by asking whether the
         # sum of the faces is 0 and a weighted coin flip succeeds.
-        include = [
-            self.lattice.index.cubes[cube] for cube in self.lattice.cubes
+        includeCubes = [
+            cube for cube in self.lattice.cubes
             if self.occupied[cube] and np.random.uniform() < p
         ]
 
+        includeCubeIndices = [self.lattice.index.cubes[cube] for cube in includeCubes]
+
+        # Look at which *faces* are included so we don't accidentally reassign.
+        includeFaceIndices = [
+            self.lattice.index.faces[face] for cube in includeCubes for face in cube.faces
+        ]
+
         # Uniformly randomly sample a cocycle on the sublattice admitted by the
-        # chosen edges.
-        return linalg.sampleFromKernel(self.lattice.coboundary, self.lattice.field, include)
+        # chosen edges; reconstruct the labeling on the entire lattice by
+        # subbing in the values of c which differ from existing ones.
+        c = linalg.sampleFromKernel(self.lattice.coboundary, self.lattice.field, includeCubeIndices)
+        return self.lattice.field([
+            c[index] if index in includeFaceIndices else self.state[index]
+            for index in range(len(c))
+        ])
     
 
     def assign(self, cocycle: np.array):
         """
         Updates mappings from faces to spins and cubes to occupations.
 
-        Args:
+        Args: 
             cocycle (np.array): Cocycle on the sublattice.
         """
         self.spins = { face: cocycle[self.lattice.index.faces[face]] for face in self.lattice.faces }
         self.occupied = {
-            cube: 1 if not sum(int(self.spins[face]) for face in cube.faces) % self.lattice.field.order else 0
+            cube: 0 if self.lattice.field([self.spins[face] for face in cube.faces]).sum() else 1
             for cube in self.lattice.cubes
         }
+        
+        # # Dual graph of sublattice of occupied cubes.
+        # self.lattice.subgraph = self.lattice.graph.subgraph(
+        #     [self.lattice.index.cubes[cube] for cube in self.lattice.cubes if not self.occupied[cube]]
+        # )
