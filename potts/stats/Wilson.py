@@ -1,9 +1,4 @@
 
-import numpy as np
-from functools import reduce
-from rustworkx import connected_components as components
-
-
 def WilsonLoop(model, state):
     """
     Sums (over the finite field) the spins of faces of the "generalized loop"
@@ -18,13 +13,30 @@ def WilsonLoop(model, state):
         The evaluation of the cocycle (State) on the faces making up a connected
         component of the Lattice.
     """
-    # Uniformly randomly choose a cube which is *not* occupied, and find the sum
-    # of spins around its faces; in other words, we find a cycle which is not
-    # a boundary and evaluate the cocycle on it.
-    try:
-        unoccupied = np.random.choice([c for c, i in model.occupied.items() if not bool(i)])
-        index = model.lattice.index.cubes[unoccupied]
-    except:
-        unoccupied = None
-    
-    return 0 if not unoccupied else (model.lattice.coboundary[index]*state).sum()
+    # Choose *one* cube and, the entire time, ask what the sum of the coefficients
+    # on its faces are.
+    cube = model.lattice.cubes[13]
+    q = model.lattice.field([state[model.lattice.index.faces[face]] for face in cube.faces]).sum()
+    p = 1 if q else -1
+    return p
+
+
+def GraphWilsonLoop(model, state):
+    """
+    Sums (over the finite field) the spins of faces of the "generalized loop"
+    (which we're taking to mean the largest loop).
+
+    Args:
+        model (Model): Computational model we're using.
+        state (np.array): Current State (assignment of spins) to faces of the
+            Lattice of the Model.
+
+    Returns:
+        The evaluation of the cocycle (State) on the faces making up a connected
+        component of the Lattice.
+    """
+    # Choose *one* cube and, the entire time, ask what the sum of the coefficients
+    # on its faces are.
+    edge = model.lattice.cubes[13]
+    u, v = edge.at
+    return -1 if state[u.index] == state[v.index] else 1

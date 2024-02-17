@@ -3,7 +3,7 @@ import galois
 import numpy as np
 import json
 import ast
-from rustworkx import PyGraph, cycle_basis as basis
+from rustworkx import PyGraph
 from itertools import combinations as combs, product
 from functools import reduce
 

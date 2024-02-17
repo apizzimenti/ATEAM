@@ -1,15 +1,15 @@
 
 import numpy as np
 from rustworkx import connected_components as connectedComponents
-from pathlib import Path
 
-from ..stats import constant, uniform
+from ..structures import GraphLattice
+from ..stats import constant
 from .Model import Model
 
 
 class GraphSwendsonWang(Model):
     def __init__(
-            self, temperatureFunction=constant(-0.6), testing=False
+            self, L: GraphLattice, temperatureFunction=constant(-0.6), initial=None
         ):
         """
         Initializes a Swendson-Wang evolution on the Potts model.
@@ -20,24 +20,15 @@ class GraphSwendsonWang(Model):
                 schedule.
             testing (Bool): Are we testing?
         """
+        self.lattice = L
         self.temperatureFunction = temperatureFunction
-        self.testing = testing
-        self.log = ""
 
-        self._directorySetup()
+        self.state = initial if initial else self.initial()
+        self.spins = { face: self.state[face.index] for face in self.lattice.faces }
+        self.occupied = { cube: 1 for cube in self.lattice.cubes }
     
 
-    def _directorySetup(self):
-        if self.testing:
-            # Creates an output directory if none exists.
-            outroot = Path("./output/")
-            if not outroot.exists():
-                outroot.mkdir()
-                (outroot/"figures").mkdir()
-                (outroot/"matrices").mkdir()
-    
-
-    def proposal(self, chain):
+    def proposal(self, time):
         """
         Proposal scheme for the Swendson-Wang evolution on the Potts model. 
 
@@ -49,11 +40,11 @@ class GraphSwendsonWang(Model):
             A proposed state.
         """
         # Compute the probability of choosing any individual edge in the graph.
-        self.temperature = -self.temperatureFunction(chain.step)
+        self.temperature = self.temperatureFunction(time)
         p = 1-np.exp(self.temperature)
 
         # Get the graph and choose which edges to include.
-        G = chain.lattice.graph
+        G = self.lattice.graph
         include = []
 
         for edge in G.edges():
@@ -77,13 +68,13 @@ class GraphSwendsonWang(Model):
         
         # For each vertex in each component, assign a spin.
         for vertexset in components:
-            q = np.random.randint(low=0, high=chain.lattice.field.order)
+            q = np.random.randint(low=0, high=self.lattice.field.order)
             for index in vertexset: G[index].spin = q
 
         return [v.spin for v in G.nodes()]
 
 
-    def initial(self, lattice, distribution=uniform):
+    def initial(self):
         """
         Generates a random initial state.
 
@@ -97,31 +88,15 @@ class GraphSwendsonWang(Model):
         Returns:
             A cocycle with initial states.
         """
-        G = lattice.graph
+        G = self.lattice.graph
         vertices = G.nodes()
 
-        for vertex in vertices: vertex.spin = int(distribution(0, lattice.field.order))
+        for vertex in vertices: vertex.spin = int(np.random.randint(0, self.lattice.field.order))
         return [v.spin for v in vertices]
 
 
-    def energy(self, lattice, state):
-        """
-        Computes the Hamiltonian (energy) of the lattice in its current state.
-
-        Args:
-            lattice (Lattice): The lattice we're working over.
-            state (list): Optional argument for computing the energy of an
-                arbitrary state instead of the current one in the chain.
-
-        Returns:
-            Integer representing the Hamiltonian.
-        """
-        G = lattice.graph
-
-        s = 0
-        for edge in G.edges():
+    def assign(self, cocycle):
+        for index, spin in enumerate(cocycle): self.lattice.graph[index].spin = spin
+        for edge in self.lattice.graph.edges():
             u, v = edge.at
-            s += (1 if state[u.index] == state[v.index] else 0)
-
-        return -s
-
+            edge.spin = (0 if u.spin != v.spin else 1)

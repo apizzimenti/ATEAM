@@ -59,26 +59,28 @@ class SwendsenWang(Model):
 
         # Choose cubes (i.e. columns) to include: we do so by asking whether the
         # sum of the faces is 0 and a weighted coin flip succeeds.
-        includeCubes = [
-            cube for cube in self.lattice.cubes
-            if self.occupied[cube] and np.random.uniform() < p
-        ]
+        includeCubes = []
+        
+        for cube in self.lattice.cubes:
+            q = np.random.uniform()
+            if self.occupied[cube] and q < p:
+                includeCubes.append(cube)
 
         includeCubeIndices = [self.lattice.index.cubes[cube] for cube in includeCubes]
 
         # Look at which *faces* are included so we don't accidentally reassign.
-        includeFaceIndices = [
-            self.lattice.index.faces[face] for cube in includeCubes for face in cube.faces
-        ]
+        # includeFaceIndices = [
+        #     self.lattice.index.faces[face] for cube in includeCubes for face in cube.faces
+        # ]
 
         # Uniformly randomly sample a cocycle on the sublattice admitted by the
         # chosen edges; reconstruct the labeling on the entire lattice by
         # subbing in the values of c which differ from existing ones.
-        c = linalg.sampleFromKernel(self.lattice.coboundary, self.lattice.field, includeCubeIndices)
-        return self.lattice.field([
-            c[index] if index in includeFaceIndices else self.state[index]
-            for index in range(len(c))
-        ])
+        return linalg.sampleFromKernel(self.lattice.coboundary, self.lattice.field, includeCubeIndices)
+        # return self.lattice.field([
+        #     c[index] if index in includeFaceIndices else self.state[index]
+        #     for index in range(len(c))
+        # ])
     
 
     def assign(self, cocycle: np.array):
