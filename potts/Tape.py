@@ -3,7 +3,7 @@ import jsonlines as jsl
 import gzip
 import numpy as np
 
-from . import Model
+from .models import Model
 from .Chain import Chain
 from typing import Self
 
