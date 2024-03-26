@@ -4,6 +4,7 @@ __pycache__/
 .DS_Store
 .python-version
 potts.egg-info/
+.vscode/
 
 # Ignore contents, but not directories.
 output/figures/*

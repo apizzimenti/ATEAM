@@ -1,7 +1,6 @@
 
-from .Cell import Cell
 from .Lattice import Lattice
-from .Components import Vertex, Edge
+from .Cell import Cell, IntegerCell
 from .GraphLattice import GraphLattice
 
-__all__ = ["Cell", "Vertex", "Edge", "Lattice", "GraphLattice"]
+__all__ = ["Cell", "IntegerCell", "Lattice", "GraphLattice"]

@@ -1,11 +1,26 @@
 
 import galois
-import matplotlib.pyplot as plt
 from functools import reduce
 from rustworkx import PyGraph
-from rustworkx import cartesian_product as product, graph_adjacency_matrix as gam
+from rustworkx import cartesian_product as product
 
-from .Components import Vertex, Edge
+
+class Vertex:
+    def __init__(self, at, spin, index):
+        self.at = at
+        self.spin = spin
+        self.index = index
+
+class Edge:
+    def __init__(self, at, spin, index):
+        self.at = at
+        self.spin = spin
+        self.index = index
+
+
+class Index:
+    cubes = {}
+    faces = {}
 
 
 class GraphLattice:
@@ -18,11 +33,10 @@ class GraphLattice:
             of corners (boundary constraints).
         field: Galois field from which we sample things.
         graph: Lattice as a graph.
-    """
+     """
 
     def __init__(
-            self, corners, field=2, boundaryDimension=1, maxDimension=None,
-            periodicBoundaryConditions=True
+            self, corners, field=2, dimension=1, periodicBoundaryConditions=True
         ):
         """
         Instantiates an integer lattice.
@@ -35,15 +49,15 @@ class GraphLattice:
                 ith copy of Z bounded below by 0 and above by ci (inclusive).
             field (int): The finite field over which we're working; that is,
                 coefficients are taken from the finite field of order `field`.
-            boundaryDimension (int): Specifies the dimension for which we construct
+            dimension (int): Specifies the dimension for which we construct
                 the boundary/coboundary operator matrices; this defaults to 1.
-            maxDimension (int): The maximum dimension of cell constructed;
-                if nothing is passed, cells of all dimensions (from 0 to
-                the dimension of the lattice) are constructed.
-        """
-        # Assign corners and dimensionality.
+            periodicBoundaryConditions (bool): Do we identify the endpoints of
+                our cubical lattice to turn it into a torus?
+         """
+        # Assign corners, dimensionality, boundary conditions.
         self.corners = corners
-        self.dimension = len(corners)
+        self.complexDimension = len(corners)
+        self.dimension = dimension if dimension else len(corners)
         self.field = galois.GF(field)
         self.periodicBoundaryConditions = periodicBoundaryConditions
 
@@ -57,10 +71,11 @@ class GraphLattice:
             self.graph.update_edge_by_index(i, Edge((u, v), 1, i))
 
         # Construct our structure so it fits in well with the proposal.
-        self.structure = {
-            0: self.graph.nodes(),
-            1: self.graph.edges()
-        }
+        self.faces = self.graph.nodes()
+        self.cubes = self.graph.edges()
+
+        self.index = Index()
+        self.index.faces = { }
 
 
     @staticmethod
@@ -126,34 +141,4 @@ class GraphLattice:
 
         for edge in self.graph.edges():
             u, v = edge.at
-            edge.spin = 1 if u.spin == v.spin else 0
-    
-
-    @staticmethod
-    def plot(
-        graph, vertexStyle=dict(marker="o", markeredgewidth=0),
-        edgeStyle=dict(linewidth=1/2, alpha=1/2), edgeAssignment=None,
-        vertexAssignment=None, ax=None
-    ):
-        
-        if not ax: _, ax = plt.subplots()
-        
-        for edge in graph.edges():
-            u, v = edge.at
-            ax.plot(
-                *([u.at[axis], v.at[axis]] for axis in range(len(u.at))),
-                color=(edgeAssignment[edge.index] if edgeAssignment else "k"),
-                **edgeStyle
-            )
-
-        for vertex in graph.nodes():
-            ax.plot(
-                *vertex.at,
-                color=(vertexAssignment[vertex.index] if vertexAssignment else "k"),
-                **vertexStyle
-            )
-
-        # Set axes to be equal, turn off panes.
-        ax.set_aspect("equal")
-        ax.set_axis_off()
-        return plt.gcf(), ax
+            edge.spin = (0 if u.spin != v.spin else 1)

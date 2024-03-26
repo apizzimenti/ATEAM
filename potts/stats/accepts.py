@@ -26,8 +26,8 @@ def metropolis(burnIn=1/100):
             if chain.step < wait: return True
             
             # Compute the energies of each state.
-            oldEnergy = chain.model.energy(chain.lattice, chain.state)
-            newEnergy = chain.model.energy(chain.lattice, proposed)
+            oldEnergy = chain.model.energy(chain.model.state)
+            newEnergy = chain.model.energy(proposed)
 
             # Compute the differences in the states' energy; if the energy has *increased*
             # (a thing we don't want), then our difference is less than 0, and we

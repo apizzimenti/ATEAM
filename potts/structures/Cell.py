@@ -1,57 +1,85 @@
 
-import numpy as np
+from ..arithmetic import flattenAndSortSetUnion, elementwiseAddOne
+
+class ReducedCell:
+    """
+    Cells for the lattice, but encoded using NumPy for performance advantages;
+    carries far less data.
+    """
+    def __init__(self, encoding, faces=None):
+        self.encoding = self._sortEncoding(encoding)
+        self.faces = set(faces) if faces else None
+        self.hash = hash(self.encoding)
+        self.str = str(self.encoding)
+        self.index = None
+    
+    @staticmethod
+    def _sortEncoding(encoding): return tuple(sorted(tuple(encoding)))
+
+    # Comparisons.
+    def __lt__(self, other): return self.encoding < other.encoding
+    def __gt__(self, other): return self.encoding > other.encoding
+    def __eq__(self, other): return self.encoding == other.encoding
+
+    # Things for hashes and stringifications; we compute them once, and return
+    # them always.
+    def __str__(self): return self.str
+    def __hash__(self): return self.hash
 
 
 class Cell:
-    # Default spin.
-    spin = 0;
+    def __init__(self, faces, vertex=False):
+        self.dimension = 0 if vertex else faces[0].dimension+1
+        self.vertices = [faces] if vertex else flattenAndSortSetUnion([face.vertices for face in faces])
+        self.encoding = tuple(self.vertices) + (self.dimension,)
+        self.faces = set() if self.dimension == 0 else set(faces)
 
-    def __init__(self, coordinates, orientation=1, index=0):
-        """
-        Initializes a cell of any dimension.
-
-        Args:
-            coordinates (list): Will be integers (0-cell) or cell entries
-                (k-cell, k > 0).
-            orientation (int): Which way do we traverse the entries in `coordinates`?
-            index (int): When constructing matrices, the index to which this cell
-                corresponds.
-        """
-        # This determines which kind of cell we're dealing with: if it's a
-        # 0-dimensional cell, then `coordinates` will have integer entries; if
-        # it's any higher-dimensional one, its entries will be instances of cell.
-        if type(coordinates[0]) in {int, np.int32, np.int64}:
-            self.dimension = 0
-        else:
-            self.dimension = coordinates[0].dimension + 1
-
-        self.coordinates = coordinates
-        self.orientation = orientation
-        self.index = index
-
-    def __repr__(self): return self.__str__()
-
-    def __str__(self):
-        """
-        Stringification.
-        """
-        if self.dimension < 1:
-            return str(tuple(self.coordinates))
-        else:
-            return f"{self.dimension}-dimensional cell at index {self.index}"
+        self.hash = hash(self.encoding)
+        self.str = str(self.encoding)
         
-    def __eq__(self, other):
-        """
-        Testing for equality; this asks whether the coordinates of each cell
-        are the same.
-        """
-        return self.coordinates == other.coordinates
-    
-    def __lt__(self, other):
-        pass
 
-    def __hash__(self):
+    def reEncode(self):
         """
-        Returns a unique property from each cell.
+        If changes are made to this Cell, we re-compute its encoding and vertices.
         """
-        return hash(tuple(self.coordinates))
+        self.vertices = self.vertices if self.dimension==0 else flattenAndSortSetUnion([face.vertices for face in self.faces])
+        self.encoding = tuple(self.vertices) + (self.dimension,)
+
+        self.hash = hash(self.encoding)
+        self.str = str(self.encoding)
+
+
+    def __lt__(self, other): return self.encoding < other.encoding
+    def __gt__(self, other): return self.encoding > other.encoding
+    def __eq__(self, other): return self.encoding == other.encoding
+
+    def __str__(self): return self.str
+    def __hash__(self): return self.hash
+
+
+
+
+class IntegerCell:
+    def __init__(self, faces, vertex=False):
+        self.dimension = 0 if vertex else faces[0].dimension+1
+        self.vertices = [faces] if vertex else flattenAndSortSetUnion([face.vertices for face in faces])
+        self.encoding = tuple(self.vertices) + (self.dimension,)
+        self.faces = set(faces if self.dimension > 0 else [faces])
+
+        self.hash = hash(self.encoding)
+        self.str = str(self.encoding)
+
+    def shiftedEncoding(self, k):
+        return tuple(elementwiseAddOne(self.vertices, k)) + (self.dimension,)
+    
+    def __lt__(self, other): return self.encoding < other.encoding
+    def __gt__(self, other): return self.encoding > other.encoding
+    def __eq__(self, other): return self.encoding == other.encoding
+
+    def __str__(self): return self.str
+    def __hash__(self): return self.hash
+
+
+class Vertex:
+    # TODO consolidate the GraphLattice and Lattice classes!
+    pass

@@ -1,4 +1,5 @@
 
+from Cython.Build import cythonize
 from pathlib import Path
 from setuptools import find_packages, setup
 
@@ -28,4 +29,7 @@ setup(
     extras_require={
         "dev": ["pdoc3", "flake8", "pytest", "autopep8", "pytest-cov", "black", "isort"]
     },
+    ext_modules=cythonize(
+        "potts/**/*.pyx"
+    )
 )
