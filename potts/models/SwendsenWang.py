@@ -28,8 +28,8 @@ class SwendsenWang(Model):
 
         # SW defaults.
         self.state = initial if initial else self.initial()
-        self.spins = { face: int(self.state[self.lattice.index.faces[face]]) for face in self.lattice.faces }
-        self.occupied = { cube: 1 for cube in self.lattice.cubes }
+        self.spins = { face: self.state[self.lattice.index.faces[face]] for face in self.lattice.faces }
+        self.occupied = set()
 
 
     def initial(self) -> np.array:
@@ -63,24 +63,18 @@ class SwendsenWang(Model):
         
         for cube in self.lattice.cubes:
             q = np.random.uniform()
-            if self.occupied[cube] and q < p:
+            null = self.lattice.field([self.spins[face] for face in cube.faces]).sum() == 0
+
+            if null and q < p:
                 includeCubes.append(cube)
 
         includeCubeIndices = [self.lattice.index.cubes[cube] for cube in includeCubes]
-
-        # Look at which *faces* are included so we don't accidentally reassign.
-        # includeFaceIndices = [
-        #     self.lattice.index.faces[face] for cube in includeCubes for face in cube.faces
-        # ]
+        self.occupied = set(includeCubes)
 
         # Uniformly randomly sample a cocycle on the sublattice admitted by the
         # chosen edges; reconstruct the labeling on the entire lattice by
         # subbing in the values of c which differ from existing ones.
         return linalg.sampleFromKernel(self.lattice.coboundary, self.lattice.field, includeCubeIndices)
-        # return self.lattice.field([
-        #     c[index] if index in includeFaceIndices else self.state[index]
-        #     for index in range(len(c))
-        # ])
     
 
     def assign(self, cocycle: np.array):
@@ -91,12 +85,8 @@ class SwendsenWang(Model):
             cocycle (np.array): Cocycle on the sublattice.
         """
         self.spins = { face: cocycle[self.lattice.index.faces[face]] for face in self.lattice.faces }
-        self.occupied = {
-            cube: 0 if self.lattice.field([self.spins[face] for face in cube.faces]).sum() else 1
-            for cube in self.lattice.cubes
-        }
         
-        # # Dual graph of sublattice of occupied cubes.
+        # Dual graph of sublattice of occupied cubes.
         # self.lattice.subgraph = self.lattice.graph.subgraph(
-        #     [self.lattice.index.cubes[cube] for cube in self.lattice.cubes if not self.occupied[cube]]
+        #     [self.lattice.index.cubes[cube] for cube in self.lattice.cubes if not cube in self.occupied]
         # )

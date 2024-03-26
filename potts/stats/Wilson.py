@@ -17,7 +17,7 @@ def WilsonLoop(model, state):
     # on its faces are.
     cube = model.lattice.cubes[13]
     q = model.lattice.field([state[model.lattice.index.faces[face]] for face in cube.faces]).sum()
-    p = 1 if q else -1
+    p = -1 if q else 1
     return p
 
 
@@ -39,4 +39,4 @@ def GraphWilsonLoop(model, state):
     # on its faces are.
     edge = model.lattice.cubes[13]
     u, v = edge.at
-    return -1 if state[u.index] == state[v.index] else 1
+    return 1 if u.spin == v.spin else -1

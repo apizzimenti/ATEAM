@@ -59,8 +59,9 @@ class Chain:
         # While we haven't reached the max number of steps, propose a new plan,
         # check whether it's acceptable/valid, and continue.
         while self.step < self.steps:
-            # Propose the next state and check whether it's valid; assign the
-            # state to the Model.
+            # Propose the next state and check whether we want to accept it as
+            # the next state or not; assign whichever state is chosen to the
+            # Model.
             proposed = self.model.proposal(self.step)
             self.state = (proposed if self.accept(proposed) else self.state)
             self.model.assign(self.state)
@@ -68,12 +69,6 @@ class Chain:
             # Compute statistics.
             for name, function in self.functions.items():
                 self.statistics[name].append(function(self.model, self.state))
-
-            # If we're collecting samples, collect!
-            # try:
-            #     if self.step % self.sampleInterval == 0:
-            #         self.assignments.append(list(self.state))
-            # except: pass
             
             # Iterate.
             self.step += 1

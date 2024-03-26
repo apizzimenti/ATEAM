@@ -11,6 +11,7 @@ class ReducedCell:
         self.faces = set(faces) if faces else None
         self.hash = hash(self.encoding)
         self.str = str(self.encoding)
+        self.index = None
     
     @staticmethod
     def _sortEncoding(encoding): return tuple(sorted(tuple(encoding)))

@@ -166,37 +166,30 @@ class Lattice:
     def _constructGraph(self):
         """
         Constructs and maintains a graph, where faces are vertices and cubes are
-        edges; two cubes are adjacent if and only if they share a face.
-
-        TODO: we're currently doing this naïvely, and it'd be better to do it in
-        a more... efficient fashion. (Really we're just hitting the array twice.)
+        edges; two faces are adjacent if and only if they share a coface.
         """
+        G = PyGraph(multigraph=False)
+
         # Catalogue to which cubes each face belongs.
+        parents = { f: set() for f in self.faces }
         adjacencies = { f: set() for f in self.faces }
 
         for cube in self.cubes:
             for face in cube.faces:
-                adjacencies[face].add(cube)
+                parents[face].add(cube)
+                adjacencies[face] |= cube.faces
 
-        # Construct a graph (on the cubes) from the adjacencies!
-        A = np.zeros((len(self.cubes), len(self.cubes)))
+        # Add vertices and edges.
+        for face in self.faces: face.index = G.add_node(face)
+        
+        # Add edges.
+        for face, neighbors in adjacencies.items():
+            for neighbor in neighbors:
+                if face == neighbor: continue
+                edge = (parents[face] & parents[neighbor]).pop()
+                edge.index = G.add_edge(face.index, neighbor.index, edge)                
 
-        for face, cubes in adjacencies.items():
-            # Get the indices for the cubes; take the product over the list and
-            # add ones.
-            indices = product([self.index.cubes[c] for c in cubes], repeat=2)
-            indices = [(i,j) for i,j in indices if i!=j]
-            for coord in indices: A[coord] = 1
-
-        # Construct a graph from the matrix A. The indices of the cubes *should*
-        # map onto the indices of the graph. We also attach a pointer to each
-        # Cube to each vertex in this graph.
-        self.graph = PyGraph().from_adjacency_matrix(A)
-        for cube, index in self.index.cubes.items(): self.graph[index] = cube
-
-        # Create a subgraph object for later.
-        self.subgraph = None
-
+        self.graph = G
         
 
 class LargeLattice:

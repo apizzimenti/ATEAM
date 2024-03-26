@@ -1,5 +1,6 @@
 
 import numpy as np
+import random
 from rustworkx import connected_components as connectedComponents
 
 from ..structures import GraphLattice
@@ -25,7 +26,7 @@ class GraphSwendsonWang(Model):
 
         self.state = initial if initial else self.initial()
         self.spins = { face: self.state[face.index] for face in self.lattice.faces }
-        self.occupied = { cube: 1 for cube in self.lattice.cubes }
+        self.occupied = set()
     
 
     def proposal(self, time):
@@ -45,7 +46,8 @@ class GraphSwendsonWang(Model):
 
         # Get the graph and choose which edges to include.
         G = self.lattice.graph
-        include = []
+        exclude = []
+        occupied = []
 
         for edge in G.edges():
             u, v = edge.at
@@ -54,21 +56,26 @@ class GraphSwendsonWang(Model):
                 q = np.random.uniform()
                 
                 if q < p:
-                    include.append((u.index, v.index))
+                    occupied.append(edge)
                     edge.spin = 1
                 else:
+                    exclude.append((u.index, v.index))
                     edge.spin = 0
-
             else:
+                exclude.append((u.index, v.index))
                 edge.spin = 0
 
+        # Keep track of occupied cubes.
+        self.occupied = set(occupied)
+
         # Do stuff to the subgraph.
-        subgraph = G.edge_subgraph(include)
+        subgraph = G.copy()
+        subgraph.remove_edges_from(exclude)
         components = connectedComponents(subgraph)
         
         # For each vertex in each component, assign a spin.
-        for vertexset in components:
-            q = np.random.randint(low=0, high=self.lattice.field.order)
+        Q = np.random.randint(low=0, high=self.lattice.field.order, size=len(components))
+        for vertexset, q in zip(components, Q):
             for index in vertexset: G[index].spin = q
 
         return [v.spin for v in G.nodes()]
@@ -91,12 +98,9 @@ class GraphSwendsonWang(Model):
         G = self.lattice.graph
         vertices = G.nodes()
 
-        for vertex in vertices: vertex.spin = int(np.random.randint(0, self.lattice.field.order))
+        for vertex in vertices: vertex.spin = np.random.randint(0, self.lattice.field.order)
         return [v.spin for v in vertices]
 
 
     def assign(self, cocycle):
-        for index, spin in enumerate(cocycle): self.lattice.graph[index].spin = spin
-        for edge in self.lattice.graph.edges():
-            u, v = edge.at
-            edge.spin = (0 if u.spin != v.spin else 1)
+        pass
