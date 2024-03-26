@@ -82,7 +82,8 @@ class Lattice:
         Args:
             fp: File object; must be in write mode.
         """
-        json.dump({
+        json.dump(
+            {
                 "faces": { k: str(f.encoding) for f, k in self.index.faces.items() },
                 "cubes": {
                     str(cube.encoding): [self.index.faces[f] for f in cube.faces]

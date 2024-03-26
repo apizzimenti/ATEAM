@@ -1,6 +1,6 @@
 
 from .GraphIsing import GraphIsing
-from .GraphSwendsenWang import GraphSwendsonWang
+from .GraphSwendsenWang import GraphSwendsenWang
 from .SwendsenWang import SwendsenWang
 from .GraphPercolation import GraphPercolation
 from .Model import Model

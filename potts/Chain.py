@@ -1,9 +1,10 @@
 
 from .stats import always
 
+
 class Chain:
     """
-    Implements the Markov chain underlying the multidimensional Ising model.
+    Simulates a Markov chain on the given Model.
     """
 
     def __init__(
@@ -14,7 +15,6 @@ class Chain:
         Initializes the Chain object.
 
         Args:
-
             proposal (callable): A function which consumes this Chain object and
                 proposes a new state.
             initial (np.array): A NumPy Array (homomorphism from the (k-1)-simplices
@@ -75,17 +75,12 @@ class Chain:
             
             return self.state
         
-        # If we haven't returned, we're done; convert the assignments to JSON-ifiable
-        # types, and stop iteration.
-        # self.assignments = [[int(s) for s in assignment] for assignment in self.assignments]
-        
         raise StopIteration
     
-
+    
     def progress(self):
         """
         Progress bar.
         """
         from tqdm.auto import tqdm
         return tqdm(self, total=self.steps)
-            

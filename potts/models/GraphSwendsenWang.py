@@ -1,6 +1,5 @@
 
 import numpy as np
-import random
 from rustworkx import connected_components as connectedComponents
 
 from ..structures import GraphLattice
@@ -8,7 +7,7 @@ from ..stats import constant
 from .Model import Model
 
 
-class GraphSwendsonWang(Model):
+class GraphSwendsenWang(Model):
     def __init__(
             self, L: GraphLattice, temperatureFunction=constant(-0.6), initial=None
         ):
