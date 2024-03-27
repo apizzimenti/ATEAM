@@ -74,61 +74,63 @@ class Lattice:
         del _L
 
 
-    def toFile(self, fp):
+    def toFile(self, fp:str):
         """
         JSON-serializes this object and writes it to file so we can reconstruct
         it later.
 
         Args:
-            fp: File object; must be in write mode.
+            fp (str): Filepath.
         """
-        json.dump(
-            {
-                "faces": { k: str(f.encoding) for f, k in self.index.faces.items() },
-                "cubes": {
-                    str(cube.encoding): [self.index.faces[f] for f in cube.faces]
-                    for cube in self.cubes
-                },
-                "field": self.field.order,
-                "dimension": self.dimension,
-                "periodicBoundaryConditions": int(self.periodicBoundaryConditions)
-            }, fp
-        )
+        with open(fp, "w") as write:
+            json.dump(
+                {
+                    "faces": { k: str(f.encoding) for f, k in self.index.faces.items() },
+                    "cubes": {
+                        str(cube.encoding): [self.index.faces[f] for f in cube.faces]
+                        for cube in self.cubes
+                    },
+                    "field": self.field.order,
+                    "dimension": self.dimension,
+                    "periodicBoundaryConditions": int(self.periodicBoundaryConditions)
+                }, write
+            )
         
 
-    def fromFile(self, fp):
+    def fromFile(self, fp:str):
         """
         Reconstructs a serialized Lattice.
 
         Args:
-            fp: Python file object; must be in read mode.
+            fp (str): Filepath.
         """
-        # Read file into memory.
-        serialized = json.load(fp)
+        with open(fp, "r") as read:
+            # Read file into memory.
+            serialized = json.load(read)
 
-        # Set field and dimension.
-        self.field = galois.GF(int(serialized["field"]))
-        self.dimension = int(serialized["dimension"])
-        self.periodicBoundaryConditions = bool(serialized["periodicBoundaryConditions"])
+            # Set field and dimension.
+            self.field = galois.GF(int(serialized["field"]))
+            self.dimension = int(serialized["dimension"])
+            self.periodicBoundaryConditions = bool(serialized["periodicBoundaryConditions"])
 
-        # Create faces and cubes.
-        faces = {
-            int(k): ReducedCell(ast.literal_eval(f)) for k, f in serialized["faces"].items()
-        }
+            # Create faces and cubes.
+            faces = {
+                int(k): ReducedCell(ast.literal_eval(f)) for k, f in serialized["faces"].items()
+            }
 
-        self.faces = list(sorted(faces.values()))
-        self.cubes = list(sorted(
-            ReducedCell(ast.literal_eval(c), faces=list(sorted(faces[k] for k in indices)))
-            for c, indices in serialized["cubes"].items()
-        ))
+            self.faces = list(sorted(faces.values()))
+            self.cubes = list(sorted(
+                ReducedCell(ast.literal_eval(c), faces=list(sorted(faces[k] for k in indices)))
+                for c, indices in serialized["cubes"].items()
+            ))
 
-        # Construct indices, boundary matrix, and graph.
-        self._index()
-        self._constructBoundaryMatrix()
-        self._constructGraph()
+            # Construct indices, boundary matrix, and graph.
+            self._index()
+            self._constructBoundaryMatrix()
+            self._constructGraph()
 
-        del serialized
-        del faces
+            del serialized
+            del faces
 
     
     def _index(self):
