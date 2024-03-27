@@ -8,6 +8,8 @@ from .Model import Model
 
 
 class GraphSwendsenWang(Model):
+    name = "GraphSwendsenWang"
+    
     def __init__(
             self, L: GraphLattice, temperatureFunction=constant(-0.6), initial=None
         ):

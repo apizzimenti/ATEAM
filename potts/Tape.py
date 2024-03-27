@@ -5,7 +5,6 @@ import numpy as np
 
 from .models import Model
 from .Chain import Chain
-from typing import Self
 
 
 class Recorder:
@@ -16,7 +15,7 @@ class Recorder:
     """
     def __init__(self): pass
 
-    def record(self, M: Chain, fp: str, compressed:bool=True) -> Self:
+    def record(self, M: Chain, fp: str, compressed:bool=True):
         """
         Called to configure the recording apparatus for the Chain, and *should*
         be used as a context manager (i.e. with the `with` statement).
@@ -35,7 +34,7 @@ class Recorder:
         # compression, otherwise just a standard file), and initialize a JsonLines
         # Writer.
         self._fp = fp
-        self._file = gzip.open(f"{self._fp}.gz", "wb") if compressed else open(self._fp, "w")
+        self._file = gzip.open(f"{self._fp}", "wb") if compressed else open(self._fp, "w")
         self._writer = jsl.Writer(self._file)
         
         # Save the chain for access during iteration; set the "previous" state to
@@ -77,6 +76,7 @@ class Recorder:
         self._writer.write(delta)
         self.previous = state
 
+    
     def __enter__(self):
         """
         Required context management magic method.
@@ -98,7 +98,7 @@ class Player():
     """
     def __init__(self): pass
 
-    def playback(self, S:Model, fp:str, compressed=True) -> Self:
+    def playback(self, S:Model, fp:str, compressed=True):
         """
         Initialize playback; context management.
 
@@ -149,14 +149,14 @@ class Player():
         update = {}
         for spin, fs in faces.items():
             for f in fs:
-                update[self.model.lattice.faces[f]] = spin
+                update[self.model.lattice.faces[f]] = self.model.lattice.field(spin)
 
         self.model.spins.update(update)
         self.model.occupied = set(self.model.lattice.cubes[c] for c in cubes)
 
         # Return the current state.
-        return np.array([self.model.spins[f] for f in self.model.lattice.faces])
-
+        return self.model.lattice.field([self.model.spins[f] for f in self.model.lattice.faces])
+    
 
     def __enter__(self):
         """

@@ -9,6 +9,8 @@ from .Model import Model
 
 
 class SwendsenWang(Model):
+    name = "SwendsenWang"
+    
     def __init__(
             self, L: Lattice, temperatureFunction: Callable=constant(-0.6),
             initial=None

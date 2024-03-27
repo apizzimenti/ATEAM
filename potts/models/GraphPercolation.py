@@ -8,6 +8,8 @@ from .Model import Model
 
 
 class GraphPercolation(Model):
+    name = "GraphPercolation"
+    
     def __init__(
             self, temperatureFunction=constant(-math.log(1/2)), testing=False
         ):

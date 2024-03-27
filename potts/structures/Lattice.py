@@ -4,7 +4,7 @@ import numpy as np
 import json
 import ast
 from rustworkx import PyGraph
-from itertools import combinations as combs, product
+from itertools import combinations as combs
 from functools import reduce
 
 from ..arithmetic import coordinates, binaryEncode, elementwiseAdd
@@ -196,9 +196,7 @@ class Lattice:
         
 
 class LargeLattice:
-    def __init__(
-            self, corners, dimension=None, periodicBoundaryConditions=True
-        ):
+    def __init__(self, corners, dimension=1, periodicBoundaryConditions=True):
         """
         Creates a cell complex with the given corners made of cells of the
         provided dimension.
@@ -206,11 +204,6 @@ class LargeLattice:
         Args:
             corners (list): Corners of the lattice; determines the maximal
                 cell dimension.
-            dimension (int): Maximal cell dimension; if this argument is larger
-                than that permitted by the underlying cell structure, this is
-                re-set to the maximal legal dimension. Defaults to 1, so the
-                lattice is constructed only of vertices (0-cells) and edges
-                (1-cells).
             periodicBoundaryConditions (bool): Do we use periodic boundary
                 conditions (i.e. are we making a torus)?
         """

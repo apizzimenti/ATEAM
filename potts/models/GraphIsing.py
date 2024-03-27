@@ -7,6 +7,8 @@ from .Model import Model
 
 
 class GraphIsing(Model):
+    name = "GraphIsing"
+    
     def __init__(self, temperatureFunction=constant(-math.log(math.sqrt(2)/(1+math.sqrt(2))))):
         """
         Initializes a Swendson-Wang evolution on the Potts model.
