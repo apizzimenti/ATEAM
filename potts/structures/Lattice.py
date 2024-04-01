@@ -303,8 +303,8 @@ class LargeLattice:
                 continue
 
             # If the subset *doesn't* denote an edge, we grab the basis faces
-            # and do effectively the same thing. First, get all the (dimension-1)-subsets
-            # and shift each by the single remaining element.
+            # and do effectively the same thing. First, get all the
+            # (dimension-1)-subsets and shift each by the single remaining element.
             subsetBasisElements = self.subsetBasisElements[subset]
             subsetInnerShifts = self.innerShifts[subset]
 
@@ -408,9 +408,8 @@ class LargeLattice:
         """
         Checks whether the faces of a given cube already exist in this Lattice;
         if they do, replace them; if not, add them. If we've asserted periodic
-        boundary conditions, we replace any boundary face (i.e. any face which
-        is part of exactly one cube) with sthe face at the opposite end of the
-        Lattice.
+        boundary conditions, we replace any boundary face with the face at the
+        opposite end of the Lattice.
         """
         def depthFirst(face):
             # Check for boundary conditions, replacing vertices when necessary.

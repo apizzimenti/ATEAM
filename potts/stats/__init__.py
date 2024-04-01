@@ -5,6 +5,7 @@ from .schedules import constant, critical, randomizedToConstant, linear
 from .defaults import Hamiltonian
 from .Wilson import WilsonLoop, GraphWilsonLoop
 from .Connected import Connected, GraphConnected
+from .autocorrelation import autocorrelation
 
 __all__ = [
     "always",
@@ -18,5 +19,6 @@ __all__ = [
     "WilsonLoop",
     "GraphWilsonLoop",
     "Connected",
-    "GraphConnected"
+    "GraphConnected",
+    "autocorrelation"
 ]
