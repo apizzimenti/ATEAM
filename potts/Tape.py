@@ -98,7 +98,7 @@ class Player():
     """
     def __init__(self): pass
 
-    def playback(self, S:Model, fp:str, compressed=True):
+    def playback(self, S:Model, fp:str, compressed=True, steps=None):
         """
         Initialize playback; context management.
 
@@ -110,6 +110,7 @@ class Player():
                 accurate.
             fp (str): File in which records are stored.
             compressed (bool): Are the data compressed?
+            steps (int): How many steps does this chain take?
 
         Returns:
             This Player object.
@@ -118,9 +119,15 @@ class Player():
         self._fp = fp
         self._file = gzip.open(self._fp, "rb") if compressed else open(self._fp, "r")
         self._reader = jsl.Reader(self._file)
+        self._steps = steps
         
         # Save `Model` for later.
         self.model = S
+
+        # Create template objects to avoid re-creating them all the time. The
+        # first allows us to only modify faces whose spins were updated.
+        self._state = self.model.lattice.field.Zeros(len(self.model.lattice.faces))
+        self._elements = [self.model.lattice.field(k) for k in range(self.model.lattice.field.order)]
 
         # Enter context management.
         return self.__enter__()
@@ -144,18 +151,15 @@ class Player():
         # Get cubes and faces.
         faces = configuration["faces"]
         cubes = configuration["cubes"]
-
-        # Update the faces' spins and the occupied edges.
-        update = {}
+        
         for spin, fs in faces.items():
             for f in fs:
-                update[self.model.lattice.faces[f]] = self.model.lattice.field(spin)
+                self._state[int(f)] = self._elements[int(spin)]
 
-        self.model.spins.update(update)
-        self.model.occupied = set(self.model.lattice.cubes[c] for c in cubes)
-
+        self.model.occupied = cubes
+        
         # Return the current state.
-        return self.model.lattice.field([self.model.spins[f] for f in self.model.lattice.faces])
+        return self._state
     
 
     def __enter__(self):
@@ -171,3 +175,8 @@ class Player():
         """
         self._reader.close()
         self._file.close()
+
+    
+    def progress(self):
+        from tqdm.auto import tqdm
+        return tqdm(self, total=self._steps)

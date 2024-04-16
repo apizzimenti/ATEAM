@@ -8,25 +8,24 @@ from ..stats import constant
 from .Model import Model
 
 
-class SwendsenWang(Model):
-    name = "SwendsenWang"
+class InvadedCluster(Model):
+    name = "InvadedCluster"
     
     def __init__(
-            self, L: Lattice, temperatureFunction: Callable=constant(-0.6),
-            initial=None
+            self, L: Lattice, stoppingCondition: Callable=None, initial=None
         ):
         """
-        Initializes Swendsen-Wang evolution on the Potts model.
+        Initializes the invaded-cluster (invasion percolation?) MCMC model on
+        the given lattice.
 
         Args:
             L: The `Lattice` object on which we'll be running experiments.
-            temperatureFunction (Callable): A temperature schedule function which
-                takes a single positive integer argument `t`, and returns the
-                scheduled temperature at time `t`.
             initial (np.ndarray): A vector of spin assignments to components.
+            stoppingCondition (Callable): A rule which tells the proposal
+                algorithm to stopconstructing the current spin and edge configurations.
         """
         self.lattice = L
-        self.temperatureFunction = temperatureFunction
+        self.stoppingCondition = stoppingCondition
 
         # SW defaults.
         self.state = initial if initial else self.initial()
@@ -46,7 +45,8 @@ class SwendsenWang(Model):
 
     def proposal(self, time):
         """
-        Proposal scheme for generalized Swendsen-Wang evolution on the Potts model.
+        Proposal scheme for generalized invaded-cluster evolution on the Potts
+        model.
 
         Args:
             time (int): Step in the chain.
@@ -54,22 +54,18 @@ class SwendsenWang(Model):
         Returns:
             A NumPy array representing a vector of spin assignments.
         """
-        # Compute the probability of choosing any individual cube in the complex.
-        self.temperature = self.temperatureFunction(time)
-        p = 1-np.exp(self.temperature)
-        assert 0 <= p <= 1
+        # First, check whether we're reached the stopping condition; if so, we
+        # raise a StopIteration error to force the chain to stop.
+        if self.stoppingCondition(self): raise StopIteration
 
-        # Choose cubes (i.e. columns) to include: we do so by asking whether the
-        # sum o f the faces is 0 and a weighted coin flip succeeds.
-        includeCubes = []
-        
-        for cube in self.lattice.cubes:
-            q = np.random.uniform()
-            null = self.lattice.field([self.spins[face] for face in cube.faces]).sum() == 0
-
-            if null and q < p:
-                includeCubes.append(cube)
-
+        # Next, randomize the order of the cubes. Then, check whether the cubes
+        # in the configuration are sent to 0 by the current cochain; those that
+        # are are included unconditionally, and those that aren't are ignored.
+        randomized = np.shuffle(self.lattice.cubes)
+        includeCubes = [
+            cube for cube in randomized
+            if self.lattice.field([self.spins[face] for face in cube.faces]).sum() == 0
+        ]
         includeCubeIndices = [self.lattice.index.cubes[cube] for cube in includeCubes]
         self.occupied = set(includeCubes)
 
@@ -87,8 +83,3 @@ class SwendsenWang(Model):
             cocycle (np.array): Cocycle on the sublattice.
         """
         self.spins = { face: cocycle[self.lattice.index.faces[face]] for face in self.lattice.faces }
-        
-        # Dual graph of sublattice of occupied cubes.
-        # self.lattice.subgraph = self.lattice.graph.subgraph(
-        #     [self.lattice.index.cubes[cube] for cube in self.lattice.cubes if not cube in self.occupied]
-        # )

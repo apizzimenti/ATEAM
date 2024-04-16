@@ -1,8 +1,8 @@
 
-from .accepts import always, metropolis
+from .accepts import always, MetropolisHastings
 from .distributions import uniform
 from .schedules import constant, critical, randomizedToConstant, linear
-from .defaults import Hamiltonian
+from .energies import Hamiltonian
 from .Wilson import WilsonLoop, GraphWilsonLoop
 from .Connected import Connected, GraphConnected
 from .autocorrelation import autocorrelation
@@ -14,11 +14,12 @@ __all__ = [
     "critical",
     "randomizedToConstant",
     "linear",
-    "metropolis",
     "Hamiltonian",
     "WilsonLoop",
     "GraphWilsonLoop",
     "Connected",
     "GraphConnected",
+    "autocorrelation",
+    "MetropolisHastings",
     "autocorrelation"
 ]

@@ -8,7 +8,7 @@ class Chain:
     """
 
     def __init__(
-            self, model, initial=None, accept=always, sampleInterval=0, statistics={},
+            self, model, initial=None, accept=always(), sampleInterval=0, statistics={},
             steps=10000
         ):
         """
@@ -32,7 +32,7 @@ class Chain:
         self.model = model
         self.initial = initial if initial else model.initial()
         self.steps = steps
-        self.accept = accept(self)
+        self.accept = accept
 
         # Store stats and things.
         self.functions = statistics
@@ -63,7 +63,7 @@ class Chain:
             # the next state or not; assign whichever state is chosen to the
             # Model.
             proposed = self.model.proposal(self.step)
-            self.state = (proposed if self.accept(proposed) else self.state)
+            self.state = proposed if self.accept(self.state, proposed, self.step) else self.state
             self.model.assign(self.state)
 
             # Compute statistics.
