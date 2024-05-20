@@ -19,7 +19,7 @@ def sampleFromKernel(A, field, includes=None):
     return (Q@K).astype(np.int32)
 
 
-def autocorrelation(data, lag=500):
+def autocorrelation(data):
     """
     Computes the autocorrelation of a given observable over the provided time
     lag.
@@ -29,6 +29,7 @@ def autocorrelation(data, lag=500):
             from a given observable.
         lag (int): How far back do we look?
     """
+
     # Expected value (i.e. sample mean, which converges to the expectation by
     # LLN).
     mu = data.mean()
@@ -36,7 +37,7 @@ def autocorrelation(data, lag=500):
     N = len(data)
 
     autocorrs = np.array([
-        np.dot(normalized[:N-t], normalized[t:])*(1/N) for t in range(N-lag)
+        np.dot(normalized[t:], normalized[:N-t])*(1/N) for t in range(N)
     ])
 
     return autocorrs/autocorrs[0]
