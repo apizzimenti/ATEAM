@@ -8,8 +8,8 @@ from ..stats import constant
 from .Model import Model
 
 
-class HomologicalSitePercolation(Model):
-    name = "HomologicalSitePercolation"
+class HomologicalPercolation(Model):
+    name = "HomologicalPercolation"
     
     def __init__(
             self, L: Lattice, temperatureFunction: Callable=constant(-0.6),
@@ -70,9 +70,4 @@ class HomologicalSitePercolation(Model):
         Args: 
             cocycle (np.array): Cocycle on the sublattice.
         """
-        self.spins = { face: cocycle[self.lattice.index.faces[face]] for face in self.lattice.faces }
-        
-        # Dual graph of sublattice of occupied cubes.
-        # self.lattice.subgraph = self.lattice.graph.subgraph(
-        #     [self.lattice.index.cubes[cube] for cube in self.lattice.cubes if not cube in self.occupied]
-        # )
+        self.spins = cocycle

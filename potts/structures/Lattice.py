@@ -67,11 +67,13 @@ class Lattice:
         # Construct indices, boundary matrix, and graph.
         self._index()
         self._constructBoundaryMatrix()
-        self._constructGraph()
+        # self._constructGraph()
 
         # Force garbage collection on the Lattice and the lookup.
         del _faceLookup
         del _L
+
+        return self
 
 
     def toFile(self, fp:str):
