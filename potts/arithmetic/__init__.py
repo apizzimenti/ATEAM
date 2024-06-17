@@ -6,6 +6,6 @@ from .coordinates import (
 )
 from .linalg import sampleFromKernel, autocorrelation
 from .fastiteration import energy
-from .smith import SNF
+from .smith import SNF, BoundaryReduction
 
-__all__ = ["coordinates", "sampleFromKernel", "SNF"]
+__all__ = ["coordinates", "sampleFromKernel", "SNF", "BoundaryReduction"]
