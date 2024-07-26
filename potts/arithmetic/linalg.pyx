@@ -9,6 +9,8 @@ def sampleFromKernel(A, field, includes=None):
     # whole coboundary; otherwise, exclude some of the columns.
     if includes: B = A.take(includes, axis=0)
     else: B = A
+
+    # TODO relative homology for this!
     
     # Find a basis for the kernel of B, then take a uniformly random linear
     # combination of the basis elements; this is equivalent to uniformly

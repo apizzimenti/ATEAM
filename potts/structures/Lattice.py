@@ -16,6 +16,11 @@ class Index:
     faces = {}
 
 
+class Matrices:
+    boundary = None
+    coboundary = None
+
+
 class Lattice:
     """
     A class which, post-construction of the giganto-lattice, keeps only records
@@ -44,6 +49,7 @@ class Lattice:
         """
         self.dimension = dimension if dimension else len(corners)
         self.periodicBoundaryConditions = periodicBoundaryConditions
+        self.corners = corners
 
         # Construct an initial LargeLattice.
         _L = LargeLattice(
@@ -54,10 +60,30 @@ class Lattice:
         # Construct the finite field object.
         self.field = galois.GF(field)
 
+        # Skeleta. The pair { d: f } has f as a 2-dimensional NumPy array: the
+        # kth entry of f is a list of indices of (d-1)-cubes which are the faces
+        # of the kth d-cube.
+        skeleta = {
+            d: np.sort(np.array(list(_L.skeleta[d].values())))
+            for d in range(len(corners)+1)
+        }
+
+        self.skeleta = {
+            d: len(skeleta[d])
+            for d in skeleta.keys()
+        }
+
+        cells = np.concatenate([np.array(skeleta[d]) for d in range(self.dimension+1)])
+        self.cells = np.array([ReducedCell(c.encoding[:-1]) for c in cells])
+        lookup = { self.cells[k].encoding: k for k in range(len(self.cells)) }
+        self.boundary = [
+            list(sorted([lookup[f.encoding[:-1]] for f in c.faces])) for c in cells
+        ]
+
         # Reduced cells; they carry only the encoding and, if they're cubes, the
         # list of faces making them up.
         self.faces = list(sorted(ReducedCell(f.encoding[:-1]) for f in _L.skeleta[self.dimension-1].values()))
-        _faceLookup = { f.encoding: f for f in self.faces}
+        _faceLookup = { f.encoding: f for f in self.faces }
 
         self.cubes = list(sorted(
             ReducedCell(c.encoding[:-1], faces=[_faceLookup[f.encoding[:-1]] for f in c.faces])
@@ -67,7 +93,6 @@ class Lattice:
         # Construct indices, boundary matrix, and graph.
         self._index()
         self._constructBoundaryMatrix()
-        # self._constructGraph()
 
         # Force garbage collection on the Lattice and the lookup.
         del _faceLookup
@@ -129,7 +154,7 @@ class Lattice:
             # Construct indices, boundary matrix, and graph.
             self._index()
             self._constructBoundaryMatrix()
-            self._constructGraph()
+            # self._constructGraph()
 
             del serialized
             del faces
@@ -149,6 +174,7 @@ class Lattice:
         """
         Constructs the (co)boundary matrix for this cubical lattice.
         """
+        self.matrices = Matrices()
         faceCount = len(self.faces)
         cubeCount = len(self.cubes)
         
@@ -161,8 +187,8 @@ class Lattice:
                 i = self.index.faces[face]
                 B[i,j] = 1
         
-        self.boundary = self.field(B)
-        self.coboundary = self.field(B.transpose())
+        self.matrices.boundary = self.field(B)
+        self.matrices.coboundary = self.field(B.transpose())
 
         self.subboundary = None
         self.subcoboundary = None

@@ -22,4 +22,4 @@ dependencies = [
 ]
 
 [tool.setuptools]
-py-modules = ["test"]
+py-modules = ["potts"]

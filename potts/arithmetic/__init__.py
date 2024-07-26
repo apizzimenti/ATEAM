@@ -6,6 +6,7 @@ from .coordinates import (
 )
 from .linalg import sampleFromKernel, autocorrelation
 from .fastiteration import energy
-from .smith import SNF, BoundaryReduction
+from .smith import SNF
+from .homology import essentialCyclesBorn
 
-__all__ = ["coordinates", "sampleFromKernel", "SNF", "BoundaryReduction"]
+__all__ = ["coordinates", "sampleFromKernel", "SNF"]
