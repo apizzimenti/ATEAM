@@ -2,7 +2,7 @@
 import numpy as np
 from typing import Callable
 
-from ..arithmetic import linalg
+from ..arithmetic import sampleFromKernel
 from ..structures import Lattice
 from ..stats import constant
 from .Model import Model
@@ -27,10 +27,12 @@ class SwendsenWang(Model):
         """
         self.lattice = L
         self.temperatureFunction = temperatureFunction
+        self.faceCells = len(self.lattice.skeleta[self.lattice.dimension-1])
+        self.cubeCells = len(self.lattice.skeleta[self.lattice.dimension])
 
         # SW defaults.
         self.state = initial if initial else self.initial()
-        self.spins = { face: self.state[self.lattice.index.faces[face]] for face in self.lattice.faces }
+        # self.spins = { face: self.state[self.lattice.index.faces[face]] for face in self.lattice.faces }
         self.occupied = set()
 
 
@@ -41,7 +43,9 @@ class SwendsenWang(Model):
         Returns:
             A NumPy array representing a vector of spin assignments.
         """
-        return np.array([np.random.randint(0, self.lattice.field.order) for _ in self.lattice.faces])
+        return self.lattice.field(
+            np.random.randint(0, self.lattice.field.order, size=self.faceCells)
+        )
     
 
     def proposal(self, time):
@@ -59,24 +63,17 @@ class SwendsenWang(Model):
         p = 1-np.exp(self.temperature)
         assert 0 <= p <= 1
 
-        # Choose cubes (i.e. columns) to include: we do so by asking whether the
-        # sum o f the faces is 0 and a weighted coin flip succeeds.
-        includeCubes = []
-        
-        for cube in self.lattice.cubes:
-            q = np.random.uniform()
-            null = self.lattice.field([self.spins[face] for face in cube.faces]).sum() == 0
-
-            if null and q < p:
-                includeCubes.append(cube)
-
-        includeCubeIndices = [self.lattice.index.cubes[cube] for cube in includeCubes]
-        self.occupied = set(includeCubes)
+        # Choose cubes to include; in effect, this just does a boatload of indexing.
+        uniforms = np.random.uniform(size=self.cubeCells)
+        include = (uniforms < p).nonzero()[0]
+        boundary = self.lattice.boundary[self.lattice.dimension][include]
+        boundaryValues = self.state[boundary-self.faceCells].sum(axis=1)
+        zeros = (boundaryValues == 0).nonzero()[0]
 
         # Uniformly randomly sample a cocycle on the sublattice admitted by the
         # chosen edges; reconstruct the labeling on the entire lattice by
         # subbing in the values of c which differ from existing ones.
-        return linalg.sampleFromKernel(self.lattice.coboundary, self.lattice.field, includeCubeIndices)
+        return sampleFromKernel(self.lattice.matrices.coboundary, self.lattice.field, zeros)
     
 
     def assign(self, cocycle: np.array):
@@ -86,7 +83,8 @@ class SwendsenWang(Model):
         Args: 
             cocycle (np.array): Cocycle on the sublattice.
         """
-        self.spins = { face: cocycle[self.lattice.index.faces[face]] for face in self.lattice.faces }
+        pass
+        # self.spins = { face: cocycle[self.lattice.index.faces[face]] for face in self.lattice.faces }
         
         # Dual graph of sublattice of occupied cubes.
         # self.lattice.subgraph = self.lattice.graph.subgraph(

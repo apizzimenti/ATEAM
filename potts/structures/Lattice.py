@@ -63,39 +63,37 @@ class Lattice:
         # Skeleta. The pair { d: f } has f as a 2-dimensional NumPy array: the
         # kth entry of f is a list of indices of (d-1)-cubes which are the faces
         # of the kth d-cube.
-        skeleta = {
+        _skeleta = {
             d: np.sort(np.array(list(_L.skeleta[d].values())))
-            for d in range(len(corners)+1)
+            for d in range(self.dimension+1)
         }
 
-        self.skeleta = {
-            d: len(skeleta[d])
-            for d in skeleta.keys()
-        }
-
-        cells = np.concatenate([np.array(skeleta[d]) for d in range(self.dimension+1)])
+        # Construct an array of cell objects; this should be indexable easily.
+        cells = np.concatenate([np.array(_skeleta[d]) for d in range(self.dimension+1)])
         self.cells = np.array([ReducedCell(c.encoding[:-1]) for c in cells])
+
         lookup = { self.cells[k].encoding: k for k in range(len(self.cells)) }
-        self.boundary = [
+        _boundary = [
             list(sorted([lookup[f.encoding[:-1]] for f in c.faces])) for c in cells
         ]
 
-        # Reduced cells; they carry only the encoding and, if they're cubes, the
-        # list of faces making them up.
-        self.faces = list(sorted(ReducedCell(f.encoding[:-1]) for f in _L.skeleta[self.dimension-1].values()))
-        _faceLookup = { f.encoding: f for f in self.faces }
+        # Construct a skeleta object, mapping the dimension to an array of indices
+        # of cells of that dimension.
+        self.tranches = np.cumsum([len(v) for v in _skeleta.values()])
 
-        self.cubes = list(sorted(
-            ReducedCell(c.encoding[:-1], faces=[_faceLookup[f.encoding[:-1]] for f in c.faces])
-            for c in _L.skeleta[self.dimension].values()
-        ))
+        self.skeleta = {
+            d: np.array(range(self.tranches[d-1] if d > 0 else 0, self.tranches[d]))
+            for d in range(len(self.tranches))
+        }
 
-        # Construct indices, boundary matrix, and graph.
-        self._index()
+        self.boundary = {
+            d: np.array([_boundary[k] for k in cells]).astype(int)
+            for d, cells in self.skeleta.items()
+        }
+
         self._constructBoundaryMatrix()
 
         # Force garbage collection on the Lattice and the lookup.
-        del _faceLookup
         del _L
 
         return self
@@ -112,14 +110,13 @@ class Lattice:
         with open(fp, "w") as write:
             json.dump(
                 {
-                    "faces": { k: str(f.encoding) for f, k in self.index.faces.items() },
-                    "cubes": {
-                        str(cube.encoding): [self.index.faces[f] for f in cube.faces]
-                        for cube in self.cubes
-                    },
+                    "tranches": self.tranches.tolist(),
                     "field": self.field.order,
                     "dimension": self.dimension,
-                    "periodicBoundaryConditions": int(self.periodicBoundaryConditions)
+                    "periodicBoundaryConditions": int(self.periodicBoundaryConditions),
+                    "skeleta": { k: v.tolist() for k, v in self.skeleta.items() },
+                    "boundary": { k: v.tolist() for k, v in self.boundary.items() },
+                    "corners": self.corners
                 }, write
             )
         
@@ -139,26 +136,14 @@ class Lattice:
             self.field = galois.GF(int(serialized["field"]))
             self.dimension = int(serialized["dimension"])
             self.periodicBoundaryConditions = bool(serialized["periodicBoundaryConditions"])
-
-            # Create faces and cubes.
-            faces = {
-                int(k): ReducedCell(ast.literal_eval(f)) for k, f in serialized["faces"].items()
-            }
-
-            self.faces = list(sorted(faces.values()))
-            self.cubes = list(sorted(
-                ReducedCell(ast.literal_eval(c), faces=list(sorted(faces[k] for k in indices)))
-                for c, indices in serialized["cubes"].items()
-            ))
+            self.skeleta = { int(k): np.array(v) for k, v in serialized["skeleta"].items() }
+            self.boundary = { int(k): np.array(v) for k, v in serialized["boundary"].items() }
+            self.corners = serialized["corners"]
 
             # Construct indices, boundary matrix, and graph.
-            self._index()
             self._constructBoundaryMatrix()
             # self._constructGraph()
-
-            del serialized
-            del faces
-
+    
     
     def _index(self):
         """
@@ -174,24 +159,15 @@ class Lattice:
         """
         Constructs the (co)boundary matrix for this cubical lattice.
         """
-        self.matrices = Matrices()
-        faceCount = len(self.faces)
-        cubeCount = len(self.cubes)
-        
-        # Construct the boundary matrix.
-        B = np.zeros((faceCount, cubeCount), dtype=int)
-        
-        for cube in self.cubes:
-            j = self.index.cubes[cube]
-            for face in cube.faces:
-                i = self.index.faces[face]
-                B[i,j] = 1
-        
-        self.matrices.boundary = self.field(B)
-        self.matrices.coboundary = self.field(B.transpose())
+        numFaces = len(self.skeleta[self.dimension-1])
+        numCubes = len(self.skeleta[self.dimension])
 
-        self.subboundary = None
-        self.subcoboundary = None
+        self.matrices = Matrices()
+        self.matrices.boundary = self.field.Zeros((numFaces, numCubes))
+
+        boundary = self.boundary[self.dimension]-np.min(self.boundary[self.dimension])
+        self.matrices.boundary[boundary, [[k] for k in range(len(boundary))]] = 1
+        self.matrices.coboundary = self.matrices.boundary.T
 
 
     def _constructGraph(self):

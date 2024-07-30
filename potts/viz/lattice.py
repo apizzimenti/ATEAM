@@ -52,28 +52,25 @@ def shortestPath(L, assignment):
     # get the coordinates of the edges' endpoints, and return.
     if B:
         essential = list(sorted(B, key=lambda L: len(L)))[0]
-        edges = list(zip([essential[-1]] + essential[:-1], essential))
-
+        edgeVertices = list(set(essential))
         edges = list(zip([essential[-1]] + essential[:-1], essential))
         edges = [(L.cells[u].encoding[0], L.cells[v].encoding[0]) for u, v in edges]
         # X = sum([[ux, vx] for ((ux, _), (vx, __)) in edges], [])
         # Y = sum([[uy, vy] for ((_, uy), (__, vy)) in edges], [])
 
-        return edges
-    return []
+        return edges, edgeVertices
+    return [], []
 
 
 def lattice2D(
         L, assignment,
         padding=0.1,
-        vertexArgs=dict(s=40, color="k", zorder=10),
-        edgeOccupiedColor="#3B444B",
-        edgeOccupiedWidth=1.5,
-        edgeVacantColor="#3B444B10",
-        edgeVacantWidth=1,
-        edgeArgs=dict(zorder=0),
-        shortestEdgeArgs=dict(zorder=1, color="#E52B50"),
-        squareArgs=dict(alpha=1/2, facecolor="#87A96B", edgecolor="none", zorder=0)
+        vertexOccupiedArgs=dict(),
+        vertexShortestArgs=dict(),
+        edgeOccupiedArgs=dict(),
+        edgeShortestArgs=dict(),
+        edgeVacantArgs=dict(),
+        squareArgs=dict(),
     ):
     """
     Plots the flat torus specified by `L`.
@@ -95,8 +92,23 @@ def lattice2D(
     Returns:
         `(matplotlib.Figure, matplotlib.Axes)` subplots pair.
     """
+    # Defaults.
+    _vertexOccupiedArgs=dict(s=6, color="#C19A6B", zorder=10, facecolor="none", lw=1)
+    _vertexShortestArgs=dict(s=6, color="#734F96", zorder=10, facecolor="none", lw=1)
+    _edgeOccupiedArgs=dict(lw=1.5, color="#C19A6B", zorder=1)
+    _edgeShortestArgs=dict(lw=1.6, color="#734F96", zorder=1)
+    _edgeVacantArgs=dict(lw=0, color="none")
+    _squareArgs=dict(facecolor="#87A96B75", edgecolor="none", zorder=0)
+
+    _vertexOccupiedArgs.update(vertexOccupiedArgs)
+    _vertexShortestArgs.update(vertexShortestArgs)
+    _edgeOccupiedArgs.update(edgeOccupiedArgs)
+    _edgeShortestArgs.update(edgeShortestArgs)
+    _edgeVacantArgs.update(edgeVacantArgs)
+    _squareArgs.update(squareArgs)
+
     # Get the coordinates for the shortest path.
-    shortestEdges = shortestPath(L, assignment)
+    shortestEdges, shortestEdgesVertices = shortestPath(L, assignment)
 
     # Create subplots, turn axes off, set axis limits.
     fig, ax = plt.subplots()
@@ -136,23 +148,18 @@ def lattice2D(
             if dist == 4:
                 coordinates = list(sorted(possibleSquare))
                 anchor = coordinates[0]
-                rect = Rectangle(anchor, width=1, height=1, **squareArgs)
+                rect = Rectangle(anchor, width=1, height=1, **_squareArgs)
                 ax.add_patch(rect)
 
     # Plot edges next.
     edges = [c.encoding for c in L.cells[last[0]:last[1]]]
     nonzero = (assignment == 1).nonzero()[0]
 
+    # Do it again for the shortest path.
     for j, ((ux, uy), (vx, vy)) in enumerate(edges):
         # No markers for edge ends.
-        edgeArgs.update(dict(marker="none"))
-
-        if j in nonzero:
-            edgeArgs.update(dict(color=edgeOccupiedColor))
-            edgeArgs.update(dict(linewidth=edgeOccupiedWidth))
-        else:
-            edgeArgs.update(dict(color=edgeVacantColor))
-            edgeArgs.update(dict(linewidth=edgeVacantWidth))
+        _edgeVacantArgs.update(dict(marker="none"))
+        _edgeOccupiedArgs.update(dict(marker="none"))
 
         possibleVertices = list(product(vertexmap[(ux, uy)], vertexmap[(vx, vy)]))
         compatibleEdges = [
@@ -162,19 +169,13 @@ def lattice2D(
         ]
 
         for x, y in compatibleEdges:
-            ax.plot(x, y, **edgeArgs)
+            if j in nonzero: ax.plot(x, y, **_edgeOccupiedArgs)
+            else: ax.plot(x, y, **_edgeVacantArgs)
 
     # Do it again for the shortest path.
     for j, ((ux, uy), (vx, vy)) in enumerate(shortestEdges):
         # No markers for edge ends.
-        edgeArgs.update(dict(marker="none"))
-
-        if j in nonzero:
-            edgeArgs.update(dict(color=edgeOccupiedColor))
-            edgeArgs.update(dict(linewidth=edgeOccupiedWidth))
-        else:
-            edgeArgs.update(dict(color=edgeVacantColor))
-            edgeArgs.update(dict(linewidth=edgeVacantWidth))
+        _edgeShortestArgs.update(dict(marker="none"))
 
         possibleVertices = list(product(vertexmap[(ux, uy)], vertexmap[(vx, vy)]))
         compatibleEdges = [
@@ -183,11 +184,17 @@ def lattice2D(
                 or (uy == vy and abs(ux-vx) == 1) and max(uy, vy) < L.corners[1])
         ]
 
-        for x, y in compatibleEdges:
-            ax.plot(x, y, **shortestEdgeArgs)
+        for x, y in compatibleEdges: ax.plot(x, y, **_edgeShortestArgs)
+
 
     # Plot vertices *last*.
-    vx, vy = zip(*[c.encoding[0] for c in L.cells[:L.skeleta[0]]])
-    ax.scatter(vx, vy, **vertexArgs)
+    others = list(set(range(L.skeleta[0])) - set(shortestEdgesVertices))
+
+    px, py = zip(*[c.encoding[0] for c in L.cells[others]])
+    ax.scatter(px, py, **_vertexOccupiedArgs)
+
+    if shortestEdgesVertices:
+        ix, iy = zip(*[c.encoding[0] for c in L.cells[shortestEdgesVertices]])
+        ax.scatter(ix, iy, **_vertexShortestArgs)
 
     return fig, ax

@@ -1,9 +1,6 @@
  
 import numpy as np
 import phat
-import matplotlib.pyplot as plt
-from random import shuffle, sample
-from functools import reduce
 
 from ..arithmetic import essentialCyclesBorn
 from ..structures import Lattice
@@ -58,18 +55,16 @@ class HomologicalPercolation(Model):
 
         self.dimensions = list(range(len(L.corners)+1))
 
+        
         # Static sets of indices to pass to the shuffler.
         self.times = set(range(self.tranches[-1]))
         self.targetRelativeIndices = np.array(range(0, self.lattice.skeleta[homology]))
         self.targetAbsoluteIndices = np.array(range(self.tranches[homology-1], self.tranches[homology]))
-        self.shuffler = np.array([self.targetAbsoluteIndices, self.targetAbsoluteIndices])
-
         self.lowestRelativeTargetIndex = min(self.targetAbsoluteIndices)
         self.highestRelativeTargetIndex = max(self.targetAbsoluteIndices)
 
-        # Pre-construct the boundary matrix and spin assignments.
+        # Pre-construct the boundary matrix.
         self.boundary = phat.boundary_matrix()
-        self.defaultSpins = np.zeros(len(self.targetCells), dtype=int)
 
 
     def initial(self) -> np.array:
@@ -108,7 +103,7 @@ class HomologicalPercolation(Model):
             self.dimensions,
             self.times
         )
-
+    
 
     def assign(self, cocycle: np.array):
         """
