@@ -2,8 +2,6 @@
 import galois
 import numpy as np
 import json
-import ast
-from rustworkx import PyGraph
 from itertools import combinations as combs
 from functools import reduce
 
@@ -114,7 +112,7 @@ class Lattice:
                     "field": self.field.order,
                     "dimension": self.dimension,
                     "periodicBoundaryConditions": int(self.periodicBoundaryConditions),
-                    "skeleta": { k: v.tolist() for k, v in self.skeleta.items() },
+                    "skeleta": { k: [int(min(v)), int(max(v))] for k, v in self.skeleta.items() },
                     "boundary": { k: v.tolist() for k, v in self.boundary.items() },
                     "corners": self.corners
                 }, write
@@ -136,7 +134,7 @@ class Lattice:
             self.field = galois.GF(int(serialized["field"]))
             self.dimension = int(serialized["dimension"])
             self.periodicBoundaryConditions = bool(serialized["periodicBoundaryConditions"])
-            self.skeleta = { int(k): np.array(v) for k, v in serialized["skeleta"].items() }
+            self.skeleta = { int(k): np.array(range(l, h+1)).astype(int) for k, (l, h) in serialized["skeleta"].items() }
             self.boundary = { int(k): np.array(v) for k, v in serialized["boundary"].items() }
             self.corners = serialized["corners"]
 
@@ -144,7 +142,7 @@ class Lattice:
             self._constructBoundaryMatrix()
             # self._constructGraph()
     
-    
+
     def _index(self):
         """
         Creates an internal index for the faces and cubes of the Lattice.
@@ -168,35 +166,6 @@ class Lattice:
         boundary = self.boundary[self.dimension]-np.min(self.boundary[self.dimension])
         self.matrices.boundary[boundary, [[k] for k in range(len(boundary))]] = 1
         self.matrices.coboundary = self.matrices.boundary.T
-
-
-    def _constructGraph(self):
-        """
-        Constructs and maintains a graph, where faces are vertices and cubes are
-        edges; two faces are adjacent if and only if they share a coface.
-        """
-        G = PyGraph(multigraph=False)
-
-        # Catalogue to which cubes each face belongs.
-        parents = { f: set() for f in self.faces }
-        adjacencies = { f: set() for f in self.faces }
-
-        for cube in self.cubes:
-            for face in cube.faces:
-                parents[face].add(cube)
-                adjacencies[face] |= cube.faces
-
-        # Add vertices and edges.
-        for face in self.faces: face.index = G.add_node(face)
-        
-        # Add edges.
-        for face, neighbors in adjacencies.items():
-            for neighbor in neighbors:
-                if face == neighbor: continue
-                edge = (parents[face] & parents[neighbor]).pop()
-                edge.index = G.add_edge(face.index, neighbor.index, edge)                
-
-        self.graph = G
         
 
 class LargeLattice:
