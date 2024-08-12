@@ -12,9 +12,9 @@ def shortestPath(L, assignment):
     G = rx.PyGraph(multigraph=False)
 
     # Add vertices and edges.
-    G.add_nodes_from(range(L.skeleta[0]))
+    G.add_nodes_from(range(len(L.skeleta[0])))
     G.add_edges_from_no_data([
-        tuple(e) for i, e in enumerate(L.boundary[L.skeleta[0]:len(L.cells)-L.skeleta[2]])
+        tuple(e) for i, e in enumerate(L.boundary[1])
         if assignment[i]
     ])
 
@@ -131,8 +131,7 @@ def lattice2D(
 
     # Plot squares *first*. We need to check whether this is a torus (a periodic
     # cubical complex) as well, otherwise we end up plotting weird shit.
-    last = np.cumsum(list(L.skeleta.values()))
-    squares = [c.encoding for c in L.cells[last[1]:]]
+    squares = [c.encoding for c in L.cells[L.tranches[1]:]]
 
     for square in squares:
         possibleVertices = reduce(lambda A,B: A+B, [vertexmap[v] for v in square])
@@ -152,7 +151,7 @@ def lattice2D(
                 ax.add_patch(rect)
 
     # Plot edges next.
-    edges = [c.encoding for c in L.cells[last[0]:last[1]]]
+    edges = [c.encoding for c in L.cells[L.tranches[0]:L.tranches[1]]]
     nonzero = (assignment == 1).nonzero()[0]
 
     # Do it again for the shortest path.
@@ -188,7 +187,7 @@ def lattice2D(
 
 
     # Plot vertices *last*.
-    others = list(set(range(L.skeleta[0])) - set(shortestEdgesVertices))
+    others = list(set(range(len(L.skeleta[0]))) - set(shortestEdgesVertices))
 
     px, py = zip(*[c.encoding[0] for c in L.cells[others]])
     ax.scatter(px, py, **_vertexOccupiedArgs)

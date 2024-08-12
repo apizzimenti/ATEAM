@@ -26,30 +26,34 @@ class HomologicalPercolation(Model):
             temperatureFunction (None): Dummy.
         """
         self.lattice = L
+        self.homology = homology
 
         # Partition the cells into "lower," "target," "higher," and "other.""
         # We'll only ever be modifying the middle two components of the partition.
-        self.tranches = np.cumsum(list(self.lattice.skeleta.values()))
+        self.tranches = self.lattice.tranches
+        self.boundary = sum([list(L.boundary[d]) for d in range(0, len(L.corners)+1)], [])
 
         self.lowerCells = np.array([
-            np.sort(L.boundary[j])
+            np.sort(self.boundary[j])
             for j in range(0, self.tranches[homology-1])
         ])
 
         self.targetCells = np.array([
-            np.sort(L.boundary[j])
+            np.sort(self.boundary[j])
             for j in range(self.tranches[homology-1], self.tranches[homology])
         ])
 
+        print(len(self.boundary))
+
         self.higherCells = np.array([
-            L.boundary[j]
+            self.boundary[j]
             for j in range(self.tranches[homology], self.tranches[homology+1])
         ])
 
         self.higherCellsFlat = self.higherCells.flatten()
 
         self.otherCells = np.array([
-            np.sort(L.boundary[j])
+            np.sort(self.boundary[j])
             for j in range(self.tranches[homology+1], self.tranches[-1])
         ]) if homology+1 < len(L.corners)-1 else np.array([])
 
@@ -58,7 +62,7 @@ class HomologicalPercolation(Model):
         
         # Static sets of indices to pass to the shuffler.
         self.times = set(range(self.tranches[-1]))
-        self.targetRelativeIndices = np.array(range(0, self.lattice.skeleta[homology]))
+        self.targetRelativeIndices = np.array(range(0, len(self.lattice.skeleta[homology])))
         self.targetAbsoluteIndices = np.array(range(self.tranches[homology-1], self.tranches[homology]))
         self.lowestRelativeTargetIndex = min(self.targetAbsoluteIndices)
         self.highestRelativeTargetIndex = max(self.targetAbsoluteIndices)
@@ -74,7 +78,7 @@ class HomologicalPercolation(Model):
         Returns:
             A NumPy array representing a vector of spin assignments.
         """
-        return np.array([np.random.randint(0, self.lattice.field.order) for _ in self.lattice.faces])
+        return np.array([np.random.randint(0, self.lattice.field.order) for _ in self.lattice.skeleta[self.homology]])
         
 
     def proposal(self, time):
