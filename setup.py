@@ -1,6 +1,9 @@
 
 from setuptools import setup
 from Cython.Build import cythonize
+import os
+
+os.environ["CC"] = "gcc-14"
 
 setup(
     # name="potts",

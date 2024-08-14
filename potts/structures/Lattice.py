@@ -137,6 +137,7 @@ class Lattice:
             self.skeleta = { int(k): np.array(range(l, h+1)).astype(int) for k, (l, h) in serialized["skeleta"].items() }
             self.boundary = { int(k): np.array(v) for k, v in serialized["boundary"].items() }
             self.corners = serialized["corners"]
+            self.tranches = np.array(serialized["tranches"])
 
             # Construct indices, boundary matrix, and graph.
             self._constructBoundaryMatrix()

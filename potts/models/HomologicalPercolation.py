@@ -31,37 +31,26 @@ class HomologicalPercolation(Model):
         # Partition the cells into "lower," "target," "higher," and "other.""
         # We'll only ever be modifying the middle two components of the partition.
         self.tranches = self.lattice.tranches
-        self.boundary = sum([list(L.boundary[d]) for d in range(0, len(L.corners)+1)], [])
+        self.skeleta = self.lattice.skeleta
 
-        self.lowerCells = np.array([
-            np.sort(self.boundary[j])
-            for j in range(0, self.tranches[homology-1])
-        ])
+        self.lowerCells = sum([
+            list(zip([d]*len(self.skeleta[d]), self.lattice.boundary[d].tolist()))
+            for d in range(self.homology)
+        ], [])
 
-        self.targetCells = np.array([
-            np.sort(self.boundary[j])
-            for j in range(self.tranches[homology-1], self.tranches[homology])
-        ])
+        self.otherCells = sum([
+            list(zip([d]*len(self.skeleta[d]), self.lattice.boundary[d].tolist()))
+            for d in range(self.homology+2, len(self.lattice.corners)+1)
+        ], []) if self.homology+2 <= len(self.lattice.corners) else []
 
-        print(len(self.boundary))
-
-        self.higherCells = np.array([
-            self.boundary[j]
-            for j in range(self.tranches[homology], self.tranches[homology+1])
-        ])
+        self.targetCells = self.lattice.boundary[self.homology]
+        self.higherCells = self.lattice.boundary[self.homology+1]
 
         self.higherCellsFlat = self.higherCells.flatten()
-
-        self.otherCells = np.array([
-            np.sort(self.boundary[j])
-            for j in range(self.tranches[homology+1], self.tranches[-1])
-        ]) if homology+1 < len(L.corners)-1 else np.array([])
-
-        self.dimensions = list(range(len(L.corners)+1))
-
+        self.dimensions = [self.homology, self.homology+1]
         
         # Static sets of indices to pass to the shuffler.
-        self.times = set(range(self.tranches[-1]))
+        self.times = set(range(self.tranches[self.homology-1], self.tranches[self.homology]))
         self.targetRelativeIndices = np.array(range(0, len(self.lattice.skeleta[homology])))
         self.targetAbsoluteIndices = np.array(range(self.tranches[homology-1], self.tranches[homology]))
         self.lowestRelativeTargetIndex = min(self.targetAbsoluteIndices)
@@ -93,6 +82,7 @@ class HomologicalPercolation(Model):
         Returns:
             A NumPy array representing a vector of spin assignments.
         """
+
         return essentialCyclesBorn(
             self.boundary,
             self.targetAbsoluteIndices,

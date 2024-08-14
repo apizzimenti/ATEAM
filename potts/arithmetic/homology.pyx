@@ -103,12 +103,12 @@ def essentialCyclesBorn(
     higher.sort()
 
     # Now, construct the ordered boundary matrix for the complex.
-    skeleta = [lower, target, higher, other]
+    skeleta = [target, higher]
     zipped = [
         list(zip([d]*len(skeleton), skeleton))
         for d, skeleton in zip(dimensions, skeleta)
     ]
-    columns = sum(zipped, [])
+    columns = lower + sum(zipped, []) + other
 
     # Compute persistence pairs, and find the first time an essential cycle is
     # found.
@@ -116,7 +116,7 @@ def essentialCyclesBorn(
     _births, _deaths = zip(*boundary.compute_persistence_pairs())
     births = set(_births)
     deaths = set(_deaths)
-    essential = times-(births|deaths)-{0}
+    essential = (times-(births|deaths))-{0}
     essential = min(essential)
 
     # Find indices of all target cells included at or before the birth of the
