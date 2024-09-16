@@ -18,7 +18,9 @@ dependencies = [
     "scipy",
     "rustworkx",
     "Cython",
-    "jsonlines"
+    "jsonlines",
+    "pybind11",
+    "phat"
 ]
 
 [tool.setuptools]

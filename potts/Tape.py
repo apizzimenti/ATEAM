@@ -15,7 +15,7 @@ class Recorder:
     """
     def __init__(self): pass
 
-    def record(self, M: Chain, fp: str, compressed:bool=True):
+    def record(self, M: Chain, fp: str, outputs: dict, compressed:bool=True):
         """
         Called to configure the recording apparatus for the Chain, and *should*
         be used as a context manager (i.e. with the `with` statement).
@@ -24,6 +24,7 @@ class Recorder:
             M (Chain): `potts.Chain` object to be recorded; `Recorder` needs
                 access to the `Model` and `Lattice` subobjects.
             fp (str): Filename.
+            outputs (dict): Dictionary mapping integer keys to initial states.
             compressed (bool): Do we want to compress our outputs? The answer
                 should only be "no" if we're debugging something.
 
@@ -42,34 +43,33 @@ class Recorder:
         # is the initial state, and we need to record the whole thing; fix a list
         # of possible integer states for later.
         self.chain = M
-        self.previous = [-1]*len(self.chain.model.lattice.faces)
-        self._states = list(range(0, M.model.lattice.field.order))
+        self.outputs = outputs.copy()
+        self.previous = tuple(self.outputs.values())
         
         # Enter the context manager.
         return self.__enter__()
 
 
-    def store(self, state: np.array) -> None:
+    def store(self, state: tuple) -> None:
         """
         Stores a state yielded by iteration over a `Chain`.
 
         Args:
-            state (np.array): List of spin assignments for the faces of the
-                underlying lattice.
+            state (tuple): Tuple of assignments or other data points.
         """
-        # Find the indices where spin assignments *differ*, then categorize the
-        # indices based on their spin value. *Should* save some space when
-        # writing to file.
-        indices = (~np.equal(self.previous, state)).astype(int).nonzero()[0]
-        faces = { s: [] for s in self._states }
-        for i in indices: faces[int(state[i])].append(int(i))
+        delta = { }
 
-        # Record the "delta," i.e. the changes encountered from the previous
-        # state.
-        delta = {
-            "faces": faces,
-            "cubes": [self.chain.model.lattice.index.cubes[i] for i in self.chain.model.occupied]
-        }
+        for k, output in zip(self.outputs.keys(), state):
+            # Find the indices where spin assignments *differ*, then categorize the
+            # indices based on their spin value. *Should* save some space when
+            # writing to file.
+            indices = (~np.equal(self.previous[k], output)).astype(int).nonzero()[0]
+            faces = { int(s): [] for s in set(np.array(output)) }
+            for i in indices: faces[int(output[i])].append(int(i))
+
+            # Record the "delta," i.e. the changes encountered from the previous
+            # state.
+            delta[k] = faces
 
         # Write the delta to file and update the previous state to be the current
         # one.
@@ -98,7 +98,7 @@ class Player():
     """
     def __init__(self): pass
 
-    def playback(self, S:Model, fp:str, compressed=True, steps=None):
+    def playback(self, S:Model, fp:str, outputs: dict, compressed=True, steps=None):
         """
         Initialize playback; context management.
 
@@ -109,6 +109,7 @@ class Player():
                 simulated, statistical results from this playback may not be
                 accurate.
             fp (str): File in which records are stored.
+            outputs (dict): Dictionary mapping integer keys to initial states.
             compressed (bool): Are the data compressed?
             steps (int): How many steps does this chain take?
 
@@ -120,14 +121,7 @@ class Player():
         self._file = gzip.open(self._fp, "rb") if compressed else open(self._fp, "r")
         self._reader = jsl.Reader(self._file)
         self._steps = steps
-        
-        # Save `Model` for later.
-        self.model = S
-
-        # Create template objects to avoid re-creating them all the time. The
-        # first allows us to only modify faces whose spins were updated.
-        self._state = self.model.lattice.field.Zeros(len(self.model.lattice.faces))
-        self._elements = [self.model.lattice.field(k) for k in range(self.model.lattice.field.order)]
+        self.outputs = outputs.copy()
 
         # Enter context management.
         return self.__enter__()
@@ -148,18 +142,12 @@ class Player():
         try: configuration = self._reader.read()
         except: raise StopIteration
 
-        # Get cubes and faces.
-        faces = configuration["faces"]
-        cubes = configuration["cubes"]
-        
-        for spin, fs in faces.items():
-            for f in fs:
-                self._state[int(f)] = self._elements[int(spin)]
+        for k, output in configuration.items():
+            for spin, fs in output.items():
+                for f in fs:
+                    self.outputs[int(k)][int(f)] = int(spin)
 
-        self.model.occupied = cubes
-        
-        # Return the current state.
-        return self._state
+        return tuple(self.outputs.values())
     
 
     def __enter__(self):

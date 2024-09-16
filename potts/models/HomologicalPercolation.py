@@ -11,8 +11,7 @@ class HomologicalPercolation(Model):
     name = "HomologicalPercolation"
     
     def __init__(
-            self, L: Lattice, homology=1, mesh=1000, temperatureFunction=None,
-            initial=None
+            self, L: Lattice, homology=1
         ):
         """
         Initializes homological percolation.
@@ -28,36 +27,21 @@ class HomologicalPercolation(Model):
         self.lattice = L
         self.homology = homology
 
-        # Partition the cells into "lower," "target," "higher," and "other.""
-        # We'll only ever be modifying the middle two components of the partition.
-        self.tranches = self.lattice.tranches
-        self.skeleta = self.lattice.skeleta
-
-        self.lowerCells = sum([
-            list(zip([d]*len(self.skeleta[d]), self.lattice.boundary[d].tolist()))
-            for d in range(self.homology)
-        ], [])
-
-        self.otherCells = sum([
-            list(zip([d]*len(self.skeleta[d]), self.lattice.boundary[d].tolist()))
-            for d in range(self.homology+2, len(self.lattice.corners)+1)
-        ], []) if self.homology+2 <= len(self.lattice.corners) else []
-
-        self.targetCells = self.lattice.boundary[self.homology]
-        self.higherCells = self.lattice.boundary[self.homology+1]
-
-        self.higherCellsFlat = self.higherCells.flatten()
-        self.dimensions = [self.homology, self.homology+1]
-        
-        # Static sets of indices to pass to the shuffler.
-        self.times = set(range(self.tranches[self.homology-1], self.tranches[self.homology]))
-        self.targetRelativeIndices = np.array(range(0, len(self.lattice.skeleta[homology])))
-        self.targetAbsoluteIndices = np.array(range(self.tranches[homology-1], self.tranches[homology]))
-        self.lowestRelativeTargetIndex = min(self.targetAbsoluteIndices)
-        self.highestRelativeTargetIndex = max(self.targetAbsoluteIndices)
+        # Change the Lattice's dimension and construct an initial spin configuration.
+        # We have to change the lattice's dimension and reconstruct the boundary
+        # matrix, though.
+        self.spins = self._initialSpins()
+        self.lattice.dimension = homology
+        self.lattice._constructBoundaryMatrix()
 
         # Pre-construct the boundary matrix.
-        self.boundary = phat.boundary_matrix()
+        self.phatBoundary = phat.boundary_matrix()
+        self.times = set(range(self.lattice.tranches[-1]))
+        self.indices = self.lattice.skeleta[homology].copy()
+    
+    
+    def _initialSpins(self) -> np.array:
+        return self.lattice.field([0]*len(self.lattice.skeleta[self.homology-1]))
 
 
     def initial(self) -> np.array:
@@ -83,20 +67,20 @@ class HomologicalPercolation(Model):
             A NumPy array representing a vector of spin assignments.
         """
 
-        return essentialCyclesBorn(
-            self.boundary,
-            self.targetAbsoluteIndices,
-            self.targetRelativeIndices,
-            self.lowestRelativeTargetIndex,
-            self.highestRelativeTargetIndex,
-            self.lowerCells,
-            self.targetCells,
-            self.higherCellsFlat,
-            self.otherCells,
-            (len(self.higherCells), -1),
-            self.dimensions,
-            self.times
+        spins, occupied, satisfied = essentialCyclesBorn(
+            self.phatBoundary,
+            self.lattice.matrices.coboundary,
+            self.lattice.boundary,
+            self.lattice.tranches,
+            self.lattice.skeleta,
+            self.homology,
+            self.lattice.field,
+            self.spins,
+            self.times,
+            self.indices
         )
+
+        return spins, occupied, satisfied
     
 
     def assign(self, cocycle: np.array):

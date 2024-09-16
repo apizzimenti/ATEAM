@@ -62,7 +62,8 @@ class Chain:
             # Propose the next state and check whether we want to accept it as
             # the next state or not; assign whichever state is chosen to the
             # Model.
-            proposed = self.model.proposal(self.step)
+            proposedStates = self.model.proposal(self.step)
+            proposed = proposedStates[0]
             self.state = proposed if self.accept(self.state, proposed, self.step) else self.state
             self.model.assign(self.state)
 
@@ -73,7 +74,7 @@ class Chain:
             # Iterate.
             self.step += 1
             
-            return self.state
+            return proposedStates
         
         raise StopIteration
     

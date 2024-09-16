@@ -2,7 +2,7 @@
 import numpy as np
 
 
-def sampleFromKernel(A, field, includes=None):
+def sampleFromKernel(A, field, includes=None, relativeCells=None, relativeFaces=None):
     """
     Uniformly randomly samples a cochain given the coboundary matrix A.
     """
@@ -11,12 +11,17 @@ def sampleFromKernel(A, field, includes=None):
     if len(includes): B = A.take(includes, axis=0)
     else: B = A
 
-    # TODO relative homology for this!
+    # Relative homology.
+    if len(relativeCells): C = B.take(relativeCells, axis=0)
+    else: C = B
+
+    if len(relativeFaces): D = C.take(relativeFaces, axis=1)
+    else: D = C
     
     # Find a basis for the kernel of B, then take a uniformly random linear
     # combination of the basis elements; this is equivalent to uniformly
     # randomly sampling a cocycle.
-    K = B.null_space()
+    K = D.null_space()
     M, _ = K.shape
     Q = field.Random(M)
     return (Q@K)
@@ -47,83 +52,79 @@ def autocorrelation(data):
 
 
 def essentialCyclesBorn(
+        phatBoundary,
+        coboundary,
         boundary,
-        targetAbsoluteIndices,
-        targetRelativeIndices,
-        lowestRelativeIndex,
-        highestRelativeIndex,
-        lower,
-        target,
-        higher,
-        other,
-        shape,
-        dimensions,
-        times
+        tranches,
+        skeleta,
+        homology,
+        field,
+        spins,
+        times,
+        indices
     ):
     """
     Computes the persistent homology of the given complex, identifying when the
     first nontrivial element of the parent space (generally a torus) is born.
 
     Args:
-        boundary (phat.boundary_matrix): The PHAT boundary matrix class; this
-            object is instantiated once and re-used.
-        targetAbsoluteIndices (Iterable): Absolute indices of the target cells.
-        targetRelativeIndices (Iterable): Relative indices of the target cells.
-        lowestRelativeIndex (int): Index of the first target cell.
-        highestRelativeIndex (int): Index of the last target cell.
-        lower (np.array): Lower-dimensional cells, listed in the PHAT boundary
-            matrix format.
-        target (np.array): Target-dimensional cells, listed in the PHAT boundary
-            matrix format.
-        higher (np.array): One-higher-than-target-dimensional cells, listed in
-            the PHAT boundary matrix format.
-        other (np.array): All higher-dimensional cells, listed in the PHAT
-            boundary matrix format.
-        shape (tuple): Shape of the re-indexed boundary matrix; should be
-            `(<number of higher-dimensional cells>, -1)`, allowing NumPy to infer
-            the other dimension.
-        dimensions (Iterable): List containing the dimensions of the underlying
-            lattice.
-        times (set): Indices of the *filtration* (i.e. (0, ... , <number of cells>-1))
-            reported as a set.
-
-    Returns:
-        A `np.array` of length `<number of target-dimensional cells>` with a `1`
-        for each occupied cell and a `0` for each vacant cell.
     """
-    # Randomize the indices of the target cells, then shuffle.
-    shuffled = np.random.permutation(targetAbsoluteIndices)
-    target = target[shuffled-lowestRelativeIndex]
+    # Randomize the indices of the target cells, and check that the spins on
+    # their faces sum to 0.
+    shuffled = np.random.permutation(skeleta[homology])
+    shuffledIndices = shuffled-tranches[homology-1]
+    adj = (tranches[homology-2] if homology-2>=0 else 0)
 
-    # Create a "reindexer" object which allows us to quickly determine the old->new
-    # index mapping. Recall that the entries of the matrices *must* be sorted!
-    _reindexer = np.array([shuffled, targetAbsoluteIndices])
+    faces = boundary[homology][shuffledIndices]-adj
+    cycles = spins[faces].sum(axis=1)
+    satisfiedIndices = (cycles==0).nonzero()[0]
+    satisfied = faces[satisfiedIndices]+adj
+    satisfied.sort()
+
+    # Add in the "unsatisfied" bonds afterward; note the last time a satisfied
+    # bond was added.
+    unsatisfiedIndices = np.setdiff1d(shuffledIndices,satisfiedIndices)
+    unsatisfied = faces[unsatisfiedIndices]+adj
+    unsatisfied.sort()
+
+    _reindexer = np.array([
+        np.append(shuffled[satisfiedIndices], shuffled[unsatisfiedIndices]),
+        indices
+    ])
+
     reindexer = _reindexer[:, _reindexer[0].argsort()][1]
-    higher = (reindexer[higher-lowestRelativeIndex]).reshape(shape)
+
+    higher = (boundary[homology+1]-tranches[homology-1]).flatten()
+    higher = (reindexer[higher]).reshape((len(skeleta[homology+1]), -1))
     higher.sort()
 
-    # Now, construct the ordered boundary matrix for the complex.
-    skeleta = [target, higher]
-    zipped = [
-        list(zip([d]*len(skeleton), skeleton))
-        for d, skeleton in zip(dimensions, skeleta)
-    ]
-    columns = lower + sum(zipped, []) + other
+    # Construct the columns of the boundary matrix.
+    lower = sum([list(zip([d]*len(skeleta[d]), boundary[d])) for d in range(homology)], [])
+    target = list(zip([homology]*len(satisfied), satisfied)) + list(zip([homology]*len(unsatisfied), unsatisfied))
+    reindexed = list(zip([homology+1]*len(higher), higher))
+    highest = sum([list(zip([d]*len(skeleta[d]), boundary[d])) for d in range(homology+2, len(skeleta))], [])
 
     # Compute persistence pairs, and find the first time an essential cycle is
     # found.
-    boundary.columns = columns
-    _births, _deaths = zip(*boundary.compute_persistence_pairs())
+    phatBoundary.columns = lower + target + reindexed + highest
+    _births, _deaths = zip(*phatBoundary.compute_persistence_pairs())
     births = set(_births)
     deaths = set(_deaths)
-    essential = (times-(births|deaths))-{0}
+    essential = set(e for e in times-(births|deaths) if tranches[homology-1] < e < tranches[homology])
     essential = min(essential)
-
-    # Find indices of all target cells included at or before the birth of the
-    # first essential cycle.
-    included = shuffled[:(essential-lowestRelativeIndex)+1]
-    spins = np.zeros(len(target))
-    spins[included-lowestRelativeIndex] = 1
     
-    return spins
+    # Determine which cells were included at the time the cycle was born, and
+    # construct three assignments: the *occupied* cells, the *satisfied* cells,
+    # and a new spin assignment on the *faces* of the cells.
+    occupiedIndices = shuffled[:(essential-tranches[homology-1])+1]-tranches[homology-1]
+    occupied = np.zeros(len(target), dtype=int)
+    occupied[occupiedIndices] = 1
 
+    satisfiedIndices = shuffled[satisfiedIndices]-tranches[homology-1]
+    satisfied = np.zeros(len(target), dtype=int)
+    satisfied[satisfiedIndices] = 1
+
+    # Construct a new assignment on the faces.
+    spins = sampleFromKernel(coboundary, field, occupiedIndices)
+
+    return spins, occupied, satisfied

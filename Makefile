@@ -9,7 +9,7 @@ clean:
 	@rm -rf ./build
 
 
-fp = ./test/output/profiles/metadata/profile.json
+fp = ./test/output/profiles/metadata/.profiles/profile.json
 
 test: FORCE
 	# screen -dm vprof -r

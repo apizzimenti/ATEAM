@@ -65,6 +65,7 @@ def shortestPath(L, assignment):
 def lattice2D(
         L, assignment,
         padding=0.1,
+        shortest=False,
         vertexOccupiedArgs=dict(),
         vertexShortestArgs=dict(),
         edgeOccupiedArgs=dict(),
@@ -108,7 +109,8 @@ def lattice2D(
     _squareArgs.update(squareArgs)
 
     # Get the coordinates for the shortest path.
-    shortestEdges, shortestEdgesVertices = shortestPath(L, assignment)
+    if shortest:
+        shortestEdges, shortestEdgesVertices = shortestPath(L, assignment)
 
     # Create subplots, turn axes off, set axis limits.
     fig, ax = plt.subplots()
@@ -172,27 +174,28 @@ def lattice2D(
             else: ax.plot(x, y, **_edgeVacantArgs)
 
     # Do it again for the shortest path.
-    for j, ((ux, uy), (vx, vy)) in enumerate(shortestEdges):
-        # No markers for edge ends.
-        _edgeShortestArgs.update(dict(marker="none"))
+    if shortest:
+        for j, ((ux, uy), (vx, vy)) in enumerate(shortestEdges):
+            # No markers for edge ends.
+            _edgeShortestArgs.update(dict(marker="none"))
 
-        possibleVertices = list(product(vertexmap[(ux, uy)], vertexmap[(vx, vy)]))
-        compatibleEdges = [
-            ((ux, vx), (uy, vy)) for ((ux, uy), (vx, vy)) in possibleVertices
-            if ((ux == vx and abs(uy-vy) == 1 and max(ux, vx) < L.corners[0])
-                or (uy == vy and abs(ux-vx) == 1) and max(uy, vy) < L.corners[1])
-        ]
+            possibleVertices = list(product(vertexmap[(ux, uy)], vertexmap[(vx, vy)]))
+            compatibleEdges = [
+                ((ux, vx), (uy, vy)) for ((ux, uy), (vx, vy)) in possibleVertices
+                if ((ux == vx and abs(uy-vy) == 1 and max(ux, vx) < L.corners[0])
+                    or (uy == vy and abs(ux-vx) == 1) and max(uy, vy) < L.corners[1])
+            ]
 
-        for x, y in compatibleEdges: ax.plot(x, y, **_edgeShortestArgs)
+            for x, y in compatibleEdges: ax.plot(x, y, **_edgeShortestArgs)
 
 
     # Plot vertices *last*.
-    others = list(set(range(len(L.skeleta[0]))) - set(shortestEdgesVertices))
+    others = list(set(range(len(L.skeleta[0]))) - (set(shortestEdgesVertices) if shortest else set()))
 
     px, py = zip(*[c.encoding[0] for c in L.cells[others]])
     ax.scatter(px, py, **_vertexOccupiedArgs)
 
-    if shortestEdgesVertices:
+    if shortest and shortestEdgesVertices:
         ix, iy = zip(*[c.encoding[0] for c in L.cells[shortestEdgesVertices]])
         ax.scatter(ix, iy, **_vertexShortestArgs)
 
