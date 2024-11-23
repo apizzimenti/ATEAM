@@ -2,7 +2,7 @@
 import numpy as np
 import phat
 
-from ..arithmetic import essentialCyclesBorn
+from ..arithmetic import essentialCyclesBorn, boundaryMatrix
 from ..structures import Lattice
 from .Model import Model
 
@@ -30,29 +30,20 @@ class HomologicalPercolation(Model):
         # Change the Lattice's dimension and construct an initial spin configuration.
         # We have to change the lattice's dimension and reconstruct the boundary
         # matrix, though.
-        self.spins = self._initialSpins()
+        self.spins = self.initial()
         self.lattice.dimension = homology
-        self.lattice._constructBoundaryMatrix()
+
+        self.coboundary = boundaryMatrix(L.boundary, self.homology, L.field).T
 
         # Pre-construct the boundary matrix.
         self.phatBoundary = phat.boundary_matrix()
-        self.times = set(range(self.lattice.tranches[-1]))
-        self.indices = self.lattice.skeleta[homology].copy()
+        self.times = set(range(*self.lattice.tranches[homology]))
+        self.indices = np.arange(*self.lattice.tranches[homology])
     
     
-    def _initialSpins(self) -> np.array:
-        return self.lattice.field([0]*len(self.lattice.skeleta[self.homology-1]))
-
-
     def initial(self) -> np.array:
-        """
-        Computes an initial state for the model's Lattice.
-
-        Returns:
-            A NumPy array representing a vector of spin assignments.
-        """
-        return np.array([np.random.randint(0, self.lattice.field.order) for _ in self.lattice.skeleta[self.homology]])
-        
+        return self.lattice.field.Random(len(self.lattice.boundary[self.homology-1]))
+    
 
     def proposal(self, time):
         """
@@ -69,10 +60,10 @@ class HomologicalPercolation(Model):
 
         spins, occupied, satisfied = essentialCyclesBorn(
             self.phatBoundary,
-            self.lattice.matrices.coboundary,
+            self.coboundary,
             self.lattice.boundary,
+            self.lattice.reindexed,
             self.lattice.tranches,
-            self.lattice.skeleta,
             self.homology,
             self.lattice.field,
             self.spins,
