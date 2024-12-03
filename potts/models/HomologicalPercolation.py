@@ -1,6 +1,7 @@
  
 import numpy as np
 import phat
+from itertools import product
 
 from ..arithmetic import essentialCyclesBorn, boundaryMatrix
 from ..structures import Lattice
@@ -37,8 +38,21 @@ class HomologicalPercolation(Model):
 
         # Pre-construct the boundary matrix.
         self.phatBoundary = phat.boundary_matrix()
-        self.times = set(range(*self.lattice.tranches[homology]))
+        self.times = set(range(len(self.lattice.flattened)))
         self.indices = np.arange(*self.lattice.tranches[homology])
+        self.dimension = max(self.lattice.reindexed.keys())
+
+        # Precompute some other stuff in the interest of speed.
+        self.lower = sum([
+            list(product([d], np.sort(self.lattice.reindexed[d]).tolist()))
+            if d > 0 else [(0, [])]*len(self.lattice.reindexed[d])
+            for d in range(homology)
+        ], [])
+
+        self.highest = sum([
+            list(product([d], np.sort(self.lattice.reindexed[d]).tolist()))
+            for d in range(homology+2, self.dimension+1)
+        ], [])
     
     
     def initial(self) -> np.array:
@@ -68,7 +82,9 @@ class HomologicalPercolation(Model):
             self.lattice.field,
             self.spins,
             self.times,
-            self.indices
+            self.indices,
+            self.dimension,
+            self.lower, self.highest
         )
 
         return spins, occupied, satisfied

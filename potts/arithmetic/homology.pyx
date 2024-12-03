@@ -12,17 +12,17 @@ def sampleFromKernel(A, field, includes=[], relativeCells=None, relativeFaces=No
     if len(includes): B = A.take(includes, axis=0)
     else: B = A
 
-    # # Relative homology.
-    # if relativeCells: C = B.take(relativeCells, axis=0)
-    # else: C = B
+    # Relative homology.
+    if relativeCells: C = B.take(relativeCells, axis=0)
+    else: C = B
 
-    # if relativeFaces: D = C.take(relativeFaces, axis=1)
-    # else: D = C
+    if relativeFaces: D = C.take(relativeFaces, axis=1)
+    else: D = C
     
     # Find a basis for the kernel of B, then take a uniformly random linear
     # combination of the basis elements; this is equivalent to uniformly
     # randomly sampling a cocycle.
-    K = B.null_space()
+    K = D.null_space()
     M, _ = K.shape
     Q = field.Random(M)
     return (Q@K)
@@ -30,10 +30,7 @@ def sampleFromKernel(A, field, includes=[], relativeCells=None, relativeFaces=No
 
 def evaluateCocycle(boundary, spins):
     evaluation = spins[boundary]
-
-    for j in range(len(boundary[0])):
-        if j%2: evaluation[j] = -evaluation[j]
-    
+    evaluation[:, 1::2] = -evaluation[:, 1::2]
     return evaluation.sum(axis=1)
 
 
@@ -72,6 +69,7 @@ def essentialCyclesBorn(
         spins,
         times,
         indices,
+        lower, highest
     ):
     """
     Computes the persistent homology of the given complex, identifying when the
@@ -95,21 +93,8 @@ def essentialCyclesBorn(
 
     # Reorder the actual boundary matrices, then sort both; tack the other ones
     # on, too.
-    D = max(reindexed.keys())
-
-    # Do all this dumb sorting.
-    lower = sum([
-        list(product([d], np.sort(reindexed[d]).tolist())) if d > 0 else [(0, [])]*len(reindexed[d])
-        for d in range(homology)
-    ], [])
-
-    highest = sum([
-        list(product([d], np.sort(reindexed[d]).tolist()))
-        for d in range(homology+2, D+1)
-    ], [])
-
     target = list(product(
-        [homology], np.sort(boundary[homology][unordered]).tolist()
+        [homology], np.sort(reindexed[homology][unordered]).tolist()
     ))
 
     higher = list(product(
@@ -122,6 +107,7 @@ def essentialCyclesBorn(
     _births, _deaths = zip(*phatBoundary.compute_persistence_pairs())
     births = set(_births)
     deaths = set(_deaths)
+    
     essential = list(sorted(
         set(e for e in times-(births|deaths) if tranches[homology][0] <= e < tranches[homology][1])
     ))

@@ -8,7 +8,7 @@ class Chain:
     """
 
     def __init__(
-            self, model, initial=None, accept=always(), sampleInterval=0, statistics={},
+            self, model, accept=always(), sampleInterval=0, statistics={},
             steps=10000
         ):
         """
@@ -17,9 +17,6 @@ class Chain:
         Args:
             proposal (callable): A function which consumes this Chain object and
                 proposes a new state.
-            initial (np.array): A NumPy Array (homomorphism from the (k-1)-simplices
-                of the lattice to the finite field over which the simplices are
-                a vector space, i.e. a functional) assigning spins to simplices.
             accept (callable): A function which consumes the lattice, model, and
                 state to determine whether we're going to a good place.
             sampleInterval (int): Number representing the number of spin assignments we
@@ -30,7 +27,6 @@ class Chain:
             steps (int): The number of iterations in the chain.
         """
         self.model = model
-        self.initial = initial if initial else model.initial()
         self.steps = steps
         self.accept = accept
 
@@ -48,7 +44,7 @@ class Chain:
         Initializes the Chain object as a generator.
         """
         self.step = 0
-        self.state = self.initial
+        self.state = self.model.spins
         return self
     
 
@@ -62,10 +58,9 @@ class Chain:
             # Propose the next state and check whether we want to accept it as
             # the next state or not; assign whichever state is chosen to the
             # Model.
-            proposedStates = self.model.proposal(self.step)
-            proposed = proposedStates[0]
+            proposed = self.model.proposal(self.step)
             self.state = proposed if self.accept(self.state, proposed, self.step) else self.state
-            self.model.assign(self.state)
+            self.model.assign(self.state[0])
 
             # Compute statistics.
             for name, function in self.functions.items():
@@ -74,7 +69,7 @@ class Chain:
             # Iterate.
             self.step += 1
             
-            return proposedStates
+            return self.state
         
         raise StopIteration
     

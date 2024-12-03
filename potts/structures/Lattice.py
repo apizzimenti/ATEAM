@@ -2,6 +2,7 @@
 import galois
 import numpy as np
 import json
+from pathlib import Path
 from ast import literal_eval as le
 
 from ..arithmetic import cubicalComplex, boundaryMatrix, flatten
@@ -84,9 +85,10 @@ class Lattice:
             fp (str): Filepath.
         """
         # Write compressed boundary matrix and vertex maps to file.
-        prepend = "/".join(fp.split("/")[:-1])
-        root = fp.split("/")[-1].rpartition(".")[0]
-        boundaryFile = f"./{prepend}/.{root}.lattice.npz"
+        absolute = Path(fp).resolve()
+        root = absolute.parent
+        stem = absolute.stem
+        boundaryFile = root/f".{stem}.lattice.npz"
         np.savez_compressed(boundaryFile, **{str(t): v for t, v in self.boundary.items()})
 
         with open(fp, "w") as write:
@@ -96,7 +98,7 @@ class Lattice:
                     "dimension": self.dimension,
                     "periodicBoundaryConditions": int(self.periodicBoundaryConditions),
                     "corners": self.corners,
-                    "boundary": boundaryFile,
+                    "boundary": str(boundaryFile),
                     "vertexMap": { str(k): int(v) for k, v in self.vertexMap.items() }
                 }, write
             )

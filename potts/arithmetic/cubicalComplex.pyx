@@ -10,7 +10,8 @@ def flatten(Complex, D):
 	"""
 	# Line up indices.
 	reindexer = {
-		d: np.arange(len(Complex[d])) + len(Complex[d-1]) if d > 0 else np.arange(len(Complex[0]))
+		d: np.arange(len(Complex[d])) + sum([len(Complex[t]) for t in range(d)])
+		if d > 0 else np.arange(len(Complex[0]))
 		for d in range(D+1)
 	}
 
@@ -30,7 +31,7 @@ def flatten(Complex, D):
 
 def boundaryMatrix(complex, d, field):
 	"""
-	Construct the boundary (operator) matrix given the bounadry specification
+	Construct the boundary (operator) matrix given the boundary specification
 	"""
 	faces = complex[d-1]
 	cubes = complex[d]
@@ -43,13 +44,13 @@ def boundaryMatrix(complex, d, field):
 
 	for j in range(len(cubes)):
 		indices = cubes[j]
-		# coefficients = np.resize([1,-field(1)], len(indices))
-		B[:,j][indices] = 1
-
+		coefficients = np.resize([-field(1), 1], len(indices))
+		B[:,j][indices] = coefficients
+	
 	return B
 
 
-def hammingCube(D):#
+def hammingCube(D):
 	"""
 	Constructs a Hamming cube of dimension D.
 
@@ -151,7 +152,7 @@ def cubicalComplex(corners, D, field, periodic=True):
 		vertices = np.arange(len(unique))
 		indices[unique] = vertices
 		verticesToIndices = { t: indices[verticesToIndices[t]] for t in tups }
-	
+		
 	# Explode and do some reshaping. We need everything in terms of their
 	# local coordinates, so we'll have to do some re-indexing on the higher-
 	# dimensional faces.        
@@ -192,5 +193,15 @@ def cubicalComplex(corners, D, field, periodic=True):
 		uniqueBoundaries = np.unique(allBoundaries, axis=0)
 		Complex[d] = uniqueBoundaries
 		Skeleta[d] = { tuple(f): j for j, f in enumerate(uniqueBoundaries) }
+
+		# Delete repeated keys in the vertex mapping.
+		vti = {}
+		seen = set()
+
+		for v, k in verticesToIndices.items():
+			if k not in seen: vti[v] = k
+			seen.add(k)
+
+		verticesToIndices = vti
 
 	return verticesToIndices, Complex, boundaryMatrix(Complex, D, field)
