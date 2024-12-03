@@ -66,10 +66,13 @@ class SwendsenWang(Model):
         boundaryValues = evaluateCocycle(boundary, self.spins)
         zeros = (boundaryValues == 0).nonzero()[0]
 
+        satisfied = np.zeros(len(self.lattice.boundary[self.lattice.dimension])).astype(int)
+        satisfied[zeros] = 1
+
         # Uniformly randomly sample a cocycle on the sublattice admitted by the
         # chosen edges; reconstruct the labeling on the entire lattice by
         # subbing in the values of c which differ from existing ones.
-        return sampleFromKernel(self.lattice.matrices.coboundary, self.lattice.field, includes=zeros), zeros
+        return sampleFromKernel(self.lattice.matrices.coboundary, self.lattice.field, includes=zeros), satisfied
     
 
     def assign(self, cocycle: np.array):
