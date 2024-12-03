@@ -1,3 +1,3 @@
 
 echo "running development install\n"
-pip install -e .
+pip install -e . --config-settings editable_mode=compat

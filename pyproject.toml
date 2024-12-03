@@ -4,7 +4,7 @@ requires = ["Cython", "setuptools"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "ATEAM"
+name = "ateam"
 version = "0.0.1"
 description = "Algebraic Topology-Enabled Algorithms for Mechanics"
 readme = "README.md"
