@@ -1,1 +1,0 @@
-sbatch profile.slurm

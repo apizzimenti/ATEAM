@@ -6,6 +6,12 @@ __pycache__/
 potts.egg-info/
 .vscode/
 
+# Ignore object files.
+*.o
+*.so
+*.c
+build/
+
 # Ignore contents, but not directories.
 output/figures/*
 output/matrices/*

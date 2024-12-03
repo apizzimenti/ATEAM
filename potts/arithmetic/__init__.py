@@ -1,11 +1,12 @@
 
-from .Metadata import Metadata
 from .coordinates import (
     coordinates, elementwiseSubtract, subtractMany, binaryEncode, increment,
     elementwiseAdd, binaryUnencode, flattenAndSortSetUnion, elementwiseAddOne,
     elementwiseAddModuli
 )
-from .linalg import sampleFromKernel, autocorrelation
-from .fastiteration import energy
 
-__all__ = ["Metadata", "coordinates", "sampleFromKernel"]
+from .cubicalComplex import cubicalComplex, boundaryMatrix, flatten
+from .fastiteration import energy
+from .homology import essentialCyclesBorn, sampleFromKernel, autocorrelation, evaluateCocycle
+
+__all__ = ["coordinates", "sampleFromKernel", "SNF"]

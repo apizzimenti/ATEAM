@@ -1,0 +1,27 @@
+
+[build-system]
+requires = ["Cython", "setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "Potts"
+version = "0.0.1"
+description = "Topological statistical mechanics."
+readme = "README.md"
+
+requires-python = ">=3.8"
+dependencies = [
+    "numpy",
+    "galois",
+    "matplotlib",
+    "pandas",
+    "scipy",
+    "rustworkx",
+    "Cython",
+    "jsonlines",
+    "pybind11",
+    "phat"
+]
+
+[tool.setuptools]
+py-modules = ["potts"]
