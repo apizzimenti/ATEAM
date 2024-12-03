@@ -17,3 +17,7 @@ output/figures/*
 output/matrices/*
 output/profiles/*
 sync.sh
+
+# Ignore *most* testing stuff.
+test/.*
+test/*.sh

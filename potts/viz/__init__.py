@@ -1,2 +1,2 @@
 
-from .lattice import lattice2D
+from .lattice import lattice2D, points, shortestPath

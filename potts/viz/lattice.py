@@ -12,7 +12,7 @@ def shortestPath(L, assignment):
     G = rx.PyGraph(multigraph=False)
 
     # Add vertices and edges.
-    G.add_nodes_from(range(len(L.skeleta[0])))
+    G.add_nodes_from(range(len(L.boundary[0])))
     G.add_edges_from_no_data([
         tuple(e) for i, e in enumerate(L.boundary[1])
         if assignment[i]
@@ -54,12 +54,44 @@ def shortestPath(L, assignment):
         essential = list(sorted(B, key=lambda L: len(L)))[0]
         edgeVertices = list(set(essential))
         edges = list(zip([essential[-1]] + essential[:-1], essential))
-        edges = [(L.cells[u].encoding[0], L.cells[v].encoding[0]) for u, v in edges]
-        # X = sum([[ux, vx] for ((ux, _), (vx, __)) in edges], [])
-        # Y = sum([[uy, vy] for ((_, uy), (__, vy)) in edges], [])
+        edges = np.array(edges)
+        edges.sort(axis=1)
 
-        return edges, edgeVertices
+        edgeIncluded = np.array([
+            int(list(r) in edges) for r in L.boundary[1]
+        ])
+
+        return edgeIncluded, edgeVertices
     return [], []
+
+
+def points(L, dimension, scale=1, adj=2/3):
+    _vertices = [k for k, v in L.vertexMap.items()]
+    vertices = [(x*scale, y*scale) for x, y in _vertices]
+    edges = list((vertices[u], vertices[v]) for (u,v) in L.boundary[dimension])
+    external = [[] for _ in edges]
+    adj = adj*scale
+
+    # Move through the list of edges, re-casting edges that are on the boundary
+    # of the torus.
+    for j, edge in enumerate(edges):
+        ((ux, uy), (vx, vy)) = edge
+        if ux == vx:
+            if abs(uy-vy) > 1:
+                external[j] += [
+                    ((vx, vy), (vx, vy+adj)),
+                    ((ux, uy), (ux, uy-adj))
+                ]
+        if uy == vy:
+            if abs(ux-vx) > 1:
+                external[j] += [
+                    ((vx, vy), (vx+adj, vy)),
+                    ((ux, uy), (ux-adj, uy))
+                ]
+    
+    # Reform the sets of vertices and edges so they're numpy arrays.
+    vertices = np.array(vertices).T
+    return vertices, (edges, external)
 
 
 def lattice2D(
