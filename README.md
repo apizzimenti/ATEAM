@@ -4,7 +4,7 @@ Clone this repository by `git clone https://github.com/apizzimenti/ateam.git` an
 
 ## Example Use
 
-Below, we provide sample code for simulating a 10-iteration Markov chain
+Below, we provide sample code for simulating a 10-iteration Markov chain determined by the plaquette invaded-cluster algorithm.
 
 ```python
 from ateam.structures import Lattice
