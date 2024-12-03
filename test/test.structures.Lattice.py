@@ -1,7 +1,7 @@
 
-from potts.structures import Lattice
-from potts.models import HomologicalPercolation
-from potts import Chain
+from ateam.structures import Lattice
+from ateam.models import HomologicalPercolation
+from ateam import Chain
 import numpy as np
 
 homology = 2

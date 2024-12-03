@@ -1,6 +1,6 @@
 
-from potts.structures import Lattice
-from potts.viz.lattice import points
+from ateam.structures import Lattice
+from ateam.viz.lattice import points
 
 
 

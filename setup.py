@@ -40,6 +40,6 @@ setup(
     #     "dev": ["pdoc3", "flake8", "pytest", "autopep8", "pytest-cov", "black", "isort"]
     # },
     ext_modules=cythonize(
-        "potts/**/*.pyx"
+        "ateam/**/*.pyx"
     )
 )

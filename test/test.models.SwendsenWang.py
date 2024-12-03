@@ -1,7 +1,7 @@
 
-from potts.structures import Lattice
-from potts.models import SwendsenWang
-from potts import Chain
+from ateam.structures import Lattice
+from ateam.models import SwendsenWang
+from ateam import Chain
 
 L = Lattice().fromCorners([3,3])
 SW = SwendsenWang(L)

@@ -3,7 +3,7 @@
 __pycache__/
 .DS_Store
 .python-version
-potts.egg-info/
+ateam.egg-info/
 .vscode/
 
 # Ignore object files.

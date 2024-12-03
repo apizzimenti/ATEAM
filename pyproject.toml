@@ -4,9 +4,9 @@ requires = ["Cython", "setuptools"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "Potts"
+name = "ATEAM"
 version = "0.0.1"
-description = "Topological statistical mechanics."
+description = "Algebraic Topology-Enabled Algorithms for Mechanics"
 readme = "README.md"
 
 requires-python = ">=3.8"
@@ -24,4 +24,4 @@ dependencies = [
 ]
 
 [tool.setuptools]
-py-modules = ["potts"]
+py-modules = ["ateam"]

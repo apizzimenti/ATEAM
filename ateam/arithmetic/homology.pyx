@@ -1,8 +1,11 @@
 
+import cython
 import numpy as np
 from itertools import product
 
 
+@cython.boundscheck(False)
+@cython.wraparound(False)
 def sampleFromKernel(A, field, includes=[], relativeCells=None, relativeFaces=None):
     """
     Uniformly randomly samples a cochain given the coboundary matrix A.
@@ -28,6 +31,8 @@ def sampleFromKernel(A, field, includes=[], relativeCells=None, relativeFaces=No
     return (Q@K)
 
 
+@cython.boundscheck(False)
+@cython.wraparound(False)
 def evaluateCocycle(boundary, spins):
     evaluation = spins[boundary]
     evaluation[:, 1::2] = -evaluation[:, 1::2]
@@ -58,6 +63,8 @@ def autocorrelation(data):
     return autocorrs/autocorrs[0]
 
 
+@cython.boundscheck(False)
+@cython.wraparound(False)
 def essentialCyclesBorn(
         phatBoundary,
         coboundary,

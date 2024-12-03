@@ -8,14 +8,14 @@ from ..structures import Lattice
 from .Model import Model
 
 
-class HomologicalPercolation(Model):
-    name = "HomologicalPercolation"
+class InvadedCluster(Model):
+    name = "InvadedCluster"
     
     def __init__(
             self, L: Lattice, homology=1
         ):
         """
-        Initializes homological percolation.
+        Initializes the plaquette invaded-cluster algorithm.
 
         Args:
             L (Lattice): The `Lattice` object on which we'll be running experiments.
@@ -61,7 +61,7 @@ class HomologicalPercolation(Model):
 
     def proposal(self, time):
         """
-        Proposal scheme for homological percolation. Each "step" in the chain
+        Proposal scheme for plaquette invaded-cluster. Each "step" in the chain
         is the set of spins from which a giant cycle first emerges (i.e. the
         "homological percolation" event).
 
@@ -83,7 +83,6 @@ class HomologicalPercolation(Model):
             self.spins,
             self.times,
             self.indices,
-            self.dimension,
             self.lower, self.highest
         )
 
