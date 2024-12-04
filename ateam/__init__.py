@@ -3,6 +3,7 @@
 ## ATEAM
 
 .. include:: ./index.md
+.. include:: ./../README.md
 """
 
 from .Chain import Chain

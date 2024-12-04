@@ -29,6 +29,24 @@ hljs.highlightAll();
 <section id="section-intro">
 <h2 id="ateam">ATEAM</h2>
 <p>The <strong>A</strong>lgebraic <strong>t</strong>opology-<strong>e</strong>nabled <strong>a</strong>lgorithms for <strong>m</strong>echanics (<strong>ATEAM</strong>) library is a high-performance software suite for conducting experiments on lattice spin models. The main attractions are the <em>plaquette <a href="http://arxiv.org/abs/cond-mat/9605103">invaded-cluster</a></em> and <em>plaquette <a href="https://link.aps.org/doi/10.1103/PhysRevLett.58.86">Swendsen-Wang</a></em> algorithms for simulating Markov chains on cubical lattices of any dimension.</p>
+<h2 id="installation">Installation</h2>
+<p>Clone this repository by <code>git clone https://github.com/apizzimenti/ateam.git</code> and run <code>sh setup.sh</code> in your favorite terminal. This installs the <code><a title="ateam" href="#ateam">ateam</a></code> package (and its dependencies) globally in development mode, so any changes you make to the source are reflected system-wide.</p>
+<h2 id="example-use">Example Use</h2>
+<p>Below, we provide sample code for simulating a 10-iteration Markov chain determined by the plaquette invaded-cluster algorithm.</p>
+<pre><code class="language-python">from ateam.structures import Lattice
+from ateam.models import InvadedCluster
+from ateam import Chain
+
+# Create a 64x64 square lattice with antipodal points identified (i.e. a torus),
+# construct a model for the invaded cluster algorithm on the first homology
+# group, and initialize a Markov chain simulating the algorithm for 10 steps.
+L = Lattice().fromCorners([64,64], field=3)
+HP = InvadedCluster(L, homology=1)
+M = Chain(HP, steps=10)
+
+for state in M:
+    &lt;do whatever&gt;
+</code></pre>
 </section>
 <section>
 <h2 class="section-title" id="header-submodules">Sub-modules</h2>
@@ -98,7 +116,7 @@ margin: 1em auto;
 margin-top: -2em;
 float: right;
 }
-#content {
+#section-intro {
 text-align: justify;
 }
 #sidebar {
@@ -111,6 +129,8 @@ width: 20%;
 <div class="toc">
 <ul>
 <li><a href="#ateam">ATEAM</a></li>
+<li><a href="#installation">Installation</a></li>
+<li><a href="#example-use">Example Use</a></li>
 </ul>
 </div>
 <ul id="index">

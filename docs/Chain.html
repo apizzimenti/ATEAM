@@ -43,7 +43,6 @@ hljs.highlightAll();
 </code></dt>
 <dd>
 <div class="desc"><p>Simulates a Markov chain on the given Model.</p>
-<p>Initializes the Chain object.</p>
 <h2 id="args">Args</h2>
 <dl>
 <dt><strong><code>model</code></strong> :&ensp;<code>Model</code></dt>
@@ -64,13 +63,9 @@ and stores whatever output is given.</dd>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class Chain:
-    &#34;&#34;&#34;
-    Simulates a Markov chain on the given Model.
-    &#34;&#34;&#34;
-
     def __init__(self, model, accept=always(), statistics={}, steps=10000):
         &#34;&#34;&#34;
-        Initializes the Chain object.
+        Simulates a Markov chain on the given Model.
 
         Args:
             model (Model): An instantiated descendant of `Model` (e.g. `HomologicalPercolation`)
@@ -187,7 +182,7 @@ margin: 1em auto;
 margin-top: -2em;
 float: right;
 }
-#content {
+#section-intro {
 text-align: justify;
 }
 #sidebar {

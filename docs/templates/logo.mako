@@ -41,7 +41,7 @@
                 float: right;
             }
 
-            #content {
+            #section-intro {
                 text-align: justify;
             }
 

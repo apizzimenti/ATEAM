@@ -3,13 +3,9 @@ from .stats import always
 
 
 class Chain:
-    """
-    Simulates a Markov chain on the given Model.
-    """
-
     def __init__(self, model, accept=always(), statistics={}, steps=10000):
         """
-        Initializes the Chain object.
+        Simulates a Markov chain on the given Model.
 
         Args:
             model (Model): An instantiated descendant of `Model` (e.g. `HomologicalPercolation`)
