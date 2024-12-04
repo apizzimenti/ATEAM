@@ -4,8 +4,8 @@ import numpy as np
 from itertools import product
 
 
-# @cython.boundscheck(False)
-# @cython.wraparound(False)
+@cython.boundscheck(False)
+@cython.wraparound(False)
 def sampleFromKernel(A, F, includes=[], relativeCells=None, relativeFaces=None):
     """
     Uniformly randomly samples a cochain given the coboundary matrix A.
@@ -91,7 +91,7 @@ def autocorrelation(data):
 @cython.wraparound(False)
 def essentialCyclesBorn(
         phatBoundary, coboundary, boundary, reindexed, tranches, homology, F, spins,
-        times, indices, lower, highest
+        times, indices, lower, highest, stop
     ):
     """
     Computes the persistent homology of the given complex, identifying when the
@@ -116,6 +116,8 @@ def essentialCyclesBorn(
             dimension less than \(k\).
         highest (list): List of (dimension, boundary) pairs for all cubes of
             dimension greater than \(k+1\).
+        stop (int): How many essential cycles are identified before we we-sample
+            a cochain.
 
     Returns:
         A triplet: a \((k-1)\)-cochain as a `galois.FieldArray`; a binary
@@ -176,7 +178,7 @@ def essentialCyclesBorn(
 
         # Only sample the next cocycle from the time we homologically percolate,
         # not after.
-        if j < 1:
+        if (j+1) == stop:
             spins = sampleFromKernel(coboundary, F, includes=occupiedIndices)
 
         j += 1

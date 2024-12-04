@@ -50,7 +50,7 @@ from a given observable.</dd>
 <p>An <code>np.ndarray</code> of autocorrelation data.</p></div>
 </dd>
 <dt id="ateam.arithmetic.homology.essentialCyclesBorn"><code class="name flex">
-<span>def <span class="ident">essentialCyclesBorn</span></span>(<span>phatBoundary,<br>coboundary,<br>boundary,<br>reindexed,<br>tranches,<br>homology,<br>F,<br>spins,<br>times,<br>indices,<br>lower,<br>highest)</span>
+<span>def <span class="ident">essentialCyclesBorn</span></span>(<span>phatBoundary,<br>coboundary,<br>boundary,<br>reindexed,<br>tranches,<br>homology,<br>F,<br>spins,<br>times,<br>indices,<br>lower,<br>highest,<br>stop)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Computes the persistent homology of the given complex, identifying when the
@@ -87,6 +87,9 @@ dimension less than <span><span class="MathJax_Preview">k</span><script type="ma
 <dt><strong><code>highest</code></strong> :&ensp;<code>list</code></dt>
 <dd>List of (dimension, boundary) pairs for all cubes of
 dimension greater than <span><span class="MathJax_Preview">k+1</span><script type="math/tex">k+1</script></span>.</dd>
+<dt><strong><code>stop</code></strong> :&ensp;<code>int</code></dt>
+<dd>How many essential cycles are identified before we we-sample
+a cochain.</dd>
 </dl>
 <h2 id="returns">Returns</h2>
 <dl>
@@ -160,12 +163,12 @@ proof.appendChild(square);
 }
 </script>
 <header>
-<a class="homelink" rel="home" title="potts" href="https://github.com/apizzimenti/potts">
+<a class="homelink" rel="home" title="ATEAM" href="https://github.com/apizzimenti/ateam">
 <style>
 header > h1 { display: none; }
 img.resize {
-max-width: 80%;
-max-height: 80%;
+max-width: 90%;
+max-height: 90%;
 display: block;
 margin: 0 auto;
 }
@@ -179,8 +182,14 @@ margin: 1em auto;
 margin-top: -2em;
 float: right;
 }
+#content {
+text-align: justify;
+}
+#sidebar {
+width: 20%;
+}
 </style>
-<img class="resize" src="https://github.com/apizzimenti/potts/blob/main/docs/lattice.gif?raw=true" alt="iteration on the Potts model">
+<img class="resize" src="https://github.com/apizzimenti/ateam/blob/main/docs/lattice-55.jpeg?raw=true" alt="Homological percolation on the torus.">
 </a>
 </header>
 <div class="toc">

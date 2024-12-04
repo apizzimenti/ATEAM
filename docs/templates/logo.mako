@@ -23,8 +23,8 @@
             header > h1 { display: none; }
 
             img.resize {
-                max-width: 80%;
-                max-height: 80%;
+                max-width: 90%;
+                max-height: 90%;
                 display: block;
                 margin: 0 auto;
             }
@@ -39,6 +39,14 @@
             .tombstone {
                 margin-top: -2em;
                 float: right;
+            }
+
+            #content {
+                text-align: justify;
+            }
+
+            #sidebar {
+                width: 20%;
             }
         </style>
         <img class="resize" src="https://github.com/apizzimenti/ateam/blob/main/docs/lattice-55.jpeg?raw=true" alt="Homological percolation on the torus.">

@@ -1,6 +1,7 @@
 
 build: clean
 	python setup.py build_ext --inplace
+	sh docs.sh
 
 
 clean:

@@ -10,7 +10,7 @@ from .Model import Model
 class InvadedCluster(Model):
     name = "InvadedCluster"
     
-    def __init__(self, L, homology=1):
+    def __init__(self, L, homology=1, stop=0):
         """
         Initializes the plaquette invaded-cluster algorithm on the provided
         integer lattice, detecting percolation in the `homology`-th homology
@@ -20,9 +20,12 @@ class InvadedCluster(Model):
             L (Lattice): The `Lattice` object on which we'll be running experiments.
             homology (int=1): Computing the `homology`th homology group of the
                 complex.
+            stop (int=0): How many essential cycles we find before sampling a
+                new cochain.
         """
         self.lattice = L
         self.homology = homology
+        self.stop = stop
 
         # Change the Lattice's dimension and construct an initial spin configuration.
         # We have to change the lattice's dimension and reconstruct the boundary
@@ -87,7 +90,9 @@ class InvadedCluster(Model):
             self.spins,
             self.times,
             self.indices,
-            self.lower, self.highest
+            self.lower,
+            self.highest,
+            self.stop
         )
 
         return spins, occupied, satisfied
