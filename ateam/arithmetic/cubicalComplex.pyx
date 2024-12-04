@@ -7,6 +7,17 @@ from math import comb
 def flatten(Complex, D):
 	"""
 	Flattens the given Complex for a PHAT-style specification.
+
+	Args:
+		Complex (dict): Dictionary sending dimensions (keys) to boundary matrices
+			(values).
+		D (int): Top-level dimension of the complex.
+
+	Returns:
+		A triplet: the first item is a reindexer dictionary, taking each dimension
+		to a count of all faces of lower dimension; the second is the re-indexed
+		`Complex` object; the third is a flattened, reindexed `Complex` object
+		(for use with PHAT).
 	"""
 	# Line up indices.
 	reindexer = {
@@ -29,22 +40,32 @@ def flatten(Complex, D):
 	return reindexer, reindexed, flattened
 
 
-def boundaryMatrix(complex, d, field):
+def boundaryMatrix(Complex, D, F):
 	"""
 	Construct the boundary (operator) matrix given the boundary specification
+	and finite field.
+
+	Args:
+		Complex (dict): Dictionary sending dimensions (keys) to boundary matrices
+			(values).
+		D (int): Top-level dimension of the complex.
+		F (galois.GF): Finite field representation.
+
+	Returns:
+		Galois `Array` representing the signed boundary matrix for the `Complex`.
 	"""
-	faces = complex[d-1]
-	cubes = complex[d]
+	faces = Complex[D-1]
+	cubes = Complex[D]
 
 	# Construct the empty matrix; this will *only* store 0, 1, and -1 (i.e. whatever
 	# the additive inverse of 1 is in the field; to be safe, we use the below method)
 	# rather than straight subtraction).
 	m, n = len(faces), len(cubes)
-	B = field(np.zeros((m,n), dtype=int))
+	B = F(np.zeros((m,n), dtype=int))
 
 	for j in range(len(cubes)):
 		indices = cubes[j]
-		coefficients = np.resize([-field(1), 1], len(indices))
+		coefficients = np.resize([-F(1), 1], len(indices))
 		B[:,j][indices] = coefficients
 	
 	return B
@@ -106,7 +127,7 @@ def hammingCube(D):
 	return Complex
 
 
-def cubicalComplex(corners, D, field, periodic=True):
+def cubicalComplex(corners, D, F, periodic=True):
 	"""
 	Constructs a cubical complex completely specified by a boundary matrix and
 	a vertex map.
@@ -116,10 +137,21 @@ def cubicalComplex(corners, D, field, periodic=True):
 			`periodic` is truthy, antipodal vertices are identified; for example,
 			if `corners = [3,3]`, then the vertices at indices (0,0), (0,3), (3,0),
 			and (3,3) are identified.
-		periodic (bool): If truthy, we construct a \(d\)-fold torus, where \(d\)
+		D (int): Top-level dimension.
+		F (galois.GF): Finite field representation.
+		periodic (bool=True): If truthy, we construct a \(d\)-fold torus, where \(d\)
 			is the topmost dimension of the lattice (as determined by the number
 			of corners specified). For example, if `periodic` is falsy, then
 			`corners = [3,3]` hands back a 4x4 grid (zero-indexed).
+
+	Returns:
+		A triplet containing
+		
+		1. a `dict` mapping vertex indices to integer coordinates
+
+		2. a `dict` mapping dimensions to boundary matrices
+
+		3. a `galois.FieldArray` representing the signed boundary matrix for the complex.
 	"""
 	# Get the boundary specification for a D-dimensional Hamming cube; we use
 	# this cube to enforce an ordering on the vertices (and thus edges, etc.) so
@@ -204,4 +236,4 @@ def cubicalComplex(corners, D, field, periodic=True):
 
 		verticesToIndices = vti
 
-	return verticesToIndices, Complex, boundaryMatrix(Complex, D, field)
+	return verticesToIndices, Complex, boundaryMatrix(Complex, D, F)

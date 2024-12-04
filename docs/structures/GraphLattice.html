@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.3">
+<title>ateam.structures.GraphLattice API documentation</title>
+<meta name="description" content="">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], processEscapes: true } });</script>
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS_CHTML" integrity="sha256-kZafAc6mZvK3W3v1pHOcUix30OHQN6pU/NO2oFkqZVw=" crossorigin></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>ateam.structures.GraphLattice</code></h1>
+</header>
+<section id="section-intro">
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="ateam.structures.GraphLattice.Edge"><code class="flex name class">
+<span>class <span class="ident">Edge</span></span>
+<span>(</span><span>at, spin, index)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Edge:
+    def __init__(self, at, spin, index):
+        self.at = at
+        self.spin = spin
+        self.index = index</code></pre>
+</details>
+</dd>
+<dt id="ateam.structures.GraphLattice.GraphLattice"><code class="flex name class">
+<span>class <span class="ident">GraphLattice</span></span>
+<span>(</span><span>corners, field=2, dimension=1, periodicBoundaryConditions=True)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Encodes a d-dimensional integer lattice.</p>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>corners</code></strong></dt>
+<dd>Bounds of the integer lattice; equivalent to boundary constraints.</dd>
+<dt><strong><code>dimension</code></strong></dt>
+<dd>Dimension of the integer lattice as determined by the number
+of corners (boundary constraints).</dd>
+<dt><strong><code>field</code></strong></dt>
+<dd>Galois field from which we sample things.</dd>
+<dt><strong><code>graph</code></strong></dt>
+<dd>Lattice as a graph.</dd>
+</dl>
+<p>Instantiates an integer lattice.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>corners</code></strong> :&ensp;<code>list</code></dt>
+<dd>An iterable collection of "corners" for the lattice:
+for example, the argument <code>[1,1,1]</code> gives the unit cube in a
+3-dimensional integer lattice. More generally, an argument of
+<code>[c1, &hellip;, cn]</code> admits an n-dimensional integer lattice with the
+ith copy of Z bounded below by 0 and above by ci (inclusive).</dd>
+<dt><strong><code>field</code></strong> :&ensp;<code>int</code></dt>
+<dd>The finite field over which we're working; that is,
+coefficients are taken from the finite field of order <code>field</code>.</dd>
+<dt><strong><code>dimension</code></strong> :&ensp;<code>int</code></dt>
+<dd>Specifies the dimension for which we construct
+the boundary/coboundary operator matrices; this defaults to 1.</dd>
+<dt><strong><code>periodicBoundaryConditions</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Do we identify the endpoints of
+our cubical lattice to turn it into a torus?</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class GraphLattice:
+    &#34;&#34;&#34;
+    Encodes a d-dimensional integer lattice.
+
+    Attributes:
+        corners: Bounds of the integer lattice; equivalent to boundary constraints.
+        dimension: Dimension of the integer lattice as determined by the number
+            of corners (boundary constraints).
+        field: Galois field from which we sample things.
+        graph: Lattice as a graph.
+     &#34;&#34;&#34;
+
+    def __init__(
+            self, corners, field=2, dimension=1, periodicBoundaryConditions=True
+        ):
+        &#34;&#34;&#34;
+        Instantiates an integer lattice.
+
+        Args:
+            corners (list): An iterable collection of &#34;corners&#34; for the lattice:
+                for example, the argument `[1,1,1]` gives the unit cube in a
+                3-dimensional integer lattice. More generally, an argument of
+                `[c1, ..., cn]` admits an n-dimensional integer lattice with the
+                ith copy of Z bounded below by 0 and above by ci (inclusive).
+            field (int): The finite field over which we&#39;re working; that is,
+                coefficients are taken from the finite field of order `field`.
+            dimension (int): Specifies the dimension for which we construct
+                the boundary/coboundary operator matrices; this defaults to 1.
+            periodicBoundaryConditions (bool): Do we identify the endpoints of
+                our cubical lattice to turn it into a torus?
+         &#34;&#34;&#34;
+        # Assign corners, dimensionality, boundary conditions.
+        self.corners = corners
+        self.complexDimension = len(corners)
+        self.dimension = dimension if dimension else len(corners)
+        self.field = galois.GF(field)
+        self.periodicBoundaryConditions = periodicBoundaryConditions
+
+        # Create an initial graph, then re-index and add stuff based on boundary
+        # conditions.
+        self.graph = reduce(self._reduceProduct, [self._gridFactory(c) for c in self.corners])
+        for i, _ in enumerate(self.graph.nodes()): self.graph[i] = Vertex(self.graph[i], 1, i)
+
+        for i, (j, k) in enumerate(self.graph.edge_list()):
+            u, v = self.graph[j], self.graph[k]
+            self.graph.update_edge_by_index(i, Edge((u, v), 1, i))
+
+        # Construct our structure so it fits in well with the proposal.
+        self.faces = self.graph.nodes()
+        self.cubes = self.graph.edges()
+
+        self.index = Index()
+        self.index.faces = { }
+
+
+    @staticmethod
+    def _reduceProduct(G, H):
+        &#34;&#34;&#34;
+        Static method for taking the cartesian product of two *graphs* and making
+        the vertex labels nice.
+
+        Args:
+            G (rustworkx.PyGraph): PyGraph object to be multiplied on the right.
+            H (rustworkx.PyGraph): PyGraph object to be multiplied on the left.
+
+        Returns:
+            PyGraph object which represents the product of G and H and labeled
+            appropriately. 
+        &#34;&#34;&#34;
+        L, _ = product(G, H)
+
+        # Update vertices.
+        for i, vertex in enumerate(L.nodes()):
+            u, v = vertex
+            if not(type(u) is int and type(v) is int): L[i] = (*u, v)
+
+        # Update edges.
+        for i, edge in enumerate(L.edge_list()):
+            u, v = edge
+            L.update_edge_by_index(i, (L[u], L[v]))
+
+        return L
+    
+
+    def _gridFactory(self, l):
+        &#34;&#34;&#34;
+        Factory for creating new grid graphs.
+
+        Args:
+            l (int): Length of the path.
+
+        Returns:
+            PyGraph object representing a path of length `l`.
+        &#34;&#34;&#34;
+        path = PyGraph()
+
+        # Add the appropriate coordinates. 
+        for coordinate in range(l): path.add_node(coordinate)
+        for coordinate in range(1, l): path.add_edge(coordinate-1, coordinate, (path[coordinate-1], path[coordinate]))
+
+        # If we&#39;re using periodic boundary conditions, we&#39;re pac-manning our
+        # graph: that is, we draw an edge between the first and last vertices, so
+        # our graph is actually a torus.
+        if self.periodicBoundaryConditions: path.add_edge(l-1, 0, (path[l-1], path[0]))
+        return path
+    
+
+    def assign(self, state):
+        &#34;&#34;&#34;
+        Assigns spins to vertices.
+
+        Args:
+            state (list): States to apply to vertices.
+        &#34;&#34;&#34;
+        for index, spin in enumerate(state): self.graph[index].spin = spin
+
+        for edge in self.graph.edges():
+            u, v = edge.at
+            edge.spin = (0 if u.spin != v.spin else 1)</code></pre>
+</details>
+<h3>Methods</h3>
+<dl>
+<dt id="ateam.structures.GraphLattice.GraphLattice.assign"><code class="name flex">
+<span>def <span class="ident">assign</span></span>(<span>self, state)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Assigns spins to vertices.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>state</code></strong> :&ensp;<code>list</code></dt>
+<dd>States to apply to vertices.</dd>
+</dl></div>
+</dd>
+</dl>
+</dd>
+<dt id="ateam.structures.GraphLattice.Index"><code class="flex name class">
+<span>class <span class="ident">Index</span></span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Index:
+    cubes = {}
+    faces = {}</code></pre>
+</details>
+<h3>Class variables</h3>
+<dl>
+<dt id="ateam.structures.GraphLattice.Index.cubes"><code class="name">var <span class="ident">cubes</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="ateam.structures.GraphLattice.Index.faces"><code class="name">var <span class="ident">faces</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+<dt id="ateam.structures.GraphLattice.Vertex"><code class="flex name class">
+<span>class <span class="ident">Vertex</span></span>
+<span>(</span><span>at, spin, index)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Vertex:
+    def __init__(self, at, spin, index):
+        self.at = at
+        self.spin = spin
+        self.index = index</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<!-- include a script for adding stuff to the end of proofs. -->
+<script>
+// Get all the proofs in the document.
+proofs = document.getElementsByClassName("proof");
+// For each of the proofs, attach a floating child element in the bottom-right
+// corner.
+for (var proof of proofs) {
+// Create a proof-ending tombstone.
+square = document.createElement("div");
+square.className = "tombstone";
+square.innerHTML = "◼️";
+// Attach the tombstone to the proof.
+proof.appendChild(square);
+}
+</script>
+<header>
+<a class="homelink" rel="home" title="potts" href="https://github.com/apizzimenti/potts">
+<style>
+header > h1 { display: none; }
+img.resize {
+max-width: 80%;
+max-height: 80%;
+display: block;
+margin: 0 auto;
+}
+div.proof {
+border: 1px solid black;
+padding: 0em 1em;
+width: 90%;
+margin: 1em auto;
+}
+.tombstone {
+margin-top: -2em;
+float: right;
+}
+</style>
+<img class="resize" src="https://github.com/apizzimenti/potts/blob/main/docs/lattice.gif?raw=true" alt="iteration on the Potts model">
+</a>
+</header>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="ateam.structures" href="index.html">ateam.structures</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="ateam.structures.GraphLattice.Edge" href="#ateam.structures.GraphLattice.Edge">Edge</a></code></h4>
+</li>
+<li>
+<h4><code><a title="ateam.structures.GraphLattice.GraphLattice" href="#ateam.structures.GraphLattice.GraphLattice">GraphLattice</a></code></h4>
+<ul class="">
+<li><code><a title="ateam.structures.GraphLattice.GraphLattice.assign" href="#ateam.structures.GraphLattice.GraphLattice.assign">assign</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="ateam.structures.GraphLattice.Index" href="#ateam.structures.GraphLattice.Index">Index</a></code></h4>
+<ul class="">
+<li><code><a title="ateam.structures.GraphLattice.Index.cubes" href="#ateam.structures.GraphLattice.Index.cubes">cubes</a></code></li>
+<li><code><a title="ateam.structures.GraphLattice.Index.faces" href="#ateam.structures.GraphLattice.Index.faces">faces</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="ateam.structures.GraphLattice.Vertex" href="#ateam.structures.GraphLattice.Vertex">Vertex</a></code></h4>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.3</a>.</p>
+</footer>
+</body>
+</html>

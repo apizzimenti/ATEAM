@@ -21,7 +21,3 @@ sync.sh
 # Ignore *most* testing stuff.
 test/.*
 test/*.sh
-
-# Ignore docs for now.
-docs/*
-docs.sh

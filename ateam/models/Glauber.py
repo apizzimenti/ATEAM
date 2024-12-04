@@ -38,7 +38,7 @@ class Glauber(Model):
         self.occupied = set()
 
 
-    def initial(self) -> np.array:
+    def initial(self):
         """
         Computes an initial state for the model's Lattice.
 
@@ -68,17 +68,16 @@ class Glauber(Model):
 
         return self.state+self._shift
 
+
     def assign(self, cocycle):
         """
         Updates mappings from faces to spins and cubes to occupations.
-
-        Args: 
-            cocycle (np.array): Cocycle on the sublattice.
-        """
-        self.spins = { face: cocycle[self.lattice.index.faces[face]] for face in self.lattice.faces }
-        self.state = cocycle
         
-        # Dual graph of sublattice of occupied cubes.
-        # self.lattice.subgraph = self.lattice.graph.subgraph(
-        #     [self.lattice.index.cubes[cube] for cube in self.lattice.cubes if not cube in self.occupied]
-        # )
+        Args:
+            cocycle (galois.FieldArray): Cocycle on the sublattice.
+        
+        Returns:
+            None.
+        """
+        self.spins = cocycle
+    

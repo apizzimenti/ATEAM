@@ -1,0 +1,653 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.3">
+<title>ateam.models API documentation</title>
+<meta name="description" content="">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], processEscapes: true } });</script>
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS_CHTML" integrity="sha256-kZafAc6mZvK3W3v1pHOcUix30OHQN6pU/NO2oFkqZVw=" crossorigin></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>ateam.models</code></h1>
+</header>
+<section id="section-intro">
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="ateam.models.Glauber"><code class="flex name class">
+<span>class <span class="ident">Glauber</span></span>
+<span>(</span><span>L: ateam.structures.Lattice.Lattice,<br>temperatureFunction: Callable = &lt;function constant.&lt;locals&gt;._&gt;,<br>initial=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Initializes Glauber dynamics on the Potts model.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>L</code></strong></dt>
+<dd>The <code>Lattice</code> object on which we'll be running experiments.</dd>
+<dt><strong><code>temperatureFunction</code></strong> :&ensp;<code>Callable</code></dt>
+<dd>A temperature schedule function which
+takes a single positive integer argument <code>t</code>, and returns the
+scheduled temperature at time <code>t</code>.</dd>
+<dt><strong><code>initial</code></strong> :&ensp;<code>np.ndarray</code></dt>
+<dd>A vector of spin assignments to components.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Glauber(Model):
+    name = &#34;Glauber&#34;
+    
+    def __init__(
+            self, L: Lattice, temperatureFunction: Callable=constant(-0.6),
+            initial=None
+        ):
+        &#34;&#34;&#34;
+        Initializes Glauber dynamics on the Potts model.
+
+        Args:
+            L: The `Lattice` object on which we&#39;ll be running experiments.
+            temperatureFunction (Callable): A temperature schedule function which
+                takes a single positive integer argument `t`, and returns the
+                scheduled temperature at time `t`.
+            initial (np.ndarray): A vector of spin assignments to components.
+        &#34;&#34;&#34;
+        self.lattice = L
+        self.temperatureFunction = temperatureFunction
+
+        # SW defaults.
+        self.state = initial if initial else self.initial()
+        self.state = self.lattice.field(self.state)
+        self._shift = self.lattice.field(np.zeros(len(self.state), dtype=int))
+        self._shiftIndex = 0
+        self._indices = list(range(len(self.state)))
+
+        self.spins = { face: self.state[self.lattice.index.faces[face]] for face in self.lattice.faces }
+        self.occupied = set()
+
+
+    def initial(self):
+        &#34;&#34;&#34;
+        Computes an initial state for the model&#39;s Lattice.
+
+        Returns:
+            A NumPy array representing a vector of spin assignments.
+        &#34;&#34;&#34;
+        return self.lattice.field.Random(len(self.lattice.faces))
+    
+
+    def proposal(self, time):
+        &#34;&#34;&#34;
+        Proposal scheme for generalized Glauber dynamics on the Potts model:
+        uniformly randomly chooses a face in the complex, flips the face&#39;s spin,
+        and returns the corresponding cocycle.
+
+        Args:
+            time (int): Step in the chain.
+
+        Returns:
+            A NumPy array representing a vector of spin assignments.
+        &#34;&#34;&#34;
+        # Choose a location to &#34;flip,&#34; then revisit the last shifted vertex.
+        loc = np.random.randint(len(self.lattice.faces))
+        self._shift[self._shiftIndex] = 0
+        self._shift[loc] = self.lattice.field.Random()
+        self._shiftIndex = loc
+
+        return self.state+self._shift
+
+
+    def assign(self, cocycle):
+        &#34;&#34;&#34;
+        Updates mappings from faces to spins and cubes to occupations.
+        
+        Args:
+            cocycle (galois.FieldArray): Cocycle on the sublattice.
+        
+        Returns:
+            None.
+        &#34;&#34;&#34;
+        self.spins = cocycle</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>ateam.models.Model.Model</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="ateam.models.Glauber.name"><code class="name">var <span class="ident">name</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="ateam.models.Glauber.assign"><code class="name flex">
+<span>def <span class="ident">assign</span></span>(<span>self, cocycle)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Updates mappings from faces to spins and cubes to occupations.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>cocycle</code></strong> :&ensp;<code>galois.FieldArray</code></dt>
+<dd>Cocycle on the sublattice.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>None.</p></div>
+</dd>
+<dt id="ateam.models.Glauber.initial"><code class="name flex">
+<span>def <span class="ident">initial</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Computes an initial state for the model's Lattice.</p>
+<h2 id="returns">Returns</h2>
+<p>A NumPy array representing a vector of spin assignments.</p></div>
+</dd>
+<dt id="ateam.models.Glauber.proposal"><code class="name flex">
+<span>def <span class="ident">proposal</span></span>(<span>self, time)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Proposal scheme for generalized Glauber dynamics on the Potts model:
+uniformly randomly chooses a face in the complex, flips the face's spin,
+and returns the corresponding cocycle.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>time</code></strong> :&ensp;<code>int</code></dt>
+<dd>Step in the chain.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>A NumPy array representing a vector of spin assignments.</p></div>
+</dd>
+</dl>
+</dd>
+<dt id="ateam.models.InvadedCluster"><code class="flex name class">
+<span>class <span class="ident">InvadedCluster</span></span>
+<span>(</span><span>L, homology=1)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Initializes the plaquette invaded-cluster algorithm on the provided
+integer lattice, detecting percolation in the <code>homology</code>-th homology
+group.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>L</code></strong> :&ensp;<code>Lattice</code></dt>
+<dd>The <code>Lattice</code> object on which we'll be running experiments.</dd>
+<dt><strong><code>homology</code></strong> :&ensp;<code>int=1</code></dt>
+<dd>Computing the <code>homology</code>th homology group of the
+complex.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class InvadedCluster(Model):
+    name = &#34;InvadedCluster&#34;
+    
+    def __init__(self, L, homology=1):
+        &#34;&#34;&#34;
+        Initializes the plaquette invaded-cluster algorithm on the provided
+        integer lattice, detecting percolation in the `homology`-th homology
+        group.
+
+        Args:
+            L (Lattice): The `Lattice` object on which we&#39;ll be running experiments.
+            homology (int=1): Computing the `homology`th homology group of the
+                complex.
+        &#34;&#34;&#34;
+        self.lattice = L
+        self.homology = homology
+
+        # Change the Lattice&#39;s dimension and construct an initial spin configuration.
+        # We have to change the lattice&#39;s dimension and reconstruct the boundary
+        # matrix, though.
+        self.spins = self.initial()
+        self.lattice.dimension = homology
+
+        self.coboundary = boundaryMatrix(L.boundary, self.homology, L.field).T
+
+        # Pre-construct the boundary matrix.
+        self.phatBoundary = phat.boundary_matrix()
+        self.times = set(range(len(self.lattice.flattened)))
+        self.indices = np.arange(*self.lattice.tranches[homology])
+        self.dimension = max(self.lattice.reindexed.keys())
+
+        # Precompute some other stuff in the interest of speed.
+        self.lower = sum([
+            list(product([d], np.sort(self.lattice.reindexed[d]).tolist()))
+            if d &gt; 0 else [(0, [])]*len(self.lattice.reindexed[d])
+            for d in range(homology)
+        ], [])
+
+        self.highest = sum([
+            list(product([d], np.sort(self.lattice.reindexed[d]).tolist()))
+            for d in range(homology+2, self.dimension+1)
+        ], [])
+    
+    
+    def initial(self):
+        &#34;&#34;&#34;
+        Computes a uniform random initial spin configuration.
+
+        Returns:
+            A Galois `Array` of independent uniform random draws from the field
+            of coefficients.
+        &#34;&#34;&#34;
+        return self.lattice.field.Random(len(self.lattice.boundary[self.homology-1]))
+    
+
+    def proposal(self, time):
+        &#34;&#34;&#34;
+        Proposal scheme for plaquette invaded-cluster. Each &#34;step&#34; in the chain
+        is the set of spins from which a giant cycle first emerges (i.e. the
+        &#34;homological percolation&#34; event).
+
+        Args:
+            time (int): Step in the chain; not used.
+
+        Returns:
+            A `(galois.FieldArray, numpy.ndarray, numpy.ndarray)` triplet representing
+            the proposed spin configuration, the occupied plaquettes at each
+            occurrence of homological percolation, and the satisfied plaquettes.
+        &#34;&#34;&#34;
+        spins, occupied, satisfied = essentialCyclesBorn(
+            self.phatBoundary,
+            self.coboundary,
+            self.lattice.boundary,
+            self.lattice.reindexed,
+            self.lattice.tranches,
+            self.homology,
+            self.lattice.field,
+            self.spins,
+            self.times,
+            self.indices,
+            self.lower, self.highest
+        )
+
+        return spins, occupied, satisfied
+    
+
+    def assign(self, cocycle):
+        &#34;&#34;&#34;
+        Updates mappings from faces to spins and cubes to occupations.
+
+        Args:
+            cocycle (galois.FieldArray): Cocycle on the sublattice.
+        
+        Returns:
+            Nothing.
+        &#34;&#34;&#34;
+        self.spins = cocycle</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>ateam.models.Model.Model</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="ateam.models.InvadedCluster.name"><code class="name">var <span class="ident">name</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="ateam.models.InvadedCluster.assign"><code class="name flex">
+<span>def <span class="ident">assign</span></span>(<span>self, cocycle)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Updates mappings from faces to spins and cubes to occupations.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>cocycle</code></strong> :&ensp;<code>galois.FieldArray</code></dt>
+<dd>Cocycle on the sublattice.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Nothing.</p></div>
+</dd>
+<dt id="ateam.models.InvadedCluster.initial"><code class="name flex">
+<span>def <span class="ident">initial</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Computes a uniform random initial spin configuration.</p>
+<h2 id="returns">Returns</h2>
+<p>A Galois <code>Array</code> of independent uniform random draws from the field
+of coefficients.</p></div>
+</dd>
+<dt id="ateam.models.InvadedCluster.proposal"><code class="name flex">
+<span>def <span class="ident">proposal</span></span>(<span>self, time)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Proposal scheme for plaquette invaded-cluster. Each "step" in the chain
+is the set of spins from which a giant cycle first emerges (i.e. the
+"homological percolation" event).</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>time</code></strong> :&ensp;<code>int</code></dt>
+<dd>Step in the chain; not used.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>A <code>(galois.FieldArray, numpy.ndarray, numpy.ndarray)</code> triplet representing
+the proposed spin configuration, the occupied plaquettes at each
+occurrence of homological percolation, and the satisfied plaquettes.</p></div>
+</dd>
+</dl>
+</dd>
+<dt id="ateam.models.Model"><code class="flex name class">
+<span>class <span class="ident">Model</span></span>
+</code></dt>
+<dd>
+<div class="desc"><p><code><a title="ateam.models.Model" href="#ateam.models.Model">Model</a></code> class template from which all other <code><a title="ateam.models.Model" href="#ateam.models.Model">Model</a></code>s inherit: they must
+have each of the <code>proposal()</code> and <code>initial()</code> methods.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Model:
+    name = &#34;&#34;
+    def __init__(self):
+        &#34;&#34;&#34;
+        `Model` class template from which all other `Model`s inherit: they must
+        have each of the `proposal()` and `initial()` methods.
+        &#34;&#34;&#34;
+        pass
+    def proposal(self): pass
+    def initial(self): pass
+    # def energy(self): pass</code></pre>
+</details>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li>ateam.models.Glauber.Glauber</li>
+<li>ateam.models.InvadedCluster.InvadedCluster</li>
+<li>ateam.models.SwendsenWang.SwendsenWang</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="ateam.models.Model.name"><code class="name">var <span class="ident">name</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="ateam.models.Model.initial"><code class="name flex">
+<span>def <span class="ident">initial</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="ateam.models.Model.proposal"><code class="name flex">
+<span>def <span class="ident">proposal</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+<dt id="ateam.models.SwendsenWang"><code class="flex name class">
+<span>class <span class="ident">SwendsenWang</span></span>
+<span>(</span><span>L, temperatureFunction=&lt;function constant.&lt;locals&gt;._&gt;, initial=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Initializes Swendsen-Wang evolution on the Potts model.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>L</code></strong></dt>
+<dd>The <code>Lattice</code> object on which we'll be running experiments.</dd>
+<dt><strong><code>temperatureFunction</code></strong> :&ensp;<code>Callable</code></dt>
+<dd>A temperature schedule function which
+takes a single positive integer argument <code>t</code>, and returns the
+scheduled temperature at time <code>t</code>.</dd>
+<dt><strong><code>initial</code></strong> :&ensp;<code>galois.FieldArray</code></dt>
+<dd>A vector of spin assignments to components.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class SwendsenWang(Model):
+    name = &#34;SwendsenWang&#34;
+    
+    def __init__(self, L, temperatureFunction=constant(-0.6), initial=None):
+        &#34;&#34;&#34;
+        Initializes Swendsen-Wang evolution on the Potts model.
+
+        Args:
+            L: The `Lattice` object on which we&#39;ll be running experiments.
+            temperatureFunction (Callable): A temperature schedule function which
+                takes a single positive integer argument `t`, and returns the
+                scheduled temperature at time `t`.
+            initial (galois.FieldArray): A vector of spin assignments to components.
+        &#34;&#34;&#34;
+        self.lattice = L
+        self.temperatureFunction = temperatureFunction
+        self.faceCells = len(self.lattice.boundary[self.lattice.dimension-1])
+        self.cubeCells = len(self.lattice.boundary[self.lattice.dimension])
+
+        # SW defaults.
+        self.spins = initial if initial else self.initial()
+
+
+    def initial(self):
+        &#34;&#34;&#34;
+        Computes an initial state for the model&#39;s Lattice.
+
+        Returns:
+            A Galois `Array` representing a vector of spin assignments.
+        &#34;&#34;&#34;
+        return self.lattice.field.Random(self.faceCells)
+    
+
+    def proposal(self, time):
+        &#34;&#34;&#34;
+        Proposal scheme for generalized Swendsen-Wang evolution on the Potts model.
+
+        Args:
+            time (int): Step in the chain.
+
+        Returns:
+            A Galois `Array` representing a vector of spin assignments.
+        &#34;&#34;&#34;
+        # Compute the probability of choosing any individual cube in the complex.
+        self.temperature = self.temperatureFunction(time)
+        p = 1-np.exp(self.temperature)
+        assert 0 &lt;= p &lt;= 1
+
+        # Choose cubes to include; in effect, this just does a boatload of indexing.
+        uniforms = np.random.uniform(size=self.cubeCells)
+        include = (uniforms &lt; p).nonzero()[0]
+        boundary = self.lattice.boundary[self.lattice.dimension][include]
+        boundaryValues = evaluateCocycle(boundary, self.spins)
+        zeros = (boundaryValues == 0).nonzero()[0]
+
+        satisfied = np.zeros(len(self.lattice.boundary[self.lattice.dimension])).astype(int)
+        satisfied[zeros] = 1
+
+        # Uniformly randomly sample a cocycle on the sublattice admitted by the
+        # chosen edges; reconstruct the labeling on the entire lattice by
+        # subbing in the values of c which differ from existing ones.
+        return sampleFromKernel(self.lattice.matrices.coboundary, self.lattice.field, includes=zeros), satisfied
+    
+
+    def assign(self, cocycle):
+        &#34;&#34;&#34;
+        Updates mappings from faces to spins and cubes to occupations.
+
+        Args:
+            cocycle (galois.FieldArray): Cocycle on the sublattice.
+        
+        Returns:
+            None.
+        &#34;&#34;&#34;
+        self.spins = cocycle</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>ateam.models.Model.Model</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="ateam.models.SwendsenWang.name"><code class="name">var <span class="ident">name</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="ateam.models.SwendsenWang.assign"><code class="name flex">
+<span>def <span class="ident">assign</span></span>(<span>self, cocycle)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Updates mappings from faces to spins and cubes to occupations.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>cocycle</code></strong> :&ensp;<code>galois.FieldArray</code></dt>
+<dd>Cocycle on the sublattice.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>None.</p></div>
+</dd>
+<dt id="ateam.models.SwendsenWang.initial"><code class="name flex">
+<span>def <span class="ident">initial</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Computes an initial state for the model's Lattice.</p>
+<h2 id="returns">Returns</h2>
+<p>A Galois <code>Array</code> representing a vector of spin assignments.</p></div>
+</dd>
+<dt id="ateam.models.SwendsenWang.proposal"><code class="name flex">
+<span>def <span class="ident">proposal</span></span>(<span>self, time)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Proposal scheme for generalized Swendsen-Wang evolution on the Potts model.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>time</code></strong> :&ensp;<code>int</code></dt>
+<dd>Step in the chain.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>A Galois <code>Array</code> representing a vector of spin assignments.</p></div>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<!-- include a script for adding stuff to the end of proofs. -->
+<script>
+// Get all the proofs in the document.
+proofs = document.getElementsByClassName("proof");
+// For each of the proofs, attach a floating child element in the bottom-right
+// corner.
+for (var proof of proofs) {
+// Create a proof-ending tombstone.
+square = document.createElement("div");
+square.className = "tombstone";
+square.innerHTML = "◼️";
+// Attach the tombstone to the proof.
+proof.appendChild(square);
+}
+</script>
+<header>
+<a class="homelink" rel="home" title="potts" href="https://github.com/apizzimenti/potts">
+<style>
+header > h1 { display: none; }
+img.resize {
+max-width: 80%;
+max-height: 80%;
+display: block;
+margin: 0 auto;
+}
+div.proof {
+border: 1px solid black;
+padding: 0em 1em;
+width: 90%;
+margin: 1em auto;
+}
+.tombstone {
+margin-top: -2em;
+float: right;
+}
+</style>
+<img class="resize" src="https://github.com/apizzimenti/potts/blob/main/docs/lattice.gif?raw=true" alt="iteration on the Potts model">
+</a>
+</header>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="ateam" href="../index.html">ateam</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="ateam.models.Glauber" href="#ateam.models.Glauber">Glauber</a></code></h4>
+<ul class="">
+<li><code><a title="ateam.models.Glauber.assign" href="#ateam.models.Glauber.assign">assign</a></code></li>
+<li><code><a title="ateam.models.Glauber.initial" href="#ateam.models.Glauber.initial">initial</a></code></li>
+<li><code><a title="ateam.models.Glauber.name" href="#ateam.models.Glauber.name">name</a></code></li>
+<li><code><a title="ateam.models.Glauber.proposal" href="#ateam.models.Glauber.proposal">proposal</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="ateam.models.InvadedCluster" href="#ateam.models.InvadedCluster">InvadedCluster</a></code></h4>
+<ul class="">
+<li><code><a title="ateam.models.InvadedCluster.assign" href="#ateam.models.InvadedCluster.assign">assign</a></code></li>
+<li><code><a title="ateam.models.InvadedCluster.initial" href="#ateam.models.InvadedCluster.initial">initial</a></code></li>
+<li><code><a title="ateam.models.InvadedCluster.name" href="#ateam.models.InvadedCluster.name">name</a></code></li>
+<li><code><a title="ateam.models.InvadedCluster.proposal" href="#ateam.models.InvadedCluster.proposal">proposal</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="ateam.models.Model" href="#ateam.models.Model">Model</a></code></h4>
+<ul class="">
+<li><code><a title="ateam.models.Model.initial" href="#ateam.models.Model.initial">initial</a></code></li>
+<li><code><a title="ateam.models.Model.name" href="#ateam.models.Model.name">name</a></code></li>
+<li><code><a title="ateam.models.Model.proposal" href="#ateam.models.Model.proposal">proposal</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="ateam.models.SwendsenWang" href="#ateam.models.SwendsenWang">SwendsenWang</a></code></h4>
+<ul class="">
+<li><code><a title="ateam.models.SwendsenWang.assign" href="#ateam.models.SwendsenWang.assign">assign</a></code></li>
+<li><code><a title="ateam.models.SwendsenWang.initial" href="#ateam.models.SwendsenWang.initial">initial</a></code></li>
+<li><code><a title="ateam.models.SwendsenWang.name" href="#ateam.models.SwendsenWang.name">name</a></code></li>
+<li><code><a title="ateam.models.SwendsenWang.proposal" href="#ateam.models.SwendsenWang.proposal">proposal</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.3</a>.</p>
+</footer>
+</body>
+</html>

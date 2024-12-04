@@ -7,20 +7,15 @@ class Chain:
     Simulates a Markov chain on the given Model.
     """
 
-    def __init__(
-            self, model, accept=always(), sampleInterval=0, statistics={},
-            steps=10000
-        ):
+    def __init__(self, model, accept=always(), statistics={}, steps=10000):
         """
         Initializes the Chain object.
 
         Args:
-            proposal (callable): A function which consumes this Chain object and
-                proposes a new state.
-            accept (callable): A function which consumes the lattice, model, and
+            model (Model): An instantiated descendant of `Model` (e.g. `HomologicalPercolation`)
+                generating the Markov chain.
+            accept (Callable): A function which consumes the lattice, model, and
                 state to determine whether we're going to a good place.
-            sampleInterval (int): Number representing the number of spin assignments we
-                should save.
             statistics (dict): A mapping of names to functions which take the lattice
                 as an argument. The Chain keeps track of these at each iteration
                 and stores whatever output is given.
@@ -33,10 +28,6 @@ class Chain:
         # Store stats and things.
         self.functions = statistics
         self.statistics = { name: [] for name in self.functions.keys() }
-
-        # Assignment-related things.
-        self.sampleInterval = sampleInterval
-        self.assignments = []
 
 
     def __iter__(self):
@@ -77,6 +68,9 @@ class Chain:
     def progress(self):
         """
         Progress bar.
+
+        Returns:
+            `tqdm` iterable.
         """
         from tqdm.auto import tqdm
         return tqdm(self, total=self.steps)

@@ -2,7 +2,7 @@
 import numpy as np
 from typing import Callable
 
-from ..arithmetic import sampleFromKernel, evaluateCocycle
+from ..arithmetic import sampleFromKernel, evaluateCochain
 from ..structures import Lattice
 from ..stats import constant
 from .Model import Model
@@ -11,10 +11,7 @@ from .Model import Model
 class SwendsenWang(Model):
     name = "SwendsenWang"
     
-    def __init__(
-            self, L: Lattice, temperatureFunction: Callable=constant(-0.6),
-            initial=None
-        ):
+    def __init__(self, L, temperatureFunction=constant(-0.6), initial=None):
         """
         Initializes Swendsen-Wang evolution on the Potts model.
 
@@ -23,7 +20,7 @@ class SwendsenWang(Model):
             temperatureFunction (Callable): A temperature schedule function which
                 takes a single positive integer argument `t`, and returns the
                 scheduled temperature at time `t`.
-            initial (np.ndarray): A vector of spin assignments to components.
+            initial (galois.FieldArray): A vector of spin assignments to components.
         """
         self.lattice = L
         self.temperatureFunction = temperatureFunction
@@ -34,12 +31,12 @@ class SwendsenWang(Model):
         self.spins = initial if initial else self.initial()
 
 
-    def initial(self) -> np.array:
+    def initial(self):
         """
         Computes an initial state for the model's Lattice.
 
         Returns:
-            A NumPy array representing a vector of spin assignments.
+            A Galois `Array` representing a vector of spin assignments.
         """
         return self.lattice.field.Random(self.faceCells)
     
@@ -52,7 +49,7 @@ class SwendsenWang(Model):
             time (int): Step in the chain.
 
         Returns:
-            A NumPy array representing a vector of spin assignments.
+            A Galois `Array` representing a vector of spin assignments.
         """
         # Compute the probability of choosing any individual cube in the complex.
         self.temperature = self.temperatureFunction(time)
@@ -75,11 +72,14 @@ class SwendsenWang(Model):
         return sampleFromKernel(self.lattice.matrices.coboundary, self.lattice.field, includes=zeros), satisfied
     
 
-    def assign(self, cocycle: np.array):
+    def assign(self, cocycle):
         """
         Updates mappings from faces to spins and cubes to occupations.
 
-        Args: 
-            cocycle (np.array): Cocycle on the sublattice.
+        Args:
+            cocycle (galois.FieldArray): Cocycle on the sublattice.
+        
+        Returns:
+            None.
         """
         self.spins = cocycle

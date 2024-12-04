@@ -4,11 +4,24 @@ import numpy as np
 from itertools import product
 
 
-@cython.boundscheck(False)
-@cython.wraparound(False)
-def sampleFromKernel(A, field, includes=[], relativeCells=None, relativeFaces=None):
+# @cython.boundscheck(False)
+# @cython.wraparound(False)
+def sampleFromKernel(A, F, includes=[], relativeCells=None, relativeFaces=None):
     """
     Uniformly randomly samples a cochain given the coboundary matrix A.
+
+    Args:
+        A (np.ndarray): Complete boundary matrix.
+        F (galois.GF): Finite field representation.
+        includes (iterable=[]): Column indices to _include_.
+        relativeCells (iterable=None): Column indices to _include_. (Possible
+            duplicate of the above?)
+        relativeFaces (iterable=None): Row indices to _include_.
+
+    Returns:
+        A cochain on the \((k-1)\)-skeleton of the complex that is a cocycle on
+        whatever subcomplex is specified by `includes`, `relativeCells`, and
+        `relativeFaces`, represented as a `galois.FieldArray`.
     """
     # If we're including all the columns, just set our submatrix equal to the
     # whole coboundary; otherwise, exclude some of the columns.
@@ -27,13 +40,23 @@ def sampleFromKernel(A, field, includes=[], relativeCells=None, relativeFaces=No
     # randomly sampling a cocycle.
     K = D.null_space()
     M, _ = K.shape
-    Q = field.Random(M)
+    Q = F.Random(M)
     return (Q@K)
 
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
-def evaluateCocycle(boundary, spins):
+def evaluateCochain(boundary, spins):
+    """
+    Evaluates the coboundary of a cochain on the \(k\)-skeleton.
+
+    Args:
+        boundary (np.ndarray): Boundary of the \(k\)-skeleton.
+        spins (galois.FieldArray): Cochain (spins) on the \((k-1)\)-skeleton.
+    
+    Returns:
+        A `galois.FieldArray` of coefficients on the \(k\)-skeleton.
+    """
     evaluation = spins[boundary]
     evaluation[:, 1::2] = -evaluation[:, 1::2]
     return evaluation.sum(axis=1)
@@ -41,13 +64,14 @@ def evaluateCocycle(boundary, spins):
 
 def autocorrelation(data):
     """
-    Computes the autocorrelation of a given observable over the provided time
-    lag.
+    Computes the autocorrelation of a given observable.
 
     Args:
         data (Iterable): An iterable, indexed by sample times, containing data
             from a given observable.
-        lag (int): How far back do we look?
+    
+    Returns:
+        An `np.ndarray` of autocorrelation data.
     """
 
     # Expected value (i.e. sample mean, which converges to the expectation by
@@ -66,26 +90,43 @@ def autocorrelation(data):
 @cython.boundscheck(False)
 @cython.wraparound(False)
 def essentialCyclesBorn(
-        phatBoundary,
-        coboundary,
-        boundary,
-        reindexed,
-        tranches,
-        homology,
-        field,
-        spins,
-        times,
-        indices,
-        lower, highest
+        phatBoundary, coboundary, boundary, reindexed, tranches, homology, F, spins,
+        times, indices, lower, highest
     ):
     """
     Computes the persistent homology of the given complex, identifying when the
     first nontrivial element of the parent space (generally a torus) is born.
 
     Args:
+        phatBoundary (phat.boundary_matrix): An initialized PHAT boundary matrix
+            with un-set columns.
+        coboundary (galois.FieldArray): Coboundary matrix for the complex.
+        boundary (dict): Indexed boundary matrices associated with a `Lattice`
+            object.
+        reindexed (dict): Reindexed version of `boundary`.
+        tranches (dict): Dictionary specifying the indices at which cubes of
+            each dimension appear in the flattened boundary matrix (i.e. the
+            columns of `phatBoundary`).
+        homology (int): Homology group \(k\).
+        F (galois.GF): Finite field representation.
+        spins (galois.FieldArray): Cochain on the \((k-1)\)-skeleton.
+        times (np.ndarray): Index for the filtration.
+        indices (np.ndarray): Indices for plaquettes.
+        lower (list): List of (dimension, boundary) pairs for all cubes of
+            dimension less than \(k\).
+        highest (list): List of (dimension, boundary) pairs for all cubes of
+            dimension greater than \(k+1\).
+
+    Returns:
+        A triplet: a \((k-1)\)-cochain as a `galois.FieldArray`; a binary
+        \(\\beta \\times n\) `numpy.ndarray`, where each row has a \(1\) at the
+        indices of occupied plaquettes when homological percolation occurred,
+        \(\\beta\) is the rank of the \(k\)th homology group, and \(n\) is the
+        number of plaquettes; a length-\(n\) binary `numpy.ndarray` with ones
+        at the indices of satisfied plaquettes.
     """
     # See which faces' spins sum to 0.
-    cycles = evaluateCocycle(boundary[homology], spins)
+    cycles = evaluateCochain(boundary[homology], spins)
     satisfiedIndices = (cycles == 0).nonzero()[0]
     unsatisfiedIndices = (cycles > 0).nonzero()[0]
 
@@ -136,7 +177,7 @@ def essentialCyclesBorn(
         # Only sample the next cocycle from the time we homologically percolate,
         # not after.
         if j < 1:
-            spins = sampleFromKernel(coboundary, field, includes=occupiedIndices)
+            spins = sampleFromKernel(coboundary, F, includes=occupiedIndices)
 
         j += 1
 

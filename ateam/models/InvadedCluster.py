@@ -4,26 +4,22 @@ import phat
 from itertools import product
 
 from ..arithmetic import essentialCyclesBorn, boundaryMatrix
-from ..structures import Lattice
 from .Model import Model
 
 
 class InvadedCluster(Model):
     name = "InvadedCluster"
     
-    def __init__(
-            self, L: Lattice, homology=1
-        ):
+    def __init__(self, L, homology=1):
         """
-        Initializes the plaquette invaded-cluster algorithm.
+        Initializes the plaquette invaded-cluster algorithm on the provided
+        integer lattice, detecting percolation in the `homology`-th homology
+        group.
 
         Args:
             L (Lattice): The `Lattice` object on which we'll be running experiments.
             homology (int=1): Computing the `homology`th homology group of the
                 complex.
-            mesh (int=1000): Number of temperature sample points.
-            initial (None): Dummy.
-            temperatureFunction (None): Dummy.
         """
         self.lattice = L
         self.homology = homology
@@ -55,7 +51,14 @@ class InvadedCluster(Model):
         ], [])
     
     
-    def initial(self) -> np.array:
+    def initial(self):
+        """
+        Computes a uniform random initial spin configuration.
+
+        Returns:
+            A Galois `Array` of independent uniform random draws from the field
+            of coefficients.
+        """
         return self.lattice.field.Random(len(self.lattice.boundary[self.homology-1]))
     
 
@@ -66,12 +69,13 @@ class InvadedCluster(Model):
         "homological percolation" event).
 
         Args:
-            time (int): Step in the chain.
+            time (int): Step in the chain; not used.
 
         Returns:
-            A NumPy array representing a vector of spin assignments.
+            A `(galois.FieldArray, numpy.ndarray, numpy.ndarray)` triplet representing
+            the proposed spin configuration, the occupied plaquettes at each
+            occurrence of homological percolation, and the satisfied plaquettes.
         """
-
         spins, occupied, satisfied = essentialCyclesBorn(
             self.phatBoundary,
             self.coboundary,
@@ -89,11 +93,14 @@ class InvadedCluster(Model):
         return spins, occupied, satisfied
     
 
-    def assign(self, cocycle: np.array):
+    def assign(self, cocycle):
         """
         Updates mappings from faces to spins and cubes to occupations.
 
-        Args: 
-            cocycle (np.array): Cocycle on the sublattice.
+        Args:
+            cocycle (galois.FieldArray): Cocycle on the sublattice.
+        
+        Returns:
+            Nothing.
         """
         self.spins = cocycle

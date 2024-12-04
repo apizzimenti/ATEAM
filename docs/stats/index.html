@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.3">
+<title>ateam.stats API documentation</title>
+<meta name="description" content="">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], processEscapes: true } });</script>
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS_CHTML" integrity="sha256-kZafAc6mZvK3W3v1pHOcUix30OHQN6pU/NO2oFkqZVw=" crossorigin></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>ateam.stats</code></h1>
+</header>
+<section id="section-intro">
+</section>
+<section>
+<h2 class="section-title" id="header-submodules">Sub-modules</h2>
+<dl>
+<dt><code class="name"><a title="ateam.stats.Wilson" href="Wilson.html">ateam.stats.Wilson</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt><code class="name"><a title="ateam.stats.accepts" href="accepts.html">ateam.stats.accepts</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt><code class="name"><a title="ateam.stats.defaults" href="defaults.html">ateam.stats.defaults</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt><code class="name"><a title="ateam.stats.distributions" href="distributions.html">ateam.stats.distributions</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt><code class="name"><a title="ateam.stats.energies" href="energies.html">ateam.stats.energies</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt><code class="name"><a title="ateam.stats.schedules" href="schedules.html">ateam.stats.schedules</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="ateam.stats.Connected"><code class="name flex">
+<span>def <span class="ident">Connected</span></span>(<span>model, state)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="ateam.stats.GraphConnected"><code class="name flex">
+<span>def <span class="ident">GraphConnected</span></span>(<span>model, state)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="ateam.stats.GraphWilsonLoop"><code class="name flex">
+<span>def <span class="ident">GraphWilsonLoop</span></span>(<span>model, state)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Sums (over the finite field) the spins of faces of the "generalized loop"
+(which we're taking to mean the largest loop).</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>model</code></strong> :&ensp;<code>Model</code></dt>
+<dd>Computational model we're using.</dd>
+<dt><strong><code>state</code></strong> :&ensp;<code>np.array</code></dt>
+<dd>Current State (assignment of spins) to faces of the
+Lattice of the Model.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>The evaluation of the cocycle (State) on the faces making up a connected
+component of the Lattice.</p></div>
+</dd>
+<dt id="ateam.stats.Hamiltonian"><code class="name flex">
+<span>def <span class="ident">Hamiltonian</span></span>(<span>model)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Computes the typical Hamiltonian on a cocycle for the given lattice.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>model</code></strong> :&ensp;<code>Model</code></dt>
+<dd>Model defining the Markov chain.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>A closure which takes</p></div>
+</dd>
+<dt id="ateam.stats.MetropolisHastings"><code class="name flex">
+<span>def <span class="ident">MetropolisHastings</span></span>(<span>model, distribution, burnIn=0)</span>
+</code></dt>
+<dd>
+<div class="desc"><h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>model</code></strong> :&ensp;<code>Model</code></dt>
+<dd>Evolution model we're using.</dd>
+<dt><strong><code>distribution</code></strong> :&ensp;<code>Callable</code></dt>
+<dd>Distribution function which consumes a cocycle
+(a list of assignments to faces).</dd>
+<dt><strong><code>burnIn</code></strong> :&ensp;<code>int=0</code></dt>
+<dd>How long we wait to begin the Metropolis-Hastings scheme.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>A closure which decides whether the proposed state is accepted or not.</p></div>
+</dd>
+<dt id="ateam.stats.WilsonLoop"><code class="name flex">
+<span>def <span class="ident">WilsonLoop</span></span>(<span>model, state)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Sums (over the finite field) the spins of faces of the "generalized loop"
+(which we're taking to mean the largest loop).</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>model</code></strong> :&ensp;<code>Model</code></dt>
+<dd>Computational model we're using.</dd>
+<dt><strong><code>state</code></strong> :&ensp;<code>np.array</code></dt>
+<dd>Current State (assignment of spins) to faces of the
+Lattice of the Model.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>The evaluation of the cocycle (State) on the faces making up a connected
+component of the Lattice.</p></div>
+</dd>
+<dt id="ateam.stats.always"><code class="name flex">
+<span>def <span class="ident">always</span></span>(<span>model=None, distribution=None, burnIn=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>An acceptance function which always accepts the proposed state; we do nothing
+with the arguments to this function.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>model</code></strong> :&ensp;<code>Model</code></dt>
+<dd>Optional argument; does nothing.</dd>
+<dt><strong><code>distribution</code></strong> :&ensp;<code>Callable</code></dt>
+<dd>Optional argument; does nothing.</dd>
+<dt><strong><code>burnIn</code></strong> :&ensp;<code>int</code></dt>
+<dd>Optional argument; does nothing.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>A function which always returns True.</p></div>
+</dd>
+<dt id="ateam.stats.autocorrelation"><code class="name flex">
+<span>def <span class="ident">autocorrelation</span></span>(<span>data)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Computes the autocorrelation of a given observable.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>data</code></strong> :&ensp;<code>Iterable</code></dt>
+<dd>An iterable, indexed by sample times, containing data
+from a given observable.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>An <code>np.ndarray</code> of autocorrelation data.</p></div>
+</dd>
+<dt id="ateam.stats.constant"><code class="name flex">
+<span>def <span class="ident">constant</span></span>(<span>temperature)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>A constant annealing schedule.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>temperature</code></strong> :&ensp;<code>float</code></dt>
+<dd>The temperature to be returned.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>A function passed to a model constructor.</p></div>
+</dd>
+<dt id="ateam.stats.critical"><code class="name flex">
+<span>def <span class="ident">critical</span></span>(<span>field)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>A constant annealing schedule which calculates the critical temperature
+of the model.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>field</code></strong> :&ensp;<code>int</code></dt>
+<dd>The order of the field we're over.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>A function passed to a Model constructor that returns the critical
+temperature of the Potts model.</p></div>
+</dd>
+<dt id="ateam.stats.linear"><code class="name flex">
+<span>def <span class="ident">linear</span></span>(<span>steps, low=-10, high=10)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>A linear temperature schedule.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>steps</code></strong> :&ensp;<code>int</code></dt>
+<dd>Total number of steps in the experiment.</dd>
+<dt><strong><code>low</code></strong> :&ensp;<code>float</code></dt>
+<dd>Lowest temperature we assign.</dd>
+<dt><strong><code>high</code></strong> :&ensp;<code>float</code></dt>
+<dd>Highest temperature we assign.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>A function that consumes a step number and returns a temperature.</p></div>
+</dd>
+<dt id="ateam.stats.randomizedToConstant"><code class="name flex">
+<span>def <span class="ident">randomizedToConstant</span></span>(<span>constant, steps, hold=0.5, distribution=&lt;function scaledUniform&gt;)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>A temperature schedule which samples spin values (according to <code>distribution</code>)
+<em>less than</em> the critical temperature of the model, then fixes the temperature
+at the critical temperature for some desired proportion of the runtime.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>steps</code></strong> :&ensp;<code>int</code></dt>
+<dd>Total number of steps the experiment takes.</dd>
+<dt><strong><code>field</code></strong> :&ensp;<code>int</code></dt>
+<dd>Order of the field we're over; used to compute critical
+temperature.</dd>
+<dt><strong><code>hold</code></strong> :&ensp;<code>float</code></dt>
+<dd>Value in [0,1] which represents the proportion of the time
+the temperature is fixed at the critical temperature. Defaults to
+half random, half fixed.</dd>
+<dt><strong><code>distribution</code></strong> :&ensp;<code>Callable</code></dt>
+<dd>Distribution from which we sample; default is
+a ln-normal distribution centered at 2 with variance 2.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>A function that consumes a step number and returns a temperature.</p></div>
+</dd>
+<dt id="ateam.stats.uniform"><code class="name flex">
+<span>def <span class="ident">uniform</span></span>(<span>low, high)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Discrete uniform distribution on [low, high).</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>low</code></strong> :&ensp;<code>int</code></dt>
+<dd>Lower end of interval.</dd>
+<dt><strong><code>high</code></strong> :&ensp;<code>int</code></dt>
+<dd>Upper end of interval.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>A value selected uniformly randomly from the interval [low, high).</p></div>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+</article>
+<nav id="sidebar">
+<!-- include a script for adding stuff to the end of proofs. -->
+<script>
+// Get all the proofs in the document.
+proofs = document.getElementsByClassName("proof");
+// For each of the proofs, attach a floating child element in the bottom-right
+// corner.
+for (var proof of proofs) {
+// Create a proof-ending tombstone.
+square = document.createElement("div");
+square.className = "tombstone";
+square.innerHTML = "◼️";
+// Attach the tombstone to the proof.
+proof.appendChild(square);
+}
+</script>
+<header>
+<a class="homelink" rel="home" title="potts" href="https://github.com/apizzimenti/potts">
+<style>
+header > h1 { display: none; }
+img.resize {
+max-width: 80%;
+max-height: 80%;
+display: block;
+margin: 0 auto;
+}
+div.proof {
+border: 1px solid black;
+padding: 0em 1em;
+width: 90%;
+margin: 1em auto;
+}
+.tombstone {
+margin-top: -2em;
+float: right;
+}
+</style>
+<img class="resize" src="https://github.com/apizzimenti/potts/blob/main/docs/lattice.gif?raw=true" alt="iteration on the Potts model">
+</a>
+</header>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="ateam" href="../index.html">ateam</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-submodules">Sub-modules</a></h3>
+<ul>
+<li><code><a title="ateam.stats.Wilson" href="Wilson.html">ateam.stats.Wilson</a></code></li>
+<li><code><a title="ateam.stats.accepts" href="accepts.html">ateam.stats.accepts</a></code></li>
+<li><code><a title="ateam.stats.defaults" href="defaults.html">ateam.stats.defaults</a></code></li>
+<li><code><a title="ateam.stats.distributions" href="distributions.html">ateam.stats.distributions</a></code></li>
+<li><code><a title="ateam.stats.energies" href="energies.html">ateam.stats.energies</a></code></li>
+<li><code><a title="ateam.stats.schedules" href="schedules.html">ateam.stats.schedules</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="ateam.stats.Connected" href="#ateam.stats.Connected">Connected</a></code></li>
+<li><code><a title="ateam.stats.GraphConnected" href="#ateam.stats.GraphConnected">GraphConnected</a></code></li>
+<li><code><a title="ateam.stats.GraphWilsonLoop" href="#ateam.stats.GraphWilsonLoop">GraphWilsonLoop</a></code></li>
+<li><code><a title="ateam.stats.Hamiltonian" href="#ateam.stats.Hamiltonian">Hamiltonian</a></code></li>
+<li><code><a title="ateam.stats.MetropolisHastings" href="#ateam.stats.MetropolisHastings">MetropolisHastings</a></code></li>
+<li><code><a title="ateam.stats.WilsonLoop" href="#ateam.stats.WilsonLoop">WilsonLoop</a></code></li>
+<li><code><a title="ateam.stats.always" href="#ateam.stats.always">always</a></code></li>
+<li><code><a title="ateam.stats.autocorrelation" href="#ateam.stats.autocorrelation">autocorrelation</a></code></li>
+<li><code><a title="ateam.stats.constant" href="#ateam.stats.constant">constant</a></code></li>
+<li><code><a title="ateam.stats.critical" href="#ateam.stats.critical">critical</a></code></li>
+<li><code><a title="ateam.stats.linear" href="#ateam.stats.linear">linear</a></code></li>
+<li><code><a title="ateam.stats.randomizedToConstant" href="#ateam.stats.randomizedToConstant">randomizedToConstant</a></code></li>
+<li><code><a title="ateam.stats.uniform" href="#ateam.stats.uniform">uniform</a></code></li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.3</a>.</p>
+</footer>
+</body>
+</html>
