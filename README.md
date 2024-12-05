@@ -1,24 +1,20 @@
 
 ## Installation
-Clone this repository by `git clone https://github.com/apizzimenti/ateam.git` and run `sh setup.sh` in your favorite terminal. This installs the `ateam` package (and its dependencies) globally in development mode, so any changes you make to the source are reflected system-wide. **Please read the 
+Clone this repository by `git clone https://github.com/apizzimenti/ateam.git`, navigate into the project's root, and run `sh setup.sh` in your favorite terminal. This installs the `ateam` package (and its dependencies) globally in development mode, so any changes you make to the source are reflected system-wide. **Please read the installation note in `setup.sh` to ensure PHAT is correctly installed on your system.**
 
 ## Example Use
 
-Below, we provide sample code for simulating a 10-iteration Markov chain determined by the plaquette invaded-cluster algorithm.
+This sample code runs the plaquette invaded-cluster algorithm on a 64x64 cubical 2-torus.
 
 ```python
 from ateam.structures import Lattice
 from ateam.models import InvadedCluster
 from ateam import Chain
 
-# Create a 64x64 square lattice with antipodal points identified (i.e. a torus),
-# construct a model for the invaded cluster algorithm on the first homology
-# group, and initialize a Markov chain simulating the algorithm for 10 steps.
 L = Lattice().fromCorners([64,64], field=3)
 HP = InvadedCluster(L, homology=1)
-M = Chain(HP, steps=10)
 
-for state in M:
+for state in Chain(HP, steps=10):
     <do whatever>
 ```
 
@@ -30,6 +26,7 @@ for state in M:
     title={{ATEAM: Algebraic Topology-Enabled Algorithms for Mechanics}},
     author={Pizzimenti, Anthony E.},
     url={https://github.com/apizzimenti/ateam},
-    version={1.0.0}
+    version={1.0.0},
+    doi={10.5281/zenodo.14284172}
 }
 ```
