@@ -2,6 +2,7 @@
 import numpy as np
 from typing import Callable
 
+from ..arithmetic import evaluateCochain
 from ..structures import Lattice
 from ..stats import constant
 from .Model import Model
@@ -28,14 +29,15 @@ class Glauber(Model):
         self.temperatureFunction = temperatureFunction
 
         # SW defaults.
-        self.state = initial if initial else self.initial()
-        self.state = self.lattice.field(self.state)
-        self._shift = self.lattice.field(np.zeros(len(self.state), dtype=int))
+        self.faces = self.lattice.boundary[self.lattice.dimension-1]
+        self.plaquettes = self.lattice.boundary[self.lattice.dimension]
+        self._shift = self.lattice.field(np.zeros(len(self.faces), dtype=int))
         self._shiftIndex = 0
-        self._indices = list(range(len(self.state)))
+        self._indices = list(range(len(self.faces)))
 
-        self.spins = { face: self.state[self.lattice.index.faces[face]] for face in self.lattice.faces }
-        self.occupied = set()
+        self.spins = initial if initial is not None else self.initial()
+        coboundary = evaluateCochain(self.plaquettes, self.spins)
+        self.closed = -(coboundary > 0).nonzero()[0].sum()
 
 
     def initial(self):
@@ -45,7 +47,7 @@ class Glauber(Model):
         Returns:
             A NumPy array representing a vector of spin assignments.
         """
-        return self.lattice.field.Random(len(self.lattice.faces))
+        return self.lattice.field.Random(len(self.faces))
     
 
     def proposal(self, time):
@@ -61,23 +63,33 @@ class Glauber(Model):
             A NumPy array representing a vector of spin assignments.
         """
         # Choose a location to "flip," then revisit the last shifted vertex.
-        loc = np.random.randint(len(self.lattice.faces))
+        loc = np.random.randint(len(self.faces))
         self._shift[self._shiftIndex] = 0
         self._shift[loc] = self.lattice.field.Random()
         self._shiftIndex = loc
 
-        return self.state+self._shift
+        spins = self.spins + self._shift
+        coboundary = evaluateCochain(self.plaquettes, spins)
+        closed = -(coboundary > 0).nonzero()[0].sum()
+        satisfied = (coboundary == 0).nonzero()[0]
+        energy = np.exp(self.temperatureFunction(time)*(self.closed - closed))
+
+        if np.random.uniform() < min(1, energy):
+            self.closed = closed
+            return spins, satisfied
+        
+        return self.spins, satisfied
 
 
-    def assign(self, cocycle):
+    def assign(self, cochain):
         """
         Updates mappings from faces to spins and cubes to occupations.
         
         Args:
-            cocycle (galois.FieldArray): Cocycle on the sublattice.
+            cochain (galois.FieldArray): Cochain on the lattice.
         
         Returns:
             None.
         """
-        self.spins = cocycle
+        self.spins = cochain
     
