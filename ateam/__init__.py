@@ -13,4 +13,4 @@ __pdoc__ = {}
 __pdoc__["ateam.viz"] = False
 __pdoc__["ateam.stats"] = False
 
-_version = "0.0.1"
+_version = "1.0.0"

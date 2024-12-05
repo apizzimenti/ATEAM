@@ -60,7 +60,7 @@ class SwendsenWang(Model):
         uniforms = np.random.uniform(size=self.cubeCells)
         include = (uniforms < p).nonzero()[0]
         boundary = self.lattice.boundary[self.lattice.dimension][include]
-        boundaryValues = evaluateCocycle(boundary, self.spins)
+        boundaryValues = evaluateCochain(boundary, self.spins)
         zeros = (boundaryValues == 0).nonzero()[0]
 
         satisfied = np.zeros(len(self.lattice.boundary[self.lattice.dimension])).astype(int)
