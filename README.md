@@ -1,3 +1,4 @@
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.14284172.svg)](https://doi.org/10.5281/zenodo.14284172)
 
 ## Installation
 Clone this repository by `git clone https://github.com/apizzimenti/ateam.git`, navigate into the project's root, and run `sh setup.sh` in your favorite terminal. This installs the `ateam` package (and its dependencies) globally in development mode, so any changes you make to the source are reflected system-wide. **Please read the installation note in `setup.sh` to ensure PHAT is correctly installed on your system.**
@@ -24,7 +25,7 @@ for state in Chain(HP, steps=10):
 ```bibtex
 @software{ATEAM,
     title={{ATEAM: Algebraic Topology-Enabled Algorithms for Mechanics}},
-    author={Pizzimenti, Anthony E.},
+    author={Duncan, Paul and Pizzimenti, Anthony E. and Schweinhart, Benjamin},
     url={https://github.com/apizzimenti/ateam},
     version={1.0.0},
     doi={10.5281/zenodo.14284172}
