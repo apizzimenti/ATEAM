@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "ateam"
-version = "1.0.0"
+version = "1.0.1"
 description = "Algebraic Topology-Enabled Algorithms for Mechanics"
 readme = "README.md"
 
