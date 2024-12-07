@@ -38,6 +38,7 @@ class Glauber(Model):
         self.spins = initial if initial is not None else self.initial()
         coboundary = evaluateCochain(self.plaquettes, self.spins)
         self.closed = -(coboundary > 0).nonzero()[0].sum()
+        self.satisfied = (coboundary == 0).nonzero()[0]
 
 
     def initial(self):
@@ -76,9 +77,13 @@ class Glauber(Model):
 
         if np.random.uniform() < min(1, energy):
             self.closed = closed
-            return spins, satisfied
+            self.satisfied = satisfied
+            self.spins = spins
+
+        satisfiedConfiguration = np.zeros(len(self.plaquettes))
+        satisfiedConfiguration[self.satisfied] = 1
         
-        return self.spins, satisfied
+        return self.spins, satisfiedConfiguration
 
 
     def assign(self, cochain):
