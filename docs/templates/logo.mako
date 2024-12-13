@@ -48,6 +48,10 @@
             #sidebar {
                 width: 20%;
             }
+
+            #index .two-column {
+                column-count: 1 !important;
+            }
         </style>
         <img class="resize" src="https://github.com/apizzimenti/ateam/blob/main/docs/lattice-55.jpeg?raw=true" alt="Homological percolation on the torus.">
     </a>

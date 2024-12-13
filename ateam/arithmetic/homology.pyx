@@ -6,12 +6,40 @@ from itertools import product
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
+def isNullHomologous(A, x, I, includes=[]):
+    """
+    Checks whether the provided sequence of faces is a boundary of some chain of
+    plaquettes.
+
+    Args:
+        A (galois.Array): Complete boundary matrix.
+        x (galois.Array): Chain of faces.
+        I (galois.Array): Identity matrix of dimension \((n+1) \\times (n+1)\),
+            where \(n\) is the number of columns of \(A\).
+        includes (iterable=[]): Column indices to _include_.
+
+    Returns:
+        A boolean which is truthy when \(x\) is nullhomologous and falsy otherwise.
+    """
+    if len(includes): B = A.take(includes, axis=1)
+    else: B = A
+    
+    # Augment the matrix, get the RREF, and check whether we have a solution or
+    # not. If not, the RREF of the matrix is the identity of dimension one
+    # larger than the boundary submatrix.
+    R = np.c_[B, x].row_reduce()
+    _, m = B.shape
+    return not (R[:m+1,:] == I[:m+1,:m+1]).all()
+
+
+@cython.boundscheck(False)
+@cython.wraparound(False)
 def sampleFromKernel(A, F, includes=[], relativeCells=None, relativeFaces=None):
     """
     Uniformly randomly samples a cochain given the coboundary matrix A.
 
     Args:
-        A (np.ndarray): Complete boundary matrix.
+        A (np.ndarray): Complete coboundary matrix.
         F (galois.GF): Finite field representation.
         includes (iterable=[]): Column indices to _include_.
         relativeCells (iterable=None): Column indices to _include_. (Possible

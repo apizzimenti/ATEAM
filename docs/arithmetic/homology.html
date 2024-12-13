@@ -117,6 +117,27 @@ at the indices of satisfied plaquettes.</p></div>
 <h2 id="returns">Returns</h2>
 <p>A <code>galois.FieldArray</code> of coefficients on the <span><span class="MathJax_Preview">k</span><script type="math/tex">k</script></span>-skeleton.</p></div>
 </dd>
+<dt id="ateam.arithmetic.homology.isNullHomologous"><code class="name flex">
+<span>def <span class="ident">isNullHomologous</span></span>(<span>A, x, I, includes=[])</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Checks whether the provided sequence of faces is a boundary of some chain of
+plaquettes.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>A</code></strong> :&ensp;<code>galois.Array</code></dt>
+<dd>Complete boundary matrix.</dd>
+<dt><strong><code>x</code></strong> :&ensp;<code>galois.Array</code></dt>
+<dd>Chain of faces.</dd>
+<dt><strong><code>I</code></strong> :&ensp;<code>galois.Array</code></dt>
+<dd>Identity matrix of dimension <span><span class="MathJax_Preview">(n+1) \times (n+1)</span><script type="math/tex">(n+1) \times (n+1)</script></span>,
+where <span><span class="MathJax_Preview">n</span><script type="math/tex">n</script></span> is the number of columns of <span><span class="MathJax_Preview">A</span><script type="math/tex">A</script></span>.</dd>
+<dt><strong><code>includes</code></strong> :&ensp;<code>iterable=[]</code></dt>
+<dd>Column indices to <em>include</em>.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>A boolean which is truthy when <span><span class="MathJax_Preview">x</span><script type="math/tex">x</script></span> is nullhomologous and falsy otherwise.</p></div>
+</dd>
 <dt id="ateam.arithmetic.homology.sampleFromKernel"><code class="name flex">
 <span>def <span class="ident">sampleFromKernel</span></span>(<span>A, F, includes=[], relativeCells=None, relativeFaces=None)</span>
 </code></dt>
@@ -125,7 +146,7 @@ at the indices of satisfied plaquettes.</p></div>
 <h2 id="args">Args</h2>
 <dl>
 <dt><strong><code>A</code></strong> :&ensp;<code>np.ndarray</code></dt>
-<dd>Complete boundary matrix.</dd>
+<dd>Complete coboundary matrix.</dd>
 <dt><strong><code>F</code></strong> :&ensp;<code>galois.GF</code></dt>
 <dd>Finite field representation.</dd>
 <dt><strong><code>includes</code></strong> :&ensp;<code>iterable=[]</code></dt>
@@ -188,6 +209,9 @@ text-align: justify;
 #sidebar {
 width: 20%;
 }
+#index .two-column {
+column-count: 1 !important;
+}
 </style>
 <img class="resize" src="https://github.com/apizzimenti/ateam/blob/main/docs/lattice-55.jpeg?raw=true" alt="Homological percolation on the torus.">
 </a>
@@ -206,6 +230,7 @@ width: 20%;
 <li><code><a title="ateam.arithmetic.homology.autocorrelation" href="#ateam.arithmetic.homology.autocorrelation">autocorrelation</a></code></li>
 <li><code><a title="ateam.arithmetic.homology.essentialCyclesBorn" href="#ateam.arithmetic.homology.essentialCyclesBorn">essentialCyclesBorn</a></code></li>
 <li><code><a title="ateam.arithmetic.homology.evaluateCochain" href="#ateam.arithmetic.homology.evaluateCochain">evaluateCochain</a></code></li>
+<li><code><a title="ateam.arithmetic.homology.isNullHomologous" href="#ateam.arithmetic.homology.isNullHomologous">isNullHomologous</a></code></li>
 <li><code><a title="ateam.arithmetic.homology.sampleFromKernel" href="#ateam.arithmetic.homology.sampleFromKernel">sampleFromKernel</a></code></li>
 </ul>
 </li>

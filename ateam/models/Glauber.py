@@ -80,7 +80,7 @@ class Glauber(Model):
             self.satisfied = satisfied
             self.spins = spins
 
-        satisfiedConfiguration = np.zeros(len(self.plaquettes))
+        satisfiedConfiguration = self.lattice.field.Zeros(len(self.plaquettes))
         satisfiedConfiguration[self.satisfied] = 1
         
         return self.spins, satisfiedConfiguration

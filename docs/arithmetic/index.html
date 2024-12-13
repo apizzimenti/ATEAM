@@ -46,6 +46,20 @@ hljs.highlightAll();
 <section>
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
+<dt id="ateam.arithmetic.autocorrelation"><code class="name flex">
+<span>def <span class="ident">autocorrelation</span></span>(<span>data)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Computes the autocorrelation of a given observable.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>data</code></strong> :&ensp;<code>Iterable</code></dt>
+<dd>An iterable, indexed by sample times, containing data
+from a given observable.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>An <code>np.ndarray</code> of autocorrelation data.</p></div>
+</dd>
 <dt id="ateam.arithmetic.boundaryMatrix"><code class="name flex">
 <span>def <span class="ident">boundaryMatrix</span></span>(<span>Complex, D, F)</span>
 </code></dt>
@@ -102,6 +116,59 @@ of corners specified). For example, if <code>periodic</code> is falsy, then
 </li>
 </ol></div>
 </dd>
+<dt id="ateam.arithmetic.essentialCyclesBorn"><code class="name flex">
+<span>def <span class="ident">essentialCyclesBorn</span></span>(<span>phatBoundary,<br>coboundary,<br>boundary,<br>reindexed,<br>tranches,<br>homology,<br>F,<br>spins,<br>times,<br>indices,<br>lower,<br>highest,<br>stop)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Computes the persistent homology of the given complex, identifying when the
+first nontrivial element of the parent space (generally a torus) is born.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>phatBoundary</code></strong> :&ensp;<code>phat.boundary_matrix</code></dt>
+<dd>An initialized PHAT boundary matrix
+with un-set columns.</dd>
+<dt><strong><code>coboundary</code></strong> :&ensp;<code>galois.FieldArray</code></dt>
+<dd>Coboundary matrix for the complex.</dd>
+<dt><strong><code>boundary</code></strong> :&ensp;<code>dict</code></dt>
+<dd>Indexed boundary matrices associated with a <code>Lattice</code>
+object.</dd>
+<dt><strong><code>reindexed</code></strong> :&ensp;<code>dict</code></dt>
+<dd>Reindexed version of <code>boundary</code>.</dd>
+<dt><strong><code>tranches</code></strong> :&ensp;<code>dict</code></dt>
+<dd>Dictionary specifying the indices at which cubes of
+each dimension appear in the flattened boundary matrix (i.e. the
+columns of <code>phatBoundary</code>).</dd>
+<dt><strong><code>homology</code></strong> :&ensp;<code>int</code></dt>
+<dd>Homology group <span><span class="MathJax_Preview">k</span><script type="math/tex">k</script></span>.</dd>
+<dt><strong><code>F</code></strong> :&ensp;<code>galois.GF</code></dt>
+<dd>Finite field representation.</dd>
+<dt><strong><code>spins</code></strong> :&ensp;<code>galois.FieldArray</code></dt>
+<dd>Cochain on the <span><span class="MathJax_Preview">(k-1)</span><script type="math/tex">(k-1)</script></span>-skeleton.</dd>
+<dt><strong><code>times</code></strong> :&ensp;<code>np.ndarray</code></dt>
+<dd>Index for the filtration.</dd>
+<dt><strong><code>indices</code></strong> :&ensp;<code>np.ndarray</code></dt>
+<dd>Indices for plaquettes.</dd>
+<dt><strong><code>lower</code></strong> :&ensp;<code>list</code></dt>
+<dd>List of (dimension, boundary) pairs for all cubes of
+dimension less than <span><span class="MathJax_Preview">k</span><script type="math/tex">k</script></span>.</dd>
+<dt><strong><code>highest</code></strong> :&ensp;<code>list</code></dt>
+<dd>List of (dimension, boundary) pairs for all cubes of
+dimension greater than <span><span class="MathJax_Preview">k+1</span><script type="math/tex">k+1</script></span>.</dd>
+<dt><strong><code>stop</code></strong> :&ensp;<code>int</code></dt>
+<dd>How many essential cycles are identified before we we-sample
+a cochain.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>A triplet</code></dt>
+<dd>a <span><span class="MathJax_Preview">(k-1)</span><script type="math/tex">(k-1)</script></span>-cochain as a <code>galois.FieldArray</code>; a binary</dd>
+</dl>
+<p><span><span class="MathJax_Preview">\beta \times n</span><script type="math/tex">\beta \times n</script></span> <code>numpy.ndarray</code>, where each row has a <span><span class="MathJax_Preview">1</span><script type="math/tex">1</script></span> at the
+indices of occupied plaquettes when homological percolation occurred,
+<span><span class="MathJax_Preview">\beta</span><script type="math/tex">\beta</script></span> is the rank of the <span><span class="MathJax_Preview">k</span><script type="math/tex">k</script></span>th homology group, and <span><span class="MathJax_Preview">n</span><script type="math/tex">n</script></span> is the
+number of plaquettes; a length-(n) binary <code>numpy.ndarray</code> with ones
+at the indices of satisfied plaquettes.</p></div>
+</dd>
 <dt id="ateam.arithmetic.evaluateCochain"><code class="name flex">
 <span>def <span class="ident">evaluateCochain</span></span>(<span>boundary, spins)</span>
 </code></dt>
@@ -117,6 +184,27 @@ of corners specified). For example, if <code>periodic</code> is falsy, then
 <h2 id="returns">Returns</h2>
 <p>A <code>galois.FieldArray</code> of coefficients on the <span><span class="MathJax_Preview">k</span><script type="math/tex">k</script></span>-skeleton.</p></div>
 </dd>
+<dt id="ateam.arithmetic.isNullHomologous"><code class="name flex">
+<span>def <span class="ident">isNullHomologous</span></span>(<span>A, x, I, includes=[])</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Checks whether the provided sequence of faces is a boundary of some chain of
+plaquettes.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>A</code></strong> :&ensp;<code>galois.Array</code></dt>
+<dd>Complete boundary matrix.</dd>
+<dt><strong><code>x</code></strong> :&ensp;<code>galois.Array</code></dt>
+<dd>Chain of faces.</dd>
+<dt><strong><code>I</code></strong> :&ensp;<code>galois.Array</code></dt>
+<dd>Identity matrix of dimension <span><span class="MathJax_Preview">(n+1) \times (n+1)</span><script type="math/tex">(n+1) \times (n+1)</script></span>,
+where <span><span class="MathJax_Preview">n</span><script type="math/tex">n</script></span> is the number of columns of <span><span class="MathJax_Preview">A</span><script type="math/tex">A</script></span>.</dd>
+<dt><strong><code>includes</code></strong> :&ensp;<code>iterable=[]</code></dt>
+<dd>Column indices to <em>include</em>.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>A boolean which is truthy when <span><span class="MathJax_Preview">x</span><script type="math/tex">x</script></span> is nullhomologous and falsy otherwise.</p></div>
+</dd>
 <dt id="ateam.arithmetic.sampleFromKernel"><code class="name flex">
 <span>def <span class="ident">sampleFromKernel</span></span>(<span>A, F, includes=[], relativeCells=None, relativeFaces=None)</span>
 </code></dt>
@@ -125,7 +213,7 @@ of corners specified). For example, if <code>periodic</code> is falsy, then
 <h2 id="args">Args</h2>
 <dl>
 <dt><strong><code>A</code></strong> :&ensp;<code>np.ndarray</code></dt>
-<dd>Complete boundary matrix.</dd>
+<dd>Complete coboundary matrix.</dd>
 <dt><strong><code>F</code></strong> :&ensp;<code>galois.GF</code></dt>
 <dd>Finite field representation.</dd>
 <dt><strong><code>includes</code></strong> :&ensp;<code>iterable=[]</code></dt>
@@ -188,6 +276,9 @@ text-align: justify;
 #sidebar {
 width: 20%;
 }
+#index .two-column {
+column-count: 1 !important;
+}
 </style>
 <img class="resize" src="https://github.com/apizzimenti/ateam/blob/main/docs/lattice-55.jpeg?raw=true" alt="Homological percolation on the torus.">
 </a>
@@ -208,10 +299,13 @@ width: 20%;
 </ul>
 </li>
 <li><h3><a href="#header-functions">Functions</a></h3>
-<ul class="">
+<ul class="two-column">
+<li><code><a title="ateam.arithmetic.autocorrelation" href="#ateam.arithmetic.autocorrelation">autocorrelation</a></code></li>
 <li><code><a title="ateam.arithmetic.boundaryMatrix" href="#ateam.arithmetic.boundaryMatrix">boundaryMatrix</a></code></li>
 <li><code><a title="ateam.arithmetic.cubicalComplex" href="#ateam.arithmetic.cubicalComplex">cubicalComplex</a></code></li>
+<li><code><a title="ateam.arithmetic.essentialCyclesBorn" href="#ateam.arithmetic.essentialCyclesBorn">essentialCyclesBorn</a></code></li>
 <li><code><a title="ateam.arithmetic.evaluateCochain" href="#ateam.arithmetic.evaluateCochain">evaluateCochain</a></code></li>
+<li><code><a title="ateam.arithmetic.isNullHomologous" href="#ateam.arithmetic.isNullHomologous">isNullHomologous</a></code></li>
 <li><code><a title="ateam.arithmetic.sampleFromKernel" href="#ateam.arithmetic.sampleFromKernel">sampleFromKernel</a></code></li>
 </ul>
 </li>

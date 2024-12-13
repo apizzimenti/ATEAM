@@ -5,12 +5,12 @@ build: clean
 
 
 clean:
-	@rm -f potts/*.c
-	@rm -f potts/*.o
-	@rm -f potts/*.so
-	@rm -f potts/arithmetic/*.c
-	@rm -f potts/arithmetic/*.o
-	@rm -f potts/arithmetic/*.so
+	@rm -f ateam/*.c
+	@rm -f ateam/*.o
+	@rm -f ateam/*.so
+	@rm -f ateam/arithmetic/*.c
+	@rm -f ateam/arithmetic/*.o
+	@rm -f ateam/arithmetic/*.so
 	@rm -rf ./build
 
 
