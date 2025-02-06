@@ -1,3 +1,5 @@
+
+
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.14284172.svg)](https://doi.org/10.5281/zenodo.14284172)
 
 ## Installation
@@ -24,7 +26,7 @@ for state in Chain(HP, steps=10):
 ### BibTeX
 ```bibtex
 @software{ATEAM,
-    title={{ATEAM: Algebraic Topology-Enabled Algorithms for Mechanics}},
+    title={{ATEAM: Algebraic Topology-Enabled AlgorithMs}},
     author={Duncan, Paul and Pizzimenti, Anthony E. and Schweinhart, Benjamin},
     url={https://github.com/apizzimenti/ateam},
     version={1.0.0},

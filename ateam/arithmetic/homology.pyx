@@ -27,7 +27,7 @@ def isNullHomologous(A, x, I, includes=[]):
     # Augment the matrix, get the RREF, and check whether we have a solution or
     # not. If not, the RREF of the matrix is the identity of dimension one
     # larger than the boundary submatrix.
-    R = np.c_[B, x].row_reduce()
+    R = (np.c_[B, x].astype(np.int32)).row_reduce()
     _, m = B.shape
     return not (R[:m+1,:] == I[:m+1,:m+1]).all()
 

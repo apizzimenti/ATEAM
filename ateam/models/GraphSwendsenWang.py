@@ -5,6 +5,7 @@ from rustworkx import connected_components as connectedComponents
 from ..structures import GraphLattice
 from ..stats import constant
 from .Model import Model
+from warnings import warn
 
 
 class GraphSwendsenWang(Model):
@@ -22,6 +23,9 @@ class GraphSwendsenWang(Model):
                 schedule.
             testing (Bool): Are we testing?
         """
+        warning = "The GraphSwendsenWang model is deprecated in favor of the SwendsenWang model, and " + \
+        "instances of the GraphSwendwenWang model will not work correctly."
+        warn(warning, DeprecationWarning, stacklevel=2)
         self.lattice = L
         self.temperatureFunction = temperatureFunction
 

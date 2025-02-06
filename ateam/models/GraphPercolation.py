@@ -5,6 +5,7 @@ from pathlib import Path
 
 from ..stats import constant, uniform
 from .Model import Model
+from warnings import warn
 
 
 class GraphPercolation(Model):
@@ -22,6 +23,10 @@ class GraphPercolation(Model):
                 schedule.
             testing (Bool): Are we testing?
         """
+        warning = "The GraphPercolation model is deprecated in favor of the InvadedCluster model, and " + \
+        "instances of the GraphPercolation model will not work correctly."
+        warn(warning, DeprecationWarning, stacklevel=2)
+
         self.temperatureFunction = temperatureFunction
         self.testing = testing
         self.log = ""
